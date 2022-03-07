@@ -4,11 +4,12 @@
   "private": true,
   "description": "Проект «Big Trip» от HTML Academy",
   "scripts": {
-    "eslint": "eslint src/",
-    "test": "npm run eslint"
+    "lint": "eslint src/",
+    "build": "webpack --mode development",
+    "start": "webpack serve --mode development --open"
   },
   "devDependencies": {
-    "eslint": "8.10.0",
+    "eslint": "^8.10.0",
     "eslint-config-htmlacademy": "5.0.0",
     "webpack": "5.70.0",
     "webpack-cli": "4.9.2",
