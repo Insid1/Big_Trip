@@ -5,9 +5,10 @@ import { createSiteTripInfo } from './view/trip-info.js';
 import { createSiteSortingTemplate } from './view/sorting.js';
 import { createTripList, createTripPoint } from './view/trip-point.js';
 import { createFormEditPointElement } from './view/form-edit.js';
-import { createFormAddPointElement } from './view/form-create.js';
+// import { createFormAddPointElement } from './view/form-create.js';
+import './mock/point-data.js';
 
-const TRIP_POINTS = 3;
+const TRIP_POINTS = 10;
 const DEFAULT_PLACE = 'beforeend';
 
 const render = (container, markup = '', place = DEFAULT_PLACE) => {
@@ -39,7 +40,7 @@ render(tripFilterElement, createTripList(), 'afterend');
 // gets trip-list element
 const tripListElement = siteMainElement.querySelector('.trip-events__list');
 // ads create-event element
-render(tripListElement, createFormAddPointElement(), 'afterbegin');
+// render(tripListElement, createFormAddPointElement(), 'afterbegin');
 // ads edit-event-form form
 render (tripListElement, createFormEditPointElement());
 // ads events to ul
