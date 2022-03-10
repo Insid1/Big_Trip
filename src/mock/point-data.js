@@ -1,52 +1,11 @@
+import {EVENTS, CITIES, PRICE_RANGE, TEXT, OFFER_LENGTH_RANGE, DATE_RANGE, DURATION_RANGE} from './const.js';
 import dayjs from 'dayjs';
 // imports plugin duration from dayjs
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
-import { getRandomInt, capitalize, trueOrFalse } from './util.js';
+import { getRandomInt, capitalize, getTrueOrFalse } from './util.js';
 
-const DATE_RANGE = {
-  DAY:{
-    MIN: -10,
-    MAX: 10,
-  },
-  HOUR:{
-    MIN: -5,
-    MAX: 10,
-  },
-  MINUTE:{
-    MIN: -40,
-    MAX: 50,
-  },
-};
-const DURATION_RANGE = {
-  MINUTE: {
-    MIN: 20,
-    MAX: 60,
-  },
-  HOUR: {
-    MIN: 0,
-    MAX: 4,
-  }
-};
-const PRICE_RANGE = {
-  MIN: 10,
-  MAX: 250,
-};
-const EVENTS = [
-  'bus', 'check-in',
-  'drive', 'flight',
-  'restaurant', 'ship',
-  'sightseeing', 'taxi',
-  'train', 'transport'];
-const CITIES = [
-  'Amsterdam', 'Chamonix',
-  'Berlin', 'Moscow',
-  'Novosibirsk', 'Tokiyo',
-  'Rotterdam', 'Brucelle',
-  'Geneva', 'Oslo',
-  'Helsinki', 'Copenhagen',
-];
-const TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
+const AMOUNT_OF_POINTS = 10;
 
 const generateDate = () => {
   const daysToAdd = getRandomInt(DATE_RANGE.DAY.MIN, DATE_RANGE.DAY.MAX);
@@ -71,34 +30,66 @@ const generateCity = () => {
 const generateDescription = () => {
   const sentences = TEXT.split('. ');
   const description = sentences.reduce((acc, currVal) => {
-    if (trueOrFalse()) {
+    if (getTrueOrFalse()) {
       acc = `${acc}. ${currVal}`;
     }
     return acc;
   });
   return description;
 };
+const generatePhotos = () => {
+  const numOfPhotos = getRandomInt(1, 8);
+  return new Array(numOfPhotos)
+    .fill()
+    .map((value, index) => `http://picsum.photos/248/152?r=${index}`);
+};
+const createPoints = () => {
+  const createPointTemplate = () => {
+    const day = generateDate();
+    const event = generateEvent();
+    const pointDuration = dayjs
+      .duration({
+        minutes: getRandomInt(DURATION_RANGE.MINUTE.MIN, DURATION_RANGE.MINUTE.MAX),
+        hours: getRandomInt(DURATION_RANGE.HOUR.MIN, DURATION_RANGE.HOUR.MAX),
+        days:getRandomInt(DURATION_RANGE.DAY.MIN, DURATION_RANGE.DAY.MAX),
+      });
+    const generateToTime = () => day.add(pointDuration);
+    const createOffers = () => {
+      const createOffer = () => {
+        const offer =  {
+          id: getRandomInt(1, 10000),
+          name: event,
+          price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
+          checked: getTrueOrFalse(),
+        };
+        return offer;
+      };
+      const numOfOffers = getRandomInt(OFFER_LENGTH_RANGE.MIN, OFFER_LENGTH_RANGE.MAX);
+      const offers = new Array(numOfOffers).fill().map(createOffer);
+      return offers;
+    };
 
-const createPointTemplate = () => {
-  const day = generateDate();
-  const pointDuration = dayjs
-    .duration({
-      minutes: getRandomInt(DURATION_RANGE.MINUTE.MIN, DURATION_RANGE.MINUTE.MAX),
-      hours: getRandomInt(DURATION_RANGE.HOUR.MIN, DURATION_RANGE.HOUR.MAX),
-    });
-  const generateToTime = () => day.add(pointDuration);
-  const templatePoint = {
-    date: day,
-    event: generateEvent(),
-    city: generateCity(),
-    toTime: generateToTime(),
-    pointDuration,
-    price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
-    offers: 'offers', // got to create data structure
-    favorite: trueOrFalse(),
-    description: generateDescription(),
+    const templatePoint = {
+      date: day,
+      event,
+      city: generateCity(),
+      toTime: generateToTime(),
+      pointDuration,
+      price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
+      offers: createOffers(), // got to create data structure
+      favorite: getTrueOrFalse(),
+      description: generateDescription(),
+      photos: generatePhotos(),
+    };
+    return templatePoint;
   };
-  return templatePoint;
+  const sortedData = new Array(AMOUNT_OF_POINTS)
+    .fill()
+    .map(createPointTemplate)
+    .sort((a, b) => a.date > b.date ? 1 : -1);
+  return sortedData;
 };
 
-export {createPointTemplate};
+const pointData = createPoints();
+
+export {pointData};

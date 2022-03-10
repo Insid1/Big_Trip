@@ -26,7 +26,7 @@ function getRandomFloat(min, max, numOfdecimalPlace) {
 }
 
 // Returns you random value true or false
-function trueOrFalse() {
+function getTrueOrFalse() {
   const checker = getRandomInt(0, 1);
   if (checker) {
     return true;
@@ -39,4 +39,4 @@ function capitalize(str) {
 }
 
 
-export {getRandomInt, trueOrFalse, getRandomFloat, capitalize};
+export {getRandomInt, getTrueOrFalse, getRandomFloat, capitalize};
