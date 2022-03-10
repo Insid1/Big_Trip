@@ -5,7 +5,7 @@ import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 import { getRandomInt, capitalize, getTrueOrFalse } from './util.js';
 
-const AMOUNT_OF_POINTS = 10;
+const AMOUNT_OF_POINTS = 20;
 
 const generateDate = () => {
   const daysToAdd = getRandomInt(DATE_RANGE.DAY.MIN, DATE_RANGE.DAY.MAX);

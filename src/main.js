@@ -23,10 +23,10 @@ render(menuHeaderElement, createSiteMenuTemplate());
 const filterHeaderElement = tripMainHeaderElement.querySelector('.trip-controls__filters');
 render(filterHeaderElement, createSiteFilterTemplate());
 // adds trip info to header
-render(tripMainHeaderElement, createSiteTripInfo(), 'afterbegin');
+render(tripMainHeaderElement, createSiteTripInfo(pointData), 'afterbegin');
 // adds trip price to header
 const tripInfoHeaderElement = tripMainHeaderElement.querySelector('.trip-info');
-render(tripInfoHeaderElement, createSitePrice());
+render(tripInfoHeaderElement, createSitePrice(pointData));
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
