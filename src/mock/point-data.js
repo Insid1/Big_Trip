@@ -1,9 +1,9 @@
-import {EVENTS, CITIES, PRICE_RANGE, TEXT, OFFER_LENGTH_RANGE, DATE_RANGE, DURATION_RANGE} from './const.js';
+import {EVENTS, CITIES, PRICE_RANGE, TEXT, OFFER_LENGTH_RANGE, DATE_RANGE, DURATION_RANGE} from '../const.js';
 import dayjs from 'dayjs';
 // imports plugin duration from dayjs
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
-import { getRandomInt, capitalize, getTrueOrFalse } from './util.js';
+import { getRandomInt, capitalize, getTrueOrFalse } from '../util.js';
 
 const AMOUNT_OF_POINTS = 20;
 

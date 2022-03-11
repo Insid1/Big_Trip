@@ -1,5 +1,5 @@
-import { EVENTS, CITIES } from '../mock/const.js';
-import { capitalize } from '../mock/util.js';
+import { EVENTS, CITIES } from '../const.js';
+import { capitalize } from '../util.js';
 
 const createFormEditPointElement = (pointData) => {
   const addOffers = () => {

@@ -1,4 +1,3 @@
-// import { createPointTemplate } from '../mock/point-data';
 const createTripPoint = (pointData) => {
   const createIconLink = () => `img/icons/${pointData.event.toLowerCase()}.png`;
   const createFavorites = () => {
