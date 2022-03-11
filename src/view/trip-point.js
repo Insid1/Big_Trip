@@ -40,6 +40,16 @@ const createTripPoint = (pointData) => {
       return `${durMin} M`;
     }
   };
+  const generatePrice = () => {
+    const initialPrice = pointData.price;
+    const extraOfferPrice = pointData
+      .offers.
+      reduce((acc, value) =>{
+        acc += value.price;
+        return acc;
+      }, 0);
+    return initialPrice + extraOfferPrice;
+  };
 
   return `<li class="trip-events__item">
     <div class="event">
@@ -57,7 +67,7 @@ const createTripPoint = (pointData) => {
         <p class="event__duration">${generateDuration()}</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">${pointData.price}</span>
+        &euro;&nbsp;<span class="event__price-value">${generatePrice()}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">

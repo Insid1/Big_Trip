@@ -3,7 +3,6 @@ import { pointData } from './mock/point-data.js';
 import SiteMenuView from './view/menu.js';
 import SiteFilterView from './view/filter.js';
 import SiteSortingView from './view/sorting.js';
-// import CreatePointView from './view/form-create.js';
 import TotalPrice from './view/price.js';
 import TripPointView from './view/trip-point.js';
 import PointContainerView  from './view/point-container';
@@ -35,8 +34,6 @@ render(tripEventsElement, new SiteSortingView().getElement(), RenderPosition.STA
 render(tripEventsElement, new PointContainerView().getElement(), RenderPosition.END);
 // gets trip-list element
 const tripListElement = siteMainElement.querySelector('.trip-events__list');
-// ads create-event element
-// renderElement(tripListElement, new CreatePointView().getElement(), RenderPosition.START);
 // adds edit form and general points to list
 pointData.forEach((element, index) => {
   if (index === 0) {

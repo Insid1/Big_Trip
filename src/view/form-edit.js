@@ -38,7 +38,29 @@ const createFormEditPointElement = (pointData) => {
     const listOfCities = CITIES.map((cityName) => createCity(cityName));
     return listOfCities.join();
   };
-  const generateIconLink = () => `img/icons/${pointData.event.toLowerCase()}.png`;
+  const addPhotos = () => {
+    const createPhoto = (photoLink) => `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
+    return pointData
+      .photos
+      .reduce((acc, photo) => {
+        acc += createPhoto(photo);
+        return acc;
+      }, '');
+  };
+  const generateIcon = () => {
+    const iconMarkup = `<img class="event__type-icon" width="17" height="17" src="img/icons/${pointData.event.toLowerCase()}.png" alt="Event type icon">`;
+    return iconMarkup;
+  };
+  const generatePrice = () => {
+    const initialPrice = pointData.price;
+    const extraOfferPrice = pointData
+      .offers.
+      reduce((acc, value) =>{
+        acc += value.price;
+        return acc;
+      }, 0);
+    return initialPrice + extraOfferPrice;
+  };
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -46,7 +68,7 @@ const createFormEditPointElement = (pointData) => {
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
-        <img class="event__type-icon" width="17" height="17" src="${generateIconLink()}" alt="Event type icon">
+        ${generateIcon()}
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -81,7 +103,7 @@ const createFormEditPointElement = (pointData) => {
     <span class="visually-hidden">Price</span>
         &euro;
         </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${pointData.price}">
+      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${generatePrice()}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -104,11 +126,7 @@ const createFormEditPointElement = (pointData) => {
       <p class="event__destination-description">${pointData.description}</p>
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+          ${addPhotos()}
         </div>
         </div>
       </section>
