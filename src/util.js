@@ -27,17 +27,13 @@ const getRandomFloat = (min, max, numOfdecimalPlace) => {
 const getTrueOrFalse = () => Boolean(getRandomInt(0, 1));
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
-const renderTemplate = (container, markup = '', place = RenderPosition.END) => {
-  container.insertAdjacentHTML(place, markup);
-};
-
 const createElement = (template) => {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = template;
   return wrapper.firstChild;
 };
 
-const renderElement = (container, element, place = RenderPosition.END) => {
+const render = (container, element, place = RenderPosition.END) => {
   switch (place) {
     case RenderPosition.START:
       container.prepend(element);
@@ -48,4 +44,4 @@ const renderElement = (container, element, place = RenderPosition.END) => {
   }
 };
 
-export {getRandomInt, getTrueOrFalse, getRandomFloat, capitalize, renderTemplate, createElement, renderElement, RenderPosition};
+export {getRandomInt, getTrueOrFalse, getRandomFloat, capitalize, createElement, render, RenderPosition};

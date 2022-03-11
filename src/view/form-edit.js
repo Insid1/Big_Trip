@@ -1,5 +1,5 @@
 import { EVENTS, CITIES } from '../const.js';
-import { capitalize } from '../util.js';
+import { capitalize, createElement } from '../util.js';
 
 const createFormEditPointElement = (pointData) => {
   const addOffers = () => {
@@ -102,9 +102,38 @@ const createFormEditPointElement = (pointData) => {
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${pointData.description}</p>
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+          <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
+          <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
+          <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
+          <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
+          <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+        </div>
+        </div>
       </section>
   </section>
   </form>
   </li>`;};
 
-export {createFormEditPointElement};
+export default class EditPoint {
+  constructor(pointData) {
+    this._pointData = pointData;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFormEditPointElement(this._pointData);
+  }
+
+  getElement() {
+    if (this._element === null) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

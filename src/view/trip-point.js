@@ -1,3 +1,5 @@
+import {createElement} from '../util.js';
+
 const createTripPoint = (pointData) => {
   const createIconLink = () => `img/icons/${pointData.event.toLowerCase()}.png`;
   const createFavorites = () => {
@@ -39,8 +41,7 @@ const createTripPoint = (pointData) => {
     }
   };
 
-  return `
-  <li class="trip-events__item">
+  return `<li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="${pointData.date.format('YYYY-MM-DD')}">${pointData.date.format('MMM D')}</time>
       <div class="event__type">
@@ -70,7 +71,25 @@ const createTripPoint = (pointData) => {
   </li>`;
 };
 
-const createTripList = () => `
-<ul class="trip-events__list"></ul>`;
+export default class TripPoint {
+  constructor(pointData) {
+    this._pointData = pointData;
+    this._element = null;
+  }
 
-export {createTripList, createTripPoint};
+  getTemplate() {
+    return createTripPoint(this._pointData);
+  }
+
+  getElement() {
+    if (this._element === null) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+}

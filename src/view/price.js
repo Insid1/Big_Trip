@@ -1,5 +1,7 @@
-const createSitePrice = (pointData) => {
-  const totalPrice = pointData.reduce((acc, curVal) => {
+import { createElement } from '../util';
+
+const createSitePrice = (data) => {
+  const totalPrice = data.reduce((acc, curVal) => {
     acc += curVal.price;
     return acc;
   }, 0);
@@ -8,4 +10,25 @@ const createSitePrice = (pointData) => {
 </p>
 `;};
 
-export {createSitePrice};
+export default class TotalPrice {
+  constructor(pointData) {
+    this._pointData = pointData;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSitePrice(this._pointData);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
