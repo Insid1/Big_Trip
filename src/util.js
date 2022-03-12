@@ -24,13 +24,15 @@ const getRandomFloat = (min, max, numOfdecimalPlace) => {
   return +randomNumber.toFixed(numOfdecimalPlace);
 };
 
+const getRandomValueFromArr = (arr) => arr[getRandomInt(0, arr.length -1)];
+
 const getTrueOrFalse = () => Boolean(getRandomInt(0, 1));
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
 const createElement = (template) => {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = template;
-  return wrapper.firstChild;
+  return wrapper.firstElementChild;
 };
 
 const render = (container, element, place = RenderPosition.END) => {
@@ -44,4 +46,4 @@ const render = (container, element, place = RenderPosition.END) => {
   }
 };
 
-export {getRandomInt, getTrueOrFalse, getRandomFloat, capitalize, createElement, render, RenderPosition};
+export {getRandomInt, getTrueOrFalse, getRandomFloat, getRandomValueFromArr, capitalize, createElement, render, RenderPosition};

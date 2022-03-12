@@ -81,7 +81,7 @@ const createTripPoint = (pointData) => {
   </li>`;
 };
 
-export default class TripPoint {
+export default class Point {
   constructor(pointData) {
     this._pointData = pointData;
     this._element = null;

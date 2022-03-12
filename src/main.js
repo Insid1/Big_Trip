@@ -1,14 +1,15 @@
 import { RenderPosition } from './util.js';
-import { pointData } from './mock/point-data.js';
+import { pointsData } from './mock/point-data.js';
 import SiteMenuView from './view/menu.js';
 import SiteFilterView from './view/filter.js';
 import SiteSortingView from './view/sorting.js';
 import TotalPrice from './view/price.js';
-import TripPointView from './view/trip-point.js';
+import PointView from './view/trip-point.js';
 import PointContainerView  from './view/point-container';
-import EditPointView from './view/form-edit.js';
+// import EditPointView from './view/form-edit.js';
 import TripInfoView from './view/trip-info.js';
 import { render } from './util.js';
+import EditPoint from './view/form-edit.js';
 
 const siteHeaderElement = document.querySelector('.page-header');
 const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
@@ -20,10 +21,10 @@ render(menuHeaderElement, new SiteMenuView().getElement());
 const filterHeaderElement = tripMainHeaderElement.querySelector('.trip-controls__filters');
 render(filterHeaderElement, new SiteFilterView().getElement());
 // adds trip info to header
-render(tripMainHeaderElement, new TripInfoView(pointData).getElement(), RenderPosition.START);
+render(tripMainHeaderElement, new TripInfoView(pointsData).getElement(), RenderPosition.START);
 // adds trip price to header
 const tripInfoHeaderElement = tripMainHeaderElement.querySelector('.trip-info');
-render(tripInfoHeaderElement, new TotalPrice(pointData).getElement());
+render(tripInfoHeaderElement, new TotalPrice(pointsData).getElement());
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
@@ -35,11 +36,42 @@ render(tripEventsElement, new PointContainerView().getElement(), RenderPosition.
 // gets trip-list element
 const tripListElement = siteMainElement.querySelector('.trip-events__list');
 // adds edit form and general points to list
-pointData.forEach((element, index) => {
-  if (index === 0) {
-    render(tripListElement, new EditPointView(element).getElement());} else {
-    render(tripListElement, new TripPointView(element).getElement());
-  }
-});
 
+const renderPoints = (data) => {
+  const renderPoint = (pointContainer, point) => {
+    const generalPointElement = new PointView(point).getElement();
+    const editorPointElement = new EditPoint(point).getElement();
+
+    const replaceWithEditPoint = () => {
+      pointContainer.replaceChild(editorPointElement, generalPointElement);
+    };
+    const replaceWithGeneralPoint = () => {
+      pointContainer.replaceChild(generalPointElement, editorPointElement);
+    };
+
+    generalPointElement
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', () => {
+        replaceWithEditPoint();
+      });
+    editorPointElement
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', () => {
+        replaceWithGeneralPoint();
+      });
+    editorPointElement.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceWithGeneralPoint();
+
+    });
+
+    render(pointContainer, generalPointElement);
+  };
+
+  data.forEach((element) => {
+    renderPoint(tripListElement, element);
+  });
+};
+
+renderPoints(pointsData);
 

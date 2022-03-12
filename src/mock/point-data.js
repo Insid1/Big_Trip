@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 // imports plugin duration from dayjs
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
-import { getRandomInt, capitalize, getTrueOrFalse } from '../util.js';
+import { getRandomInt, capitalize, getTrueOrFalse, getRandomValueFromArr } from '../util.js';
 
 const AMOUNT_OF_POINTS = 20;
 
@@ -15,7 +15,6 @@ const generateDate = () => {
     .add(daysToAdd, 'day')
     .add(hoursToAdd, 'hour')
     .add(minsToAdd, 'minute');
-  // console.log(date.format());
   return date;
 };
 const generateEvent = () => {
@@ -23,10 +22,7 @@ const generateEvent = () => {
 
   return capitalize(EVENTS[randNumFromRange]);
 };
-const generateCity = () => {
-  const randNumFromRange = getRandomInt(0, EVENTS.length -1);
-  return CITIES[randNumFromRange];
-};
+const generateCity = () => getRandomValueFromArr(CITIES);
 const generateDescription = () => {
   const sentences = TEXT.split('. ');
   const description = sentences.reduce((acc, currVal) => {
@@ -90,6 +86,6 @@ const createPoints = () => {
   return sortedData;
 };
 
-const pointData = createPoints();
+const pointsData = createPoints();
 
-export {pointData};
+export {pointsData};
