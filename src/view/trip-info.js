@@ -1,6 +1,7 @@
 import {createElement} from '../util.js';
 
 const createSiteTripInfo = (data) => {
+  if (data.length === 0) {return;}
   const createRoute = () => {
     const routeFrom = data[0].city;
     const routeTo = data[data.length-1].city;

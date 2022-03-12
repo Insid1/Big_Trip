@@ -1,30 +1,53 @@
-import { createElement } from '../util';
-const createSiteFilterTemplate = () => `<form class="trip-filters" action="#" method="get">
-<div class="trip-filters__filter">
-  <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-  <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-</div>
+import { createElement, capitalize, isDayExpired, isChecked } from '../util';
+const createFilterFormTemplate = (data) => {
+  const createFilterData = () => {
+    let numOfFuturePoints = 0;
+    let numOfPastPoints = 0;
+    data.forEach((value) => {
+      if (isDayExpired(value.date)) {
+        numOfPastPoints += 1;
+      } else {
+        numOfFuturePoints += 1;
+      }
+    });
+    const filterInfo = [
+      {
+        name: 'everything',
+        amount: data.length,
+        active: true,
+      },
+      {
+        name: 'future',
+        amount: numOfFuturePoints,
+        active: false,
+      },
+      {
+        name: 'past',
+        amount: numOfPastPoints,
+        active: false,
+      },
+    ];
+    return filterInfo;
+  };
+  const filteredData = createFilterData();
+  const createFilterTemplate = (name, amount, flag = true) => `<div class="trip-filters__filter">
+    <input id="filter-${name}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${name}" ${isChecked(flag)} >
+    <label class="trip-filters__filter-label" for="filter-${name}">${capitalize(name)} (${amount})</label>
+  </div>`;
+  const createFilters = () => filteredData.map(({name, amount, active}) => createFilterTemplate(name, amount, active)).join('');
 
-<div class="trip-filters__filter">
-  <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" disabled>
-  <label class="trip-filters__filter-label" for="filter-future">Future</label>
-</div>
-
-<div class="trip-filters__filter">
-  <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" disabled>
-  <label class="trip-filters__filter-label" for="filter-past">Past</label>
-</div>
-
-<button class="visually-hidden" type="submit">Accept filter</button>
-</form>`;
+  return `<form class="trip-filters" action="#" method="get">
+  ${createFilters()} </form>
+`;};
 
 export default class SiteFilter {
-  constructor() {
+  constructor(data) {
+    this.data = data;
     this._element = null;
   }
 
   getTemplate() {
-    return createSiteFilterTemplate();
+    return createFilterFormTemplate(this.data);
   }
 
   getElement() {

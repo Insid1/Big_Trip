@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const RenderPosition = {
   START: 'afterbegin',
   END: 'beforeend',
@@ -28,12 +30,17 @@ const getRandomValueFromArr = (arr) => arr[getRandomInt(0, arr.length -1)];
 
 const getTrueOrFalse = () => Boolean(getRandomInt(0, 1));
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
+const isChecked = (bool) => bool ? 'checked' : '';
+const isActive = (bool) => bool ? '' : 'disabled';
 
 const createElement = (template) => {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = template;
   return wrapper.firstElementChild;
 };
+
+const isDayExpired = (date) => date < dayjs();
+const isDayInFuture = (date) => date >= dayjs();
 
 const render = (container, element, place = RenderPosition.END) => {
   switch (place) {
@@ -46,4 +53,4 @@ const render = (container, element, place = RenderPosition.END) => {
   }
 };
 
-export {getRandomInt, getTrueOrFalse, getRandomFloat, getRandomValueFromArr, capitalize, createElement, render, RenderPosition};
+export {getRandomInt, getTrueOrFalse, getRandomFloat, getRandomValueFromArr, capitalize, createElement, render, RenderPosition, isDayExpired, isDayInFuture, isChecked, isActive};

@@ -6,8 +6,8 @@ import SiteSortingView from './view/sorting.js';
 import TotalPrice from './view/price.js';
 import PointView from './view/trip-point.js';
 import PointContainerView  from './view/point-container';
-// import EditPointView from './view/form-edit.js';
 import TripInfoView from './view/trip-info.js';
+import NoPointMessage from './view/no-point-message.js';
 import { render } from './util.js';
 import EditPoint from './view/form-edit.js';
 
@@ -19,16 +19,13 @@ const menuHeaderElement = tripMainHeaderElement.querySelector('.trip-controls__n
 render(menuHeaderElement, new SiteMenuView().getElement());
 // adds filter to header menu
 const filterHeaderElement = tripMainHeaderElement.querySelector('.trip-controls__filters');
-render(filterHeaderElement, new SiteFilterView().getElement());
+render(filterHeaderElement, new SiteFilterView(pointsData).getElement());
 // adds trip info to header
-render(tripMainHeaderElement, new TripInfoView(pointsData).getElement(), RenderPosition.START);
-// adds trip price to header
-const tripInfoHeaderElement = tripMainHeaderElement.querySelector('.trip-info');
-render(tripInfoHeaderElement, new TotalPrice(pointsData).getElement());
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
+
 // ads sorting form to main body
 render(tripEventsElement, new SiteSortingView().getElement(), RenderPosition.START);
 // ads ul for events to main body
@@ -41,18 +38,25 @@ const renderPoints = (data) => {
   const renderPoint = (pointContainer, point) => {
     const generalPointElement = new PointView(point).getElement();
     const editorPointElement = new EditPoint(point).getElement();
-
     const replaceWithEditPoint = () => {
       pointContainer.replaceChild(editorPointElement, generalPointElement);
     };
     const replaceWithGeneralPoint = () => {
       pointContainer.replaceChild(generalPointElement, editorPointElement);
     };
+    const onEscDown = (evt) => {
+      if (evt.key === 'Esc' || evt.key === 'Escape' ) {
+        evt.preventDefault();
+        replaceWithGeneralPoint();
+        document.removeEventListener('keydown', onEscDown);
+      }
+    };
 
     generalPointElement
       .querySelector('.event__rollup-btn')
       .addEventListener('click', () => {
         replaceWithEditPoint();
+        document.addEventListener('keydown', onEscDown);
       });
     editorPointElement
       .querySelector('.event__rollup-btn')
@@ -72,6 +76,14 @@ const renderPoints = (data) => {
     renderPoint(tripListElement, element);
   });
 };
+if (pointsData) {
+  render(tripEventsElement, new NoPointMessage(pointsData).getElement());
+} else {
+  render(tripMainHeaderElement, new TripInfoView(pointsData).getElement(), RenderPosition.START);
+  // adds trip price to header
+  const tripInfoHeaderElement = tripMainHeaderElement.querySelector('.trip-info');
+  render(tripInfoHeaderElement, new TotalPrice(pointsData).getElement());
+  renderPoints(pointsData);
+}
 
-renderPoints(pointsData);
 
