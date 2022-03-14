@@ -5,7 +5,7 @@ import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 import { getRandomInt, capitalize, getTrueOrFalse, getRandomValueFromArr } from '../util.js';
 
-const AMOUNT_OF_POINTS = 0;
+const AMOUNT_OF_POINTS = 20;
 
 const generateDate = () => {
   const daysToAdd = getRandomInt(DATE_RANGE.DAY.MIN, DATE_RANGE.DAY.MAX);
@@ -83,7 +83,7 @@ const createPoints = () => {
     .fill()
     .map(createPointTemplate)
     .sort((a, b) => a.date > b.date ? 1 : -1);
-  return sortedData;
+  return AMOUNT_OF_POINTS ? sortedData : []; // if no data return empty list
 };
 
 const pointsData = createPoints();
