@@ -1,4 +1,4 @@
-import { createElement } from '../util/point.js';
+import { createElement } from '../util/render';
 
 export default class AbstractElement {
   constructor() {
