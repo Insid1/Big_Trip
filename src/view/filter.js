@@ -1,5 +1,6 @@
-import { capitalize, isDayExpired, isChecked } from '../util';
-import AbstractElement from './abstract-element';
+import AbstractElement from './abstract-element.js';
+import {capitalize} from '../util/common.js';
+import {isChecked, isDayExpired} from '../util/point.js';
 const createFilterFormTemplate = (data) => {
   const createFilterData = () => {
     let numOfFuturePoints = 0;

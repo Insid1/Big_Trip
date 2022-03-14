@@ -1,5 +1,5 @@
 import { EVENTS, CITIES } from '../const.js';
-import { capitalize } from '../util.js';
+import { capitalize } from '../util/common';
 import AbstractElement from './abstract-element.js';
 
 const createFormEditPointElement = (pointData) => {

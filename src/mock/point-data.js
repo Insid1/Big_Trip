@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 // imports plugin duration from dayjs
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
-import { getRandomInt, capitalize, getTrueOrFalse, getRandomValueFromArr } from '../util.js';
+import { getRandomInt, capitalize, getTrueOrFalse, getRandomValueFromArr } from '../util/common.js';
 
 const AMOUNT_OF_POINTS = 20;
 

@@ -1,4 +1,4 @@
-import { RenderPosition } from './util.js';
+import { RenderPosition } from './util/render.js';
 import { pointsData } from './mock/point-data.js';
 import SiteMenuView from './view/menu.js';
 import SiteFilterView from './view/filter.js';
@@ -8,7 +8,7 @@ import PointView from './view/trip-point.js';
 import PointContainerView  from './view/point-container';
 import TripInfoView from './view/trip-info.js';
 import NoPointMessage from './view/no-point-message.js';
-import { render } from './util.js';
+import { render } from './util/render.js';
 import EditPoint from './view/form-edit.js';
 
 const siteHeaderElement = document.querySelector('.page-header');
