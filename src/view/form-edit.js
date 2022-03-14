@@ -1,5 +1,6 @@
 import { EVENTS, CITIES } from '../const.js';
-import { capitalize, createElement } from '../util.js';
+import { capitalize } from '../util.js';
+import AbstractElement from './abstract-element.js';
 
 const createFormEditPointElement = (pointData) => {
   const addOffers = () => {
@@ -134,24 +135,14 @@ const createFormEditPointElement = (pointData) => {
   </form>
   </li>`;};
 
-export default class EditPoint {
+export default class EditPoint extends AbstractElement {
   constructor(pointData) {
+    super();
     this._pointData = pointData;
-    this._element = null;
   }
 
   getTemplate() {
     return createFormEditPointElement(this._pointData);
   }
 
-  getElement() {
-    if (this._element === null) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

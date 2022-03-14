@@ -1,4 +1,4 @@
-import { createElement } from '../util';
+import AbstractElement from './abstract-element';
 
 const createSitePrice = (data) => {
   const totalPrice = data.reduce((acc, curVal) => {
@@ -10,25 +10,14 @@ const createSitePrice = (data) => {
 </p>
 `;};
 
-export default class TotalPrice {
+export default class TotalPrice extends AbstractElement {
   constructor(pointData) {
+    super();
     this._pointData = pointData;
-    this._element = null;
   }
 
   getTemplate() {
     return createSitePrice(this._pointData);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

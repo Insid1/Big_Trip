@@ -1,4 +1,4 @@
-import {createElement} from '../util.js';
+import AbstractElement from './abstract-element.js';
 
 const createTripPoint = (pointData) => {
   const createIconLink = () => `img/icons/${pointData.event.toLowerCase()}.png`;
@@ -81,25 +81,14 @@ const createTripPoint = (pointData) => {
   </li>`;
 };
 
-export default class Point {
+export default class Point extends AbstractElement{
   constructor(pointData) {
+    super();
     this._pointData = pointData;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripPoint(this._pointData);
-  }
-
-  getElement() {
-    if (this._element === null) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
 }

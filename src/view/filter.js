@@ -1,4 +1,5 @@
-import { createElement, capitalize, isDayExpired, isChecked } from '../util';
+import { capitalize, isDayExpired, isChecked } from '../util';
+import AbstractElement from './abstract-element';
 const createFilterFormTemplate = (data) => {
   const createFilterData = () => {
     let numOfFuturePoints = 0;
@@ -40,25 +41,15 @@ const createFilterFormTemplate = (data) => {
   ${createFilters()} </form>
 `;};
 
-export default class SiteFilter {
+export default class SiteFilter extends AbstractElement{
   constructor(data) {
+    super();
     this.data = data;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilterFormTemplate(this.data);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
 

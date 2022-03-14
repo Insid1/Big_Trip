@@ -1,4 +1,4 @@
-import {createElement} from '../util.js';
+import AbstractElement from './abstract-element';
 
 const createSiteTripInfo = (data) => {
   if (data.length === 0) {return;}
@@ -28,24 +28,13 @@ const createSiteTripInfo = (data) => {
   </section>`;
 };
 
-export default class TripInfo {
+export default class TripInfo extends AbstractElement {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
   }
 
   getTemplate() {
     return createSiteTripInfo(this._data);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
