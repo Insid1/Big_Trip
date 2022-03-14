@@ -12,4 +12,8 @@ const createElement = (template) => {
 const isDayExpired = (date) => date < dayjs();
 const isDayInFuture = (date) => date >= dayjs();
 
-export {isActive, isChecked, createElement, isDayExpired, isDayInFuture};
+const replaceComponentWith = (container, newElement, oldElement) => {
+  container.replaceChild(newElement.getElement(), oldElement.getElement());
+};
+
+export {isActive, isChecked, createElement, isDayExpired, isDayInFuture, replaceComponentWith};

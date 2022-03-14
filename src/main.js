@@ -1,4 +1,4 @@
-import { RenderPosition } from './util/render.js';
+import {render, RenderPosition } from './util/render.js';
 import { pointsData } from './mock/point-data.js';
 import SiteMenuView from './view/menu.js';
 import SiteFilterView from './view/filter.js';
@@ -8,7 +8,7 @@ import PointView from './view/trip-point.js';
 import PointContainerView  from './view/point-container';
 import TripInfoView from './view/trip-info.js';
 import NoPointMessage from './view/no-point-message.js';
-import { render } from './util/render.js';
+import { replaceComponentWith } from './util/point.js';
 import EditPoint from './view/form-edit.js';
 
 const siteHeaderElement = document.querySelector('.page-header');
@@ -39,40 +39,25 @@ if (pointsData.length === 0) {
   // adds edit form and general points to list
   const renderPoints = (data) => {
     const renderPoint = (pointContainer, point) => {
-      const generalPointElement = new PointView(point).getElement();
-      const editorPointElement = new EditPoint(point).getElement();
-      const replaceWithEditPoint = () => {
-        pointContainer.replaceChild(editorPointElement, generalPointElement);
-      };
-      const replaceWithGeneralPoint = () => {
-        pointContainer.replaceChild(generalPointElement, editorPointElement);
-      };
-      const onEscDown = (evt) => {
-        if (evt.key === 'Esc' || evt.key === 'Escape' ) {
-          evt.preventDefault();
-          replaceWithGeneralPoint();
-          document.removeEventListener('keydown', onEscDown);
-        }
-      };
-
-      generalPointElement
-        .querySelector('.event__rollup-btn')
-        .addEventListener('click', () => {
-          replaceWithEditPoint();
-          document.addEventListener('keydown', onEscDown);
+      const generalPoint = new PointView(point);
+      const editPoint = new EditPoint(point);
+      generalPoint.setClickHandler(() => {
+        replaceComponentWith(pointContainer, editPoint, generalPoint);
+        editPoint.setEscHandler(() => {
+          replaceComponentWith(pointContainer,generalPoint, editPoint);
+          editPoint.removeEscHandler();
         });
-      editorPointElement
-        .querySelector('.event__rollup-btn')
-        .addEventListener('click', () => {
-          replaceWithGeneralPoint();
-        });
-      editorPointElement.addEventListener('submit', (evt) => {
-        evt.preventDefault();
-        replaceWithGeneralPoint();
-
+      });
+      editPoint.setClickHandler(() => {
+        replaceComponentWith(pointContainer, generalPoint, editPoint);
+        editPoint.removeEscHandler();
+      });
+      editPoint.setSubmitHandler(() => {
+        replaceComponentWith(pointContainer, generalPoint, editPoint);
+        editPoint.removeEscHandler();
       });
 
-      render(pointContainer, generalPointElement);
+      render(pointContainer, generalPoint.getElement());
     };
 
     data.forEach((element) => {

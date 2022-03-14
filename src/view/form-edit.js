@@ -139,6 +139,62 @@ export default class EditPoint extends AbstractElement {
   constructor(pointData) {
     super();
     this._pointData = pointData;
+    this._clickHandler = this._clickHandler.bind(this);
+    this._submitHandler = this._clickHandler.bind(this);
+    this._escHandler = this._escHandler.bind(this);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  _escHandler(evt) {
+    if (evt.key === 'Esc' || evt.key === 'Escape') {
+      evt.preventDefault();
+      this._callback.esc();
+    }
+  }
+
+  setClickHandler(cb) {
+    this._callback.click = cb;
+    this
+      .getElement()
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click' , this._clickHandler);
+  }
+
+  setSubmitHandler(cb) {
+    this._callback.submit = cb;
+    this.getElement()
+      .addEventListener('submit', this._submitHandler);
+  }
+
+  setEscHandler(cb) {
+    this._callback.esc = cb;
+    document.addEventListener('keydown', this._escHandler);
+  }
+
+  removeClickHandler() {
+    this
+      .getElement()
+      .querySelector('.event__rollup-btn')
+      .removeEventListener('click', this._clickHandler);
+  }
+
+  removeSubmitHandler() {
+    this
+      .getElement()
+      .removeEventListener('submit', this._submitHandler);
+  }
+
+  removeEscHandler() {
+    document.removeEventListener('keydown', this._escHandler);
   }
 
   getTemplate() {
