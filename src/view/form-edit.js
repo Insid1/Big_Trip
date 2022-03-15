@@ -141,7 +141,6 @@ export default class EditPoint extends AbstractElement {
     this._pointData = pointData;
     this._clickHandler = this._clickHandler.bind(this);
     this._submitHandler = this._clickHandler.bind(this);
-    this._escHandler = this._escHandler.bind(this);
   }
 
   _clickHandler(evt) {
@@ -152,13 +151,6 @@ export default class EditPoint extends AbstractElement {
   _submitHandler(evt) {
     evt.preventDefault();
     this._callback.submit();
-  }
-
-  _escHandler(evt) {
-    if (evt.key === 'Esc' || evt.key === 'Escape') {
-      evt.preventDefault();
-      this._callback.esc();
-    }
   }
 
   setClickHandler(cb) {
@@ -175,11 +167,6 @@ export default class EditPoint extends AbstractElement {
       .addEventListener('submit', this._submitHandler);
   }
 
-  setEscHandler(cb) {
-    this._callback.esc = cb;
-    document.addEventListener('keydown', this._escHandler);
-  }
-
   removeClickHandler() {
     this
       .getElement()
@@ -191,10 +178,6 @@ export default class EditPoint extends AbstractElement {
     this
       .getElement()
       .removeEventListener('submit', this._submitHandler);
-  }
-
-  removeEscHandler() {
-    document.removeEventListener('keydown', this._escHandler);
   }
 
   getTemplate() {
