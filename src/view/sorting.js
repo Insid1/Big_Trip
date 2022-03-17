@@ -1,8 +1,9 @@
 import AbstractElement from './abstract-element';
+import { SORT_TYPE } from '../const';
 
 const createSiteSortingTemplate = () => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
   <div class="trip-sort__item  trip-sort__item--day">
-    <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
+    <input id="sort-day" data-sort-type="${SORT_TYPE.DATE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
     <label class="trip-sort__btn" for="sort-day">Day</label>
   </div>
 
@@ -12,12 +13,12 @@ const createSiteSortingTemplate = () => `<form class="trip-events__trip-sort  tr
   </div>
 
   <div class="trip-sort__item  trip-sort__item--time">
-    <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
+    <input id="sort-time" data-sort-type="${SORT_TYPE.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
     <label class="trip-sort__btn" for="sort-time">Time</label>
   </div>
 
   <div class="trip-sort__item  trip-sort__item--price">
-    <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
+    <input id="sort-price" data-sort-type="${SORT_TYPE.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
     <label class="trip-sort__btn" for="sort-price">Price</label>
   </div>
 
@@ -31,46 +32,28 @@ export default class SiteSorting extends AbstractElement{
   constructor() {
     super();
     this._callback = {};
-    this._dayClickHandler = this._dayClickHandler.bind(this);
-    this._timeClickHandler = this._timeClickHandler.bind(this);
-    this._priceClickHandler = this._priceClickHandler.bind(this);
+    this._sortClickHandler = this._sortClickHandler.bind(this);
   }
 
   getTemplate() {
     return createSiteSortingTemplate();
   }
 
-  setDayClick(cb) {
-    this._callback.dayClick = cb;
-    this.getElement()
-      .querySelector('#sort-day')
-      .addEventListener('click', this._dayClickHandler);
+  setSortClick(cb) {
+    this._callback.sortClick = cb;
+    this.getElement().addEventListener('click', this._sortClickHandler);
   }
 
-  setTimeClick(cb) {
-    this._callback.timeClick = cb;
-    this.getElement()
-      .querySelector('#sort-time')
-      .addEventListener('click', this._timeClickHandler);
+  _sortClickHandler(evt) {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+
+    this._callback.sortClick(evt.target.dataset.sortType);
   }
 
-  setPriceClick(cb) {
-    this._callback.priceClick = cb;
-    this.getElement()
-      .querySelector('#sort-price')
-      .addEventListener('click', this._priceClickHandler);
-  }
-
-  _dayClickHandler() {
-    this._callback.dayClick();
-  }
-
-  _timeClickHandler() {
-    this._callback.timeClick();
-  }
-
-  _priceClickHandler() {
-    this._callback.priceClick();
+  _removeSortClick() {
+    this.getElement().removeEventListener('click', this._sortClickHandler);
   }
 
 }

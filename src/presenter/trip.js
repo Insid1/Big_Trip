@@ -1,5 +1,4 @@
 import {render, RenderPosition } from '../util/render.js';
-// import { replace } from '../util/render';
 // import SiteMenuView from './view/menu.js';
 // import SiteFilterView from './view/filter.js';
 import { updateItem } from '../util/common.js';
@@ -11,6 +10,8 @@ import PointContainerView  from '../view/point-container';
 import PointPresenter from './point.js';
 // import TripInfoView from './view/trip-info.js';
 import NoPointView from '../view/no-point.js';
+import { SORT_TYPE } from '../const.js';
+import { sortByDate, sortByPrice, sortByTime } from '../util/point.js';
 
 export default class Trip {
   constructor(tripContainer) {
@@ -21,18 +22,15 @@ export default class Trip {
     this._pointPresenter = {};
     this._handleChangeData = this._handleChangeData.bind(this);
     this._handleChangeMode = this._handleChangeMode.bind(this);
-    this._handleDayClick = this._handleDayClick.bind(this);
-    this._handleTimeClick = this._handleTimeClick.bind(this);
-    this._handlePriceClick = this._handlePriceClick.bind(this);
+    this._handleSortClick = this._handleSortClick.bind(this);
+    this._currentSortType = null;
   }
 
   init(tripPointsData) {
     this._tripPoints = tripPointsData.slice();
     this._renderTrip();
+    this._sortingComponent.setSortClick(this._handleSortClick);
 
-    this._sortingComponent.setDayClick(this._handleDayClick);
-    this._sortingComponent.setTimeClick(this._handleTimeClick);
-    this._sortingComponent.setPriceClick(this._handlePriceClick);
   }
 
   _clearPointList() {
@@ -42,54 +40,40 @@ export default class Trip {
     this._pointPresenter = {};
   }
 
-  _isSorted() {
-    return this._tripPoints.every((element, index) => element === this._prevTripPoints[index]);
-  }
+  _sortBy(sortType) {
 
-  _sortByDay() {
-    this._prevTripPoints = this._tripPoints;
-    const sortedPointsData = this._tripPoints.slice();
-    sortedPointsData.sort((a ,b )=> a.date - b.date);
-    this._tripPoints = sortedPointsData;
-  }
-
-  _sortByTime() {
-    this._prevTripPoints = this._tripPoints;
-    const sortedPointsData = this._tripPoints.slice();
-    sortedPointsData.sort((a ,b )=> a.pointDuration.as('milliseconds') - b.pointDuration.as('milliseconds'));
-    this._tripPoints = sortedPointsData;
-  }
-
-  _sortByPrice() {
-    this._prevTripPoints = this._tripPoints;
-    const sortedPointsData = this._tripPoints.slice();
-    sortedPointsData.sort((a ,b )=> a.price - b.price);
-    this._tripPoints = sortedPointsData;
-  }
-
-  _handleDayClick() {
-    this._sortByDay();
-    if (this._isSorted()) {
+    if (this._currentSortType === sortType) {
       return;
     }
-    this._clearPointList();
-    this._renderPoints();
+
+    this._currentSortType = sortType;
+
+    switch (sortType) {
+      case SORT_TYPE.DATE:
+        this._tripPoints = this._tripPoints
+          .slice()
+          .sort(sortByDate);
+        break;
+      case SORT_TYPE.TIME:
+        this._tripPoints = this._tripPoints
+          .slice()
+          .sort(sortByTime);
+        break;
+      case SORT_TYPE.PRICE:
+        this._tripPoints = this._tripPoints
+          .slice()
+          .sort(sortByPrice);
+        break;
+    }
+
   }
 
-  _handleTimeClick() {
-    this._sortByTime();
-    if (this._isSorted()) {
-      return;
-    }
-    this._clearPointList();
-    this._renderPoints();
-  }
+  _handleSortClick(sortType) {
 
-  _handlePriceClick() {
-    this._sortByPrice();
-    if (this._isSorted()) {
+    if (sortType === this._currentSortType) {
       return;
     }
+    this._sortBy(sortType);
     this._clearPointList();
     this._renderPoints();
   }
@@ -110,6 +94,7 @@ export default class Trip {
   }
 
   _renderPoints() {
+    this._sortBy(SORT_TYPE.DATE);
     this._tripPoints.forEach((element) => {
       this._renderPoint(element);
     });
