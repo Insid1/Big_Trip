@@ -52,16 +52,6 @@ const createFormEditPointElement = (pointData) => {
     const iconMarkup = `<img class="event__type-icon" width="17" height="17" src="img/icons/${pointData.event.toLowerCase()}.png" alt="Event type icon">`;
     return iconMarkup;
   };
-  const generatePrice = () => {
-    const initialPrice = pointData.price;
-    const extraOfferPrice = pointData
-      .offers.
-      reduce((acc, value) =>{
-        acc += value.price;
-        return acc;
-      }, 0);
-    return initialPrice + extraOfferPrice;
-  };
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -104,7 +94,7 @@ const createFormEditPointElement = (pointData) => {
     <span class="visually-hidden">Price</span>
         &euro;
         </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${generatePrice()}">
+      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${pointData.price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

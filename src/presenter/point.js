@@ -1,5 +1,5 @@
 import PointView from '../view/trip-point.js';
-import EditPointView from '../view/form-edit.js';
+import EditPointView from '../view/trip-point-edit.js';
 import { render, replace, remove } from '../util/render';
 
 const Mode = {

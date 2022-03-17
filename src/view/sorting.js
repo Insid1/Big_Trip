@@ -28,9 +28,49 @@ const createSiteSortingTemplate = () => `<form class="trip-events__trip-sort  tr
 </form>`;
 
 export default class SiteSorting extends AbstractElement{
+  constructor() {
+    super();
+    this._callback = {};
+    this._dayClickHandler = this._dayClickHandler.bind(this);
+    this._timeClickHandler = this._timeClickHandler.bind(this);
+    this._priceClickHandler = this._priceClickHandler.bind(this);
+  }
 
   getTemplate() {
     return createSiteSortingTemplate();
+  }
+
+  setDayClick(cb) {
+    this._callback.dayClick = cb;
+    this.getElement()
+      .querySelector('#sort-day')
+      .addEventListener('click', this._dayClickHandler);
+  }
+
+  setTimeClick(cb) {
+    this._callback.timeClick = cb;
+    this.getElement()
+      .querySelector('#sort-time')
+      .addEventListener('click', this._timeClickHandler);
+  }
+
+  setPriceClick(cb) {
+    this._callback.priceClick = cb;
+    this.getElement()
+      .querySelector('#sort-price')
+      .addEventListener('click', this._priceClickHandler);
+  }
+
+  _dayClickHandler() {
+    this._callback.dayClick();
+  }
+
+  _timeClickHandler() {
+    this._callback.timeClick();
+  }
+
+  _priceClickHandler() {
+    this._callback.priceClick();
   }
 
 }
