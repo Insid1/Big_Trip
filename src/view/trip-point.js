@@ -86,11 +86,17 @@ export default class Point extends AbstractElement{
     super();
     this._pointData = pointData;
     this._clickHandler = this._clickHandler.bind(this);
+    this._clickFavoriteHandler = this._clickFavoriteHandler.bind(this);
   }
 
   _clickHandler(evt) { // save callback for handler
     evt.preventDefault();
     this._callback.click();
+  }
+
+  _clickFavoriteHandler(evt) { // save callback for handler
+    evt.preventDefault();
+    this._callback.clickFavorite();
   }
 
   setClickHandler(cb) {
@@ -100,10 +106,24 @@ export default class Point extends AbstractElement{
       .addEventListener('click',this._clickHandler);
   }
 
+  setClickFavoriteHandler(cb) {
+    this._callback.clickFavorite = cb;
+    this.getElement()
+      .querySelector('.event__favorite-btn')
+      .addEventListener('click', this._clickFavoriteHandler);
+  }
+
   removeClickHandler() {
     this.getElement()
       .querySelector('.event__rollup-btn')
       .removeEventListener('click', this._clickHandler);
+  }
+
+  removeClickFavoriteHandler() {
+    this
+      .getElement()
+      .querySelector('.event__favorite-btn')
+      .removeEventListener('click', this._clickFavoriteHandler);
   }
 
   getTemplate() {

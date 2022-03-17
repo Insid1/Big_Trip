@@ -21,4 +21,3 @@ render(filterHeaderElement, new SiteFilterView(pointsData), RenderPosition.END);
 const tripPresenter = new TripPresenter(tripEventsElement);
 tripPresenter.init(pointsData);
 
-

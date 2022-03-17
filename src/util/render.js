@@ -20,6 +20,8 @@ const render = (container, element, place = RenderPosition.END) => {
     case RenderPosition.END:
       container.append(element);
       break;
+    default:
+      throw Error(`unknown render position ${place}`);
   }
 };
 

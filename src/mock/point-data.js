@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 // imports plugin duration from dayjs
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
+import { nanoid } from 'nanoid';
 import { getRandomInt, capitalize, getTrueOrFalse, getRandomValueFromArr } from '../util/common.js';
 
 const AMOUNT_OF_POINTS = 20;
@@ -67,6 +68,7 @@ const createPoints = () => {
 
     const templatePoint = {
       date: day,
+      id: nanoid(),
       event,
       city: generateCity(),
       toTime: generateToTime(),
