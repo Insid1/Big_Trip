@@ -29,6 +29,7 @@ export default class Trip {
   init(tripPointsData) {
     this._tripPoints = tripPointsData.slice();
     this._renderTrip();
+
     this._sortingComponent.setSortClick(this._handleSortClick);
 
   }
@@ -68,14 +69,11 @@ export default class Trip {
 
   }
 
-  _handleSortClick(sortType) {
-
-    if (sortType === this._currentSortType) {
+  _handleSortClick(type) {
+    if (type === this._currentSortType) {
       return;
     }
-    this._sortBy(sortType);
-    this._clearPointList();
-    this._renderPoints();
+    this._renderSortedPoints(type);
   }
 
   _renderSorting() {
@@ -84,7 +82,6 @@ export default class Trip {
 
   _renderPointList() {
     render(this._tripContainer, this._tripListComponent, RenderPosition.END);
-    this._renderPoints();
   }
 
   _renderPoint(pointData) {
@@ -93,8 +90,13 @@ export default class Trip {
     this._pointPresenter[pointData.id] = pointPresenter;
   }
 
+  _renderSortedPoints(sortType) {
+    this._sortBy(sortType);
+    this._clearPointList();
+    this._renderPoints();
+  }
+
   _renderPoints() {
-    this._sortBy(SORT_TYPE.DATE);
     this._tripPoints.forEach((element) => {
       this._renderPoint(element);
     });
@@ -108,6 +110,7 @@ export default class Trip {
   _renderTrip() {
     this._renderSorting();
     this._renderPointList();
+    this._renderSortedPoints(SORT_TYPE.DATE);
   }
 
   _handleChangeData(updatedPoint) {
