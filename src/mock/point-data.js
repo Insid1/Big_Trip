@@ -1,4 +1,4 @@
-import {EVENTS, CITIES, PRICE_RANGE, TEXT, OFFER_LENGTH_RANGE, DATE_RANGE, DURATION_RANGE} from '../const.js';
+import {EVENTS, CITIES, PRICE_RANGE, TEXT, DATE_RANGE, DURATION_RANGE} from '../const.js';
 import dayjs from 'dayjs';
 // imports plugin duration from dayjs
 import duration from 'dayjs/plugin/duration';
@@ -6,9 +6,28 @@ dayjs.extend(duration);
 import { nanoid } from 'nanoid';
 import { getRandomInt, capitalize, getTrueOrFalse, getRandomValueFromArr } from '../util/common.js';
 
-const AMOUNT_OF_POINTS = 20;
+const AMOUNT_OF_POINTS = 5;
+const AMOUNT_OF_OFFERS = 6;
+
+
+const createOffersForEvent = () => {
+  const offersForEvent = {};
+  const createOffer = (eventName) => ({
+    id: getRandomInt(1, 10000),
+    name: eventName,
+    price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
+    checked: false,
+  });
+  EVENTS.forEach((value) => {
+    const arrOfOffers = new Array(AMOUNT_OF_OFFERS).fill().map(() => (createOffer(value)));
+    offersForEvent[value] = arrOfOffers;
+  });
+  return offersForEvent;
+};
+
 
 const createPoints = () => {
+  const offersForEvent = createOffersForEvent();
   const createPointTemplate = () => {
 
     const templatePoint = {
@@ -19,6 +38,7 @@ const createPoints = () => {
       toTime: null,
       pointDuration: null,
       price: null,
+      offersForEvent,
       offers: [],
       favorite: getTrueOrFalse(),
       description: null,
@@ -61,18 +81,12 @@ const createPoints = () => {
       },
 
       generateOffers() {
-        const createOffer = () => {
-          const offer =  {
-            id: getRandomInt(1, 10000),
-            name: this.event,
-            price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
-            checked: getTrueOrFalse(),
-          };
-          return offer;
-        };
-        const numOfOffers = getRandomInt(OFFER_LENGTH_RANGE.MIN, OFFER_LENGTH_RANGE.MAX);
-        const offers = new Array(numOfOffers).fill().map(createOffer);
-        this.offers = offers;
+        const currOffers = this.offersForEvent[this.event.toLowerCase()].slice();
+        currOffers.forEach((offer, index) => {
+          currOffers[index] = Object.assign({}, offer, {checked: getTrueOrFalse()});
+
+        });
+        this.offers = currOffers;
       },
 
       generatePrice() {

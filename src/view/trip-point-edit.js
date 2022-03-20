@@ -1,6 +1,6 @@
 import { EVENTS, CITIES } from '../const.js';
 import { capitalize } from '../util/common';
-import AbstractElement from './abstract-element.js';
+import Smart from './smart.js';
 
 const createFormEditPointElement = (pointData) => {
   const addOffers = () => {
@@ -18,7 +18,7 @@ const createFormEditPointElement = (pointData) => {
     };
 
     const offersElement = offers.map((element) => addOffer(element));
-    return offersElement.join();
+    return offersElement.join('');
 
   };
   const addListOfEvents = () => {
@@ -125,7 +125,7 @@ const createFormEditPointElement = (pointData) => {
   </form>
   </li>`;};
 
-export default class EditPoint extends AbstractElement {
+export default class EditPoint extends Smart {
   constructor(pointData) {
     super();
     this._pointData = pointData;
