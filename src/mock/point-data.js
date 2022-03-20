@@ -19,15 +19,51 @@ const createOffersForEvent = () => {
     checked: false,
   });
   EVENTS.forEach((value) => {
-    const arrOfOffers = new Array(AMOUNT_OF_OFFERS).fill().map(() => (createOffer(value)));
+    const arrOfOffers = new Array(AMOUNT_OF_OFFERS)
+      .fill()
+      .map(() => (createOffer(value)));
     offersForEvent[value] = arrOfOffers;
   });
   return offersForEvent;
 };
 
+const createPhotosForCities = () => {
+  const photosForCities = {};
+  const createPhotosForCity = () => {
+    const numOfPhotos = getRandomInt(1, 8);
+    const photos = new Array(numOfPhotos)
+      .fill()
+      .map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
+    return photos ;
+  };
+
+  CITIES.forEach((value) => {
+    photosForCities[value] = createPhotosForCity();
+  });
+
+  return photosForCities;
+};
+
+const createDescriptionForCities = () => {
+  const descriptionsForCities = {};
+  const sentences = TEXT.split('. ');
+  const createDescriptionForCity = () => sentences.reduce((acc, currVal) => {
+    if (getTrueOrFalse()) {
+      acc = `${acc}. ${currVal}`;
+    }
+    return acc;
+  });
+  CITIES.forEach((value) => {
+    descriptionsForCities[value] = createDescriptionForCity();
+  });
+  return descriptionsForCities;
+};
+
 
 const createPoints = () => {
   const offersForEvent = createOffersForEvent();
+  const photosForCities = createPhotosForCities();
+  const descriptionsForCities = createDescriptionForCities();
   const createPointTemplate = () => {
 
     const templatePoint = {
@@ -42,12 +78,14 @@ const createPoints = () => {
       offers: [],
       favorite: getTrueOrFalse(),
       description: null,
-      photos: [],
+      descriptionsForCities,
+      photosForCities,
+      photos: null,
 
       init() {
         this.generateCity();
-        this.generatePhotos();
-        this.generateDescription();
+        // this.generatePhotos();
+        // this.generateDescription();
         // --- order matters ---
         this.generateDate();
         this.generateDuration();
@@ -55,8 +93,6 @@ const createPoints = () => {
         // --- order matters ---
         this.generateToTime();
         this.generateEvent();
-        this.generateOffers();
-        this.generatePrice();
         // --- End ---
 
       },
@@ -65,46 +101,8 @@ const createPoints = () => {
         this.city = getRandomValueFromArr(CITIES);
       },
 
-      generateDescription() {
-        const sentences = TEXT.split('. ');
-        const description = sentences.reduce((acc, currVal) => {
-          if (getTrueOrFalse()) {
-            acc = `${acc}. ${currVal}`;
-          }
-          return acc;
-        });
-        this.description = description;
-      },
-
       generateEvent() {
         this.event = capitalize(getRandomValueFromArr(EVENTS));
-      },
-
-      generateOffers() {
-        const currOffers = this.offersForEvent[this.event.toLowerCase()].slice();
-        currOffers.forEach((offer, index) => {
-          currOffers[index] = Object.assign({}, offer, {checked: getTrueOrFalse()});
-
-        });
-        this.offers = currOffers;
-      },
-
-      generatePrice() {
-        const initialPrice = getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX);
-        const priceFromOffres = this.offers.reduce((acc, currVal) => {
-          if (currVal.checked) {
-            acc += currVal.price;
-          }
-          return acc;
-        }, 0);
-        this.price = initialPrice + priceFromOffres;
-      },
-
-      generatePhotos() {
-        const numOfPhotos = getRandomInt(1, 8);
-        this.photos = new Array(numOfPhotos)
-          .fill()
-          .map((value, index) => `http://picsum.photos/248/152?r=${index}`);
       },
 
       generateDate() {

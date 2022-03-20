@@ -1,15 +1,48 @@
-import { EVENTS, CITIES } from '../const.js';
-import { capitalize } from '../util/common';
+import { EVENTS, CITIES, PRICE_RANGE } from '../const.js';
+import { getTrueOrFalse } from '../util/common';
+import { capitalize,  getRandomInt} from '../util/common';
 import Smart from './smart.js';
 
 const createFormEditPointElement = (pointData) => {
+
+
+  const generateOffers = () => {
+    const currOffers = pointData.offersForEvent[pointData.event.toLowerCase()].slice();
+
+    currOffers.forEach((offer, index) => {
+      currOffers[index] = Object.assign({}, offer, {checked: getTrueOrFalse()});
+
+    });
+    pointData.offers = currOffers;
+  };
+
+  const generatePrice = () => {
+    const initialPrice = getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX);
+    const priceFromOffres = pointData.offers.reduce((acc, currVal) => {
+      if (currVal.checked) {
+        acc += currVal.price;
+      }
+      return acc;
+    }, 0);
+    pointData.price = initialPrice + priceFromOffres;
+
+  };
+
+  const generatePhotos = () => {
+    pointData.photos = pointData.photosForCities[pointData.city];
+  };
+
+  const generateDescription = () => {
+    pointData.description = pointData.descriptionsForCities[pointData.city];
+  };
+
   const addOffers = () => {
     const offers = pointData.offers;
     const addOffer = (offer) => {
       const isChecked = () => (offer.checked) ? 'checked': '';
       return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name.toLowerCase()}-${offer.id}" type="checkbox" name="event-offer-seats" ${isChecked()}>
-        <label class="event__offer-label" for="event-offer-seats-1">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name.toLowerCase()}-${offer.id}" type="checkbox" name="event-offer-${offer.name.toLowerCase()}" ${isChecked()}>
+        <label class="event__offer-label" for="event-offer-${offer.name.toLowerCase()}-${offer.id}">
         <span class="event__offer-title">${offer.name}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
@@ -32,7 +65,7 @@ const createFormEditPointElement = (pointData) => {
       </div>`;
     };
     const eventList = EVENTS.map((value) => createEventElement(value));
-    return eventList.join();
+    return eventList.join('');
   };
   const addListOfCities = () => {
     const createCity = (city) => `<option value="${city}"></option>`;
@@ -40,18 +73,36 @@ const createFormEditPointElement = (pointData) => {
     return listOfCities.join();
   };
   const addPhotos = () => {
+    if (pointData.photos === null) {return '';}
     const createPhoto = (photoLink) => `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
-    return pointData
-      .photos
+
+    const photos = pointData.photos
       .reduce((acc, photo) => {
         acc += createPhoto(photo);
         return acc;
       }, '');
+
+    return `<div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${photos}
+    </div>
+    </div>
+    `;
   };
-  const generateIcon = () => {
+  const addIcon = () => {
     const iconMarkup = `<img class="event__type-icon" width="17" height="17" src="img/icons/${pointData.event.toLowerCase()}.png" alt="Event type icon">`;
     return iconMarkup;
   };
+  const addDescription = () => {
+    if (pointData.description === null) {return '';}
+    return `<p class="event__destination-description">${pointData.description}</p>`;
+  };
+
+  generatePhotos();
+  generateOffers();
+  generatePrice();
+  generateDescription();
+
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -59,7 +110,7 @@ const createFormEditPointElement = (pointData) => {
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
-        ${generateIcon()}
+        ${addIcon()}
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -114,28 +165,44 @@ const createFormEditPointElement = (pointData) => {
     
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${pointData.description}</p>
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-          ${addPhotos()}
-        </div>
-        </div>
+      ${addDescription()}
+      ${addPhotos()}
       </section>
   </section>
   </form>
   </li>`;};
 
+
 export default class EditPoint extends Smart {
   constructor(pointData) {
     super();
     this._pointData = pointData;
-    this._clickHandler = this._clickHandler.bind(this);
-    this._submitHandler = this._clickHandler.bind(this);
+    this._clickPointerHandler = this._clickPointerHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
+    this._clickEventsHandler = this._clickEventsHandler.bind(this);
+    this._changeCityHandler = this._changeCityHandler.bind(this);
+
+    this._callback.clickEvents = this._clickEventsHandler;
+    this._setInnerHandlers();
   }
 
-  _clickHandler(evt) {
+  _clickEventsHandler(evt) {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
     evt.preventDefault();
-    this._callback.click();
+    const newEvent =  {event: evt.target.value};
+    this.updateData(newEvent);
+  }
+
+  _changeCityHandler(evt) {
+    const newCity ={ city: evt.target.value };
+    this.updateData(newCity, true);
+  }
+
+  _clickPointerHandler(evt) {
+    evt.preventDefault();
+    this._callback.clickPointer();
   }
 
   _submitHandler(evt) {
@@ -143,12 +210,25 @@ export default class EditPoint extends Smart {
     this._callback.submit();
   }
 
+  _setInnerHandlers() {
+    const currElement = this.getElement();
+    // assign handler for event clicks
+    currElement
+      .querySelector('.event__type-group')
+      .addEventListener('click', this._clickEventsHandler);
+    // assign handler for City input
+    currElement
+      .querySelector('#event-destination-1')
+      .addEventListener('input', this._changeCityHandler);
+  }
+
   setClickHandler(cb) {
-    this._callback.click = cb;
+    this._callback.clickPointer = cb;
     this
       .getElement()
       .querySelector('.event__rollup-btn')
-      .addEventListener('click' , this._clickHandler);
+      .addEventListener('click' , this._clickPointerHandler);
+
   }
 
   setSubmitHandler(cb) {
@@ -161,7 +241,7 @@ export default class EditPoint extends Smart {
     this
       .getElement()
       .querySelector('.event__rollup-btn')
-      .removeEventListener('click', this._clickHandler);
+      .removeEventListener('click', this._clickPointerHandler);
   }
 
   removeSubmitHandler() {
