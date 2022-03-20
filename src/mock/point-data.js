@@ -59,78 +59,53 @@ const createDescriptionForCities = () => {
   return descriptionsForCities;
 };
 
+const generateTimePeriod = () => {
+  const fromTime = dayjs()
+    .add(getRandomInt(DATE_RANGE.DAY.MIN, DATE_RANGE.DAY.MAX), 'day')
+    .add(getRandomInt(DATE_RANGE.HOUR.MIN, DATE_RANGE.HOUR.MAX), 'hour')
+    .add(getRandomInt(DATE_RANGE.MINUTE.MIN, DATE_RANGE.MINUTE.MAX), 'minute');
+  const toTime = fromTime.clone()
+    .add(getRandomInt(DURATION_RANGE.DAY.MIN, DURATION_RANGE.DAY.MAX), 'day')
+    .add(getRandomInt(DURATION_RANGE.HOUR.MIN, DURATION_RANGE.HOUR.MAX), 'hour')
+    .add(getRandomInt(DURATION_RANGE.MINUTE.MIN, DURATION_RANGE.MINUTE.MAX), 'minute');
+
+  return {toTime, fromTime};
+};
+
+
+const offersForEvent = createOffersForEvent();
+const photosForCities = createPhotosForCities();
+const descriptionsForCities = createDescriptionForCities();
+
+const generateOffer = (event) => {
+  const specificOffer = offersForEvent[event]
+    .slice()
+    .map((value) => Object.assign({}, value, {checked: getTrueOrFalse()}));
+  return specificOffer;
+};
 
 const createPoints = () => {
-  const offersForEvent = createOffersForEvent();
-  const photosForCities = createPhotosForCities();
-  const descriptionsForCities = createDescriptionForCities();
+  const event = getRandomValueFromArr(EVENTS);
+  const city = getRandomValueFromArr(CITIES);
+  const timePeriod = generateTimePeriod();
+  const duration = timePeriod.toTime.subtract(timePeriod.fromTime);
   const createPointTemplate = () => {
 
     const templatePoint = {
-      date: null,
       id: nanoid(),
-      event: null,
-      city: null,
-      toTime: null,
-      pointDuration: null,
-      price: null,
-      offersForEvent,
-      offers: [],
+      event,
+      city,
+      fromTime: timePeriod.fromTime,
+      duration,
+      toTime: timePeriod.toTime,
+      price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
+      offers: generateOffer(event),
       favorite: getTrueOrFalse(),
-      description: null,
-      descriptionsForCities,
-      photosForCities,
-      photos: null,
+      description: descriptionsForCities[city],
+      photos: photosForCities[city],
 
-      init() {
-        this.generateCity();
-        // this.generatePhotos();
-        // this.generateDescription();
-        // --- order matters ---
-        this.generateDate();
-        this.generateDuration();
-        // --- End ---
-        // --- order matters ---
-        this.generateToTime();
-        this.generateEvent();
-        // --- End ---
-
-      },
-
-      generateCity() {
-        this.city = getRandomValueFromArr(CITIES);
-      },
-
-      generateEvent() {
-        this.event = capitalize(getRandomValueFromArr(EVENTS));
-      },
-
-      generateDate() {
-        const daysToAdd = getRandomInt(DATE_RANGE.DAY.MIN, DATE_RANGE.DAY.MAX);
-        const hoursToAdd = getRandomInt(DATE_RANGE.HOUR.MIN, DATE_RANGE.HOUR.MAX);
-        const minsToAdd = getRandomInt(DATE_RANGE.MINUTE.MIN, DATE_RANGE.MINUTE.MAX);
-        const date = dayjs()
-          .add(daysToAdd, 'day')
-          .add(hoursToAdd, 'hour')
-          .add(minsToAdd, 'minute');
-        this.date = date;
-      },
-
-      generateDuration() {
-        this.pointDuration = dayjs
-          .duration({
-            minutes: getRandomInt(DURATION_RANGE.MINUTE.MIN, DURATION_RANGE.MINUTE.MAX),
-            hours: getRandomInt(DURATION_RANGE.HOUR.MIN, DURATION_RANGE.HOUR.MAX),
-            days:getRandomInt(DURATION_RANGE.DAY.MIN, DURATION_RANGE.DAY.MAX),
-          });
-      },
-
-      generateToTime() {
-        this.toTime = this.date.add(this.pointDuration);
-      }
     };
 
-    templatePoint.init();
     return templatePoint;
   };
   const data = new Array(AMOUNT_OF_POINTS)
