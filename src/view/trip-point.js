@@ -1,4 +1,5 @@
 import AbstractElement from './abstract-element.js';
+import { getDuration } from '../util/point.js';
 
 const createTripPoint = (pointData) => {
   const createIconLink = () => `img/icons/${pointData.event.toLowerCase()}.png`;
@@ -28,10 +29,10 @@ const createTripPoint = (pointData) => {
     }, '');
   };
   const generateDuration = () => {
-    const duration =  pointData.period;
-    const durDay = duration.get('days');
-    const durHour = duration.get('hours');
-    const durMin = duration.get('minutes');
+    const period =  getDuration(pointData.fromTime, pointData.toTime);
+    const durDay = period.get('days');
+    const durHour = period.get('hours');
+    const durMin = period.get('minutes');
     if (durDay) {
       return `${durDay} D ${durHour} H ${durMin} M`;
     } else if (durHour) {
@@ -40,16 +41,6 @@ const createTripPoint = (pointData) => {
       return `${durMin} M`;
     }
   };
-  // const generatePrice = () => {
-  //   const initialPrice = pointData.price;
-  //   const extraOfferPrice = pointData
-  //     .offers.
-  //     reduce((acc, value) =>{
-  //       acc += value.price;
-  //       return acc;
-  //     }, 0);
-  //   return initialPrice + extraOfferPrice;
-  // };
 
   return `<li class="trip-events__item">
     <div class="event">

@@ -9,10 +9,13 @@
     "start": "webpack serve"
   },
   "devDependencies": {
+    "css-loader": "^6.7.1",
     "dayjs": "^1.10.8",
     "eslint": "^8.10.0",
     "eslint-config-htmlacademy": "5.0.0",
-    "nanoid": "^3.3.1"
+    "flatpickr": "^4.6.11",
+    "nanoid": "^3.3.1",
+    "style-loader": "^3.3.1"
   },
   "engines": {
     "node": "16"

@@ -4,7 +4,10 @@ import { offersForEvent ,photosForCities, descriptionsForCities } from '../mock/
 // import { pointsData } from '../mock/point-data.js';
 import { capitalize} from '../util/common';
 import Smart from './smart.js';
-
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+import dayjs from 'dayjs';
+const DATE_FORMAT = 'd/m/y H:i';
 
 const addIcon = (event) => {
   const iconMarkup = `<img class="event__type-icon" width="17" height="17" src="img/icons/${event.toLowerCase()}.png" alt="Event type icon">`;
@@ -148,6 +151,7 @@ const addPointEditDetails = (offers, photos, description) => `<section class="ev
 const addPointEdit = (pointData) => {
   const {event, city, fromTime, toTime,
     price, offers, description, photos} = pointData;
+
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       ${addPointEditHeader(event, city,fromTime, toTime, price)}
@@ -161,13 +165,21 @@ export default class EditPoint extends Smart {
   constructor(pointData) {
     super();
     this._pointState = EditPoint.parseDataToState(pointData);
+    this._datePickerFromTime = null;
+    this._datePickerToTime = null;
+
     this._clickPointerHandler = this._clickPointerHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
     this._clickEventsHandler = this._clickEventsHandler.bind(this);
     this._changeCityHandler = this._changeCityHandler.bind(this);
+    this._clickPointerHandler = this._clickPointerHandler.bind(this);
+    this._changeFromTimeHandler = this._changeFromTimeHandler.bind(this);
+    this._changeToTimeHandler = this._changeToTimeHandler.bind(this);
 
     this._callback.clickEvents = this._clickEventsHandler;
     this._setInnerHandlers();
+    this._setDatePickerFromTime();
+    this._setDatePickerToTime();
   }
 
   _clickEventsHandler(evt) {
@@ -196,6 +208,52 @@ export default class EditPoint extends Smart {
     this._callback.clickPointer();
   }
 
+  _changeFromTimeHandler([userDate]) {
+    this.updateData({
+      fromTime: dayjs(userDate),
+    }, true);
+  }
+
+  _changeToTimeHandler([userDate]) {
+    this.updateData({
+      toTime: dayjs(userDate),
+    }, true);
+  }
+
+  _setDatePickerFromTime() {
+    if (this._datePickerFromTime) {
+      this._datePickerFromTime.destroy();
+      this._datePickerFromTime = null;
+    }
+
+    this._datePickerFromTime = flatpickr(this.getElement()
+      .querySelector('#event-start-time-1'), {
+      dateFormat: DATE_FORMAT,
+      enableTime: true,
+      defaultDate: this._pointState.date,
+      onChange: this._changeFromTimeHandler,
+      // eslint-disable-next-line camelcase
+      time_24hr: true,
+    });
+  }
+
+  _setDatePickerToTime() {
+    if (this._datePickerToTime) {
+      this._datePickerToTime.destroy();
+      this._datePickerToTime = null;
+    }
+
+    this._datePickerToTime = flatpickr(this.getElement()
+      .querySelector('#event-end-time-1'), {
+      dateFormat: DATE_FORMAT,
+      enableTime: true,
+      defaultDate: this._pointState.date,
+      onChange: this._changeToTimeHandler,
+      // eslint-disable-next-line camelcase
+      time_24hr: true,
+    });
+  }
+
   _submitHandler(evt) {
     evt.preventDefault();
     this._callback.submit(EditPoint.pasrseStateToData(this._pointState));
@@ -210,7 +268,7 @@ export default class EditPoint extends Smart {
     // assign handler for City input
     currElement
       .querySelector('#event-destination-1')
-      .addEventListener('input', this._changeCityHandler);
+      .addEventListener('change', this._changeCityHandler);
   }
 
   setClickHandler(cb) {
@@ -264,6 +322,7 @@ export default class EditPoint extends Smart {
     this.setClickHandler(this._callback.clickPointer);
     this.setSubmitHandler(this._callback.submit);
     this._setInnerHandlers();
+    this._setDatePickerFromTime();
   }
 
 }

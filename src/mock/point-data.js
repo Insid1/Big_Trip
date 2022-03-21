@@ -1,8 +1,5 @@
 import {EVENTS, CITIES, PRICE_RANGE, TEXT, DATE_RANGE, DURATION_RANGE} from '../const.js';
 import dayjs from 'dayjs';
-// imports plugin duration from dayjs
-import duration from 'dayjs/plugin/duration';
-dayjs.extend(duration);
 import { nanoid } from 'nanoid';
 import { getRandomInt, getTrueOrFalse, getRandomValueFromArr } from '../util/common.js';
 
@@ -89,14 +86,12 @@ const createPoints = () => {
     const event = getRandomValueFromArr(EVENTS);
     const city = getRandomValueFromArr(CITIES);
     const timePeriod = generateTimePeriod();
-    const period = timePeriod.toTime.subtract(timePeriod.fromTime);
 
     const templatePoint = {
       id: nanoid(),
       event,
       city,
       fromTime: timePeriod.fromTime,
-      period,
       toTime: timePeriod.toTime,
       price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
       offers: generateOffer(event),

@@ -21,4 +21,12 @@ module.exports = {
   mode: 'development',
   devtool: 'source-map',
   watch: true,
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ]
+  }
 };
