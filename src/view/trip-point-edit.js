@@ -1,52 +1,49 @@
 import { EVENTS, CITIES } from '../const.js';
+import { offersForEvent ,photosForCities, descriptionsForCities } from '../mock/point-data.js';
 // import { pointsData } from '../mock/point-data.js';
 // import { pointsData } from '../mock/point-data.js';
-import { getTrueOrFalse } from '../util/common';
 import { capitalize} from '../util/common';
 import Smart from './smart.js';
 
 
-const createPointEditHeader = (pointData) => {
+const addIcon = (event) => {
+  const iconMarkup = `<img class="event__type-icon" width="17" height="17" src="img/icons/${event.toLowerCase()}.png" alt="Event type icon">`;
+  return iconMarkup;
+};
 
-  const {event, city, date, toTime, price} = pointData;
+const addListOfEvents = (event, eventList) => {
 
-  const addIcon = () => {
-    const iconMarkup = `<img class="event__type-icon" width="17" height="17" src="img/icons/${pointData.event.toLowerCase()}.png" alt="Event type icon">`;
-    return iconMarkup;
+  const addEventElement = (eventType) => {
+    eventType = eventType.toLowerCase();
+    const isChecked = () => (eventType === event.toLowerCase()) ?
+      'checked' : '';
+    return `<div class="event__type-item">
+      <input id="event-type-${eventType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${eventType}" ${isChecked()}>
+      <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-1">${capitalize(eventType)}</label>
+    </div>`;
   };
+  const events = eventList.map((value) => addEventElement(value));
+  return events.join('');
+};
 
-  const addListOfEvents = () => {
-    const createEventElement = (eventType) => {
-      eventType = eventType.toLowerCase();
-      const isChecked = () => (eventType === pointData.event.toLowerCase()) ?
-        'checked' : '';
-      return `<div class="event__type-item">
-        <input id="event-type-${eventType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${eventType}" ${isChecked()}>
-        <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-1">${capitalize(eventType)}</label>
-      </div>`;
-    };
-    const eventList = EVENTS.map((value) => createEventElement(value));
-    return eventList.join('');
-  };
+const addListOfCities = (cities) => {
+  const createCity = (cityName) => `<option value="${cityName}"></option>`;
+  const listOfCities = cities.map((cityName) => createCity(cityName));
+  return listOfCities.join('');
+};
 
-  const addListOfCities = () => {
-    const createCity = (cityName) => `<option value="${cityName}"></option>`;
-    const listOfCities = CITIES.map((cityName) => createCity(cityName));
-    return listOfCities.join();
-  };
-
-  return `<header class="event__header">
+const addPointEditHeader = (event, city, fromTime, toTime, price) => `<header class="event__header">
   <div class="event__type-wrapper">
     <label class="event__type  event__type-btn" for="event-type-toggle-1">
       <span class="visually-hidden">Choose event type</span>
-      ${addIcon()}
+      ${addIcon(event)}
     </label>
     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
     <div class="event__type-list">
       <fieldset class="event__type-group"> 
         <legend class="visually-hidden">Event type</legend>
-        ${addListOfEvents()}
+        ${addListOfEvents(event, EVENTS)}
       </fieldset>
     </div>
   </div>
@@ -57,13 +54,13 @@ const createPointEditHeader = (pointData) => {
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
-      ${addListOfCities()}
+      ${addListOfCities(CITIES)}
     </datalist>
   </div>
   
   <div class="event__field-group  event__field-group--time">
     <label class="visually-hidden" for="event-start-time-1">From</label>
-    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${date.format('DD/MM/YY HH:mm')}">
+    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${fromTime.format('DD/MM/YY HH:mm')}">
     &mdash;
     <label class="visually-hidden" for="event-end-time-1">To</label>
     <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toTime.format('DD/MM/YY HH:mm')}">
@@ -83,114 +80,87 @@ const createPointEditHeader = (pointData) => {
     <span class="visually-hidden">Open event</span>
   </button>
 </header>`;
+
+const addPhotos = (photos) => {
+  if (!photos) {return '';}
+  const createPhoto = (photoLink) => `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
+
+  const photoElements = photos
+    .reduce((acc, photo) => {
+      acc += createPhoto(photo);
+      return acc;
+    }, '');
+
+  return `<div class="event__photos-container">
+  <div class="event__photos-tape">
+    ${photoElements}
+  </div>
+  </div>
+  `;
 };
 
-const createPointEditDetails = (pointData) => {
-  const {event, photos} = pointData;
+const addDescription = (description) => {
+  if (!description) {return '';}
+  return `<p class="event__destination-description">${description}</p>`;
+};
 
-  const createPointEditDetailsOffers = () => {
-    const generateOffers = () => {
-      const currOffers = pointData.offersForEvent[event.toLowerCase()].slice();
+const addPointEditDetailsOffers = (offers) => {
 
-      currOffers.forEach((offer, index) => {
-        currOffers[index] = Object.assign({}, offer, {checked: getTrueOrFalse()});
-
-      });
-      pointData.offers = currOffers;
-    };
-
-    const addOffers = () => {
-      const offers = pointData.offers;
-      const addOffer = (offer) => {
-        const isChecked = () => (offer.checked) ? 'checked': '';
-        return `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name.toLowerCase()}-${offer.id}" type="checkbox" name="event-offer-${offer.name.toLowerCase()}" ${isChecked()}>
-          <label class="event__offer-label" for="event-offer-${offer.name.toLowerCase()}-${offer.id}">
-          <span class="event__offer-title">${offer.name}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
-          </label>
-          </div>`;
-      };
-
-      const offersElement = offers.map((element) => addOffer(element));
-      return offersElement.join('');
-
-    };
-
-    generateOffers();
-
-    return `<section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-    <div class="event__available-offers">
-      ${addOffers()}
-    </div>
-  </section>`;
+  const addOffer = (offer) => {
+    const isChecked = () => (offer.checked) ? 'checked': '';
+    return `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name.toLowerCase()}-${offer.id}" type="checkbox" name="event-offer-${offer.name.toLowerCase()}" ${isChecked()}>
+        <label class="event__offer-label" for="event-offer-${offer.name.toLowerCase()}-${offer.id}">
+        <span class="event__offer-title">${offer.name}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+        </label>
+        </div>`;
   };
 
-  const createPointEditDetailsDestination = () => {
+  const offersElement = offers.map((element) => addOffer(element));
 
-    const generatePhotos = () => {
-      pointData.photos = pointData.photosForCities[pointData.city];
-    };
-
-    const generateDescription = () => {
-      pointData.description = pointData.descriptionsForCities[pointData.city];
-    };
-
-    const addPhotos = () => {
-      if (photos === null) {return '';}
-      const createPhoto = (photoLink) => `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
-
-      const photoElements = photos
-        .reduce((acc, photo) => {
-          acc += createPhoto(photo);
-          return acc;
-        }, '');
-
-      return `<div class="event__photos-container">
-      <div class="event__photos-tape">
-        ${photoElements}
-      </div>
-      </div>
-      `;
-    };
-
-    const addDescription = () => {
-      if (pointData.description === null) {return '';}
-      return `<p class="event__destination-description">${pointData.description}</p>`;
-    };
-
-    generatePhotos();
-    generateDescription();
-
-    return `<section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    ${addDescription()}
-    ${addPhotos()}
-  </section>`;
-  };
-
-  return `<section class="event__details">
-  ${createPointEditDetailsOffers(pointData)}
-  ${createPointEditDetailsDestination(pointData)}
+  return `<section class="event__section  event__section--offers">
+  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+  <div class="event__available-offers">
+    ${offersElement.join('')}
+  </div>
 </section>`;
 };
 
-const createPointEdit = (pointData) =>
+const createPointEditDetailsDestination = (photos, description) => {
+  if (!photos && !description) {
+    return '';
+  }
 
-  `<li class="trip-events__item">
+  return `<section class="event__section  event__section--destination">
+  <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+  ${description !== null ? addDescription(description) : ''}
+  ${description !== null ? addPhotos(photos) : ''}
+</section>`;
+};
+
+const addPointEditDetails = (offers, photos, description) => `<section class="event__details">
+  ${offers !== null ? addPointEditDetailsOffers(offers) : ''}
+  ${createPointEditDetailsDestination(photos, description)}
+</section>`;
+
+const addPointEdit = (pointData) => {
+  const {event, city, fromTime, toTime,
+    price, offers, description, photos} = pointData;
+  return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
-      ${createPointEditHeader(pointData)}
-      ${createPointEditDetails(pointData)}
+      ${addPointEditHeader(event, city,fromTime, toTime, price)}
+      ${addPointEditDetails(offers, photos, description)}
     </form>
   </li>`;
+};
 
 
 export default class EditPoint extends Smart {
   constructor(pointData) {
     super();
-    this._pointData = pointData;
+    this._pointState = EditPoint.parseDataToState(pointData);
     this._clickPointerHandler = this._clickPointerHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
     this._clickEventsHandler = this._clickEventsHandler.bind(this);
@@ -205,13 +175,20 @@ export default class EditPoint extends Smart {
       return;
     }
     evt.preventDefault();
-    const newEvent =  {event: evt.target.value};
-    this.updateData(newEvent);
+    const newEvent = evt.target.value;
+    this.updateData({
+      event: newEvent,
+      offers: offersForEvent[newEvent]
+    });
   }
 
   _changeCityHandler(evt) {
-    const newCity ={ city: evt.target.value };
-    this.updateData(newCity, true);
+    const newCity = evt.target.value;
+    this.updateData({
+      city: newCity,
+      description: descriptionsForCities[newCity],
+      photos: photosForCities[newCity],
+    });
   }
 
   _clickPointerHandler(evt) {
@@ -221,7 +198,7 @@ export default class EditPoint extends Smart {
 
   _submitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit();
+    this._callback.submit(EditPoint.pasrseStateToData(this._pointState));
   }
 
   _setInnerHandlers() {
@@ -265,7 +242,28 @@ export default class EditPoint extends Smart {
   }
 
   getTemplate() {
-    return createPointEdit(this._pointData);
+    return addPointEdit(this._pointState);
+  }
+
+  static parseDataToState(state) {
+    return Object.assign({},
+      state);
+  }
+
+  static pasrseStateToData(data) {
+    return Object.assign({},
+      data);
+  }
+
+  reset(oldData) {
+    this.updateData(EditPoint.pasrseStateToData(oldData));
+  }
+
+  restoreHandlers() {
+    // Восстанавливает обработчики событий на элементах после перересовки
+    this.setClickHandler(this._callback.clickPointer);
+    this.setSubmitHandler(this._callback.submit);
+    this._setInnerHandlers();
   }
 
 }

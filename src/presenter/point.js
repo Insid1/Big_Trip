@@ -88,23 +88,26 @@ export default class Point {
   }
 
   _handlePointFavoriteClick() {
-    const newPoint = Object.assign({}, this.pointData);
-    newPoint.favorite = !newPoint.favorite;
-    this._changeData(newPoint);
+    const newPointData = Object.assign({}, this.pointData);
+    newPointData.favorite = !newPointData.favorite;
+    this._changeData(newPointData);
   }
 
   _handleEditClick() {
+    this._pointEditComponent.reset(this.pointData);
     this._replaceEditToPoint();
 
   }
 
-  _handleEditSubmit() {
+  _handleEditSubmit(newData) {
     this._replaceEditToPoint();
+    this._changeData(newData);
   }
 
   _handleEscKeyDown(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this._pointEditComponent.reset(this.pointData);
       this._replaceEditToPoint();
     }
   }

@@ -3,10 +3,7 @@ import AbstractElement from './abstract-element';
 export default class Smart extends AbstractElement {
 
   restoreHandlers() {
-    // Восстанавливает обработчики событий на элементах после перересовки
-    this.setClickHandler(this._callback.clickPointer);
-    this.setSubmitHandler(this._callback.submit);
-    this._setInnerHandlers();
+    throw Error('Abstract method not implemented : restoreHandlers');
   }
 
   updateElement() {
@@ -27,7 +24,7 @@ export default class Smart extends AbstractElement {
     if (!update) {
       return;
     }
-    this._pointData = Object.assign({}, this._pointData, update);
+    this._pointState = Object.assign({}, this._pointState, update);
     if (isSmallUpdate) {
       return;
     }

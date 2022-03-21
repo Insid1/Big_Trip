@@ -28,7 +28,7 @@ const createTripPoint = (pointData) => {
     }, '');
   };
   const generateDuration = () => {
-    const duration =  pointData.pointDuration;
+    const duration =  pointData.period;
     const durDay = duration.get('days');
     const durHour = duration.get('hours');
     const durMin = duration.get('minutes');
@@ -53,14 +53,14 @@ const createTripPoint = (pointData) => {
 
   return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="${pointData.date.format('YYYY-MM-DD')}">${pointData.date.format('MMM D')}</time>
+      <time class="event__date" datetime="${pointData.fromTime.format('YYYY-MM-DD')}">${pointData.fromTime.format('MMM D')}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="${createIconLink()}" alt="Event type icon">
       </div>
       <h3 class="event__title">${pointData.event} ${pointData.city}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${pointData.date.format('YYYY-MM-DDTHH:MM')}">${pointData.date.format('HH:mm')}</time>
+          <time class="event__start-time" datetime="${pointData.fromTime.format('YYYY-MM-DDTHH:MM')}">${pointData.fromTime.format('HH:mm')}</time>
           &mdash;
           <time class="event__end-time" datetime="${pointData.toTime.format('YYYY-MM-DDTHH:MM')}">${pointData.toTime.format('HH:mm')}</time>
         </p>

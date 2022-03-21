@@ -4,14 +4,14 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 import { nanoid } from 'nanoid';
-import { getRandomInt, capitalize, getTrueOrFalse, getRandomValueFromArr } from '../util/common.js';
+import { getRandomInt, getTrueOrFalse, getRandomValueFromArr } from '../util/common.js';
 
 const AMOUNT_OF_POINTS = 5;
 const AMOUNT_OF_OFFERS = 6;
 
 
 const createOffersForEvent = () => {
-  const offersForEvent = {};
+  const result = {};
   const createOffer = (eventName) => ({
     id: getRandomInt(1, 10000),
     name: eventName,
@@ -22,13 +22,13 @@ const createOffersForEvent = () => {
     const arrOfOffers = new Array(AMOUNT_OF_OFFERS)
       .fill()
       .map(() => (createOffer(value)));
-    offersForEvent[value] = arrOfOffers;
+    result[value] = arrOfOffers;
   });
-  return offersForEvent;
+  return result;
 };
 
 const createPhotosForCities = () => {
-  const photosForCities = {};
+  const result = {};
   const createPhotosForCity = () => {
     const numOfPhotos = getRandomInt(1, 8);
     const photos = new Array(numOfPhotos)
@@ -38,14 +38,14 @@ const createPhotosForCities = () => {
   };
 
   CITIES.forEach((value) => {
-    photosForCities[value] = createPhotosForCity();
+    result[value] = createPhotosForCity();
   });
 
-  return photosForCities;
+  return result;
 };
 
 const createDescriptionForCities = () => {
-  const descriptionsForCities = {};
+  const result = {};
   const sentences = TEXT.split('. ');
   const createDescriptionForCity = () => sentences.reduce((acc, currVal) => {
     if (getTrueOrFalse()) {
@@ -54,9 +54,9 @@ const createDescriptionForCities = () => {
     return acc;
   });
   CITIES.forEach((value) => {
-    descriptionsForCities[value] = createDescriptionForCity();
+    result[value] = createDescriptionForCity();
   });
-  return descriptionsForCities;
+  return result;
 };
 
 const generateTimePeriod = () => {
@@ -85,18 +85,18 @@ const generateOffer = (event) => {
 };
 
 const createPoints = () => {
-  const event = getRandomValueFromArr(EVENTS);
-  const city = getRandomValueFromArr(CITIES);
-  const timePeriod = generateTimePeriod();
-  const duration = timePeriod.toTime.subtract(timePeriod.fromTime);
   const createPointTemplate = () => {
+    const event = getRandomValueFromArr(EVENTS);
+    const city = getRandomValueFromArr(CITIES);
+    const timePeriod = generateTimePeriod();
+    const period = timePeriod.toTime.subtract(timePeriod.fromTime);
 
     const templatePoint = {
       id: nanoid(),
       event,
       city,
       fromTime: timePeriod.fromTime,
-      duration,
+      period,
       toTime: timePeriod.toTime,
       price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
       offers: generateOffer(event),
@@ -116,4 +116,4 @@ const createPoints = () => {
 
 const pointsData = createPoints();
 
-export {pointsData};
+export {pointsData, offersForEvent, photosForCities, descriptionsForCities};
