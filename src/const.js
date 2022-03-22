@@ -59,4 +59,16 @@ const SORT_TYPE = {
   PRICE: 'price',
 };
 
-export {EVENTS, CITIES, PRICE_RANGE, TEXT, DATE_RANGE, DURATION_RANGE, SORT_TYPE};
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH', // to rerender onlty one point
+  MINOR: 'MINOR', // to rerender all points
+  MAJOR: 'MAJOR', // to rerender all elements on page
+};
+
+export {EVENTS, CITIES, PRICE_RANGE, TEXT, DATE_RANGE, DURATION_RANGE, SORT_TYPE, UpdateType, UserAction};

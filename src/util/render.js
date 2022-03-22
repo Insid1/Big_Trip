@@ -44,6 +44,10 @@ const replace = (newChild, oldChild) => {
 };
 
 const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
   if (!(component instanceof AbstractElement)) {
     throw new Error('Can remove components only');
   }

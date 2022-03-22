@@ -1,9 +1,9 @@
 import AbstractElement from './abstract-element';
 import { SORT_TYPE } from '../const';
 
-const createSiteSortingTemplate = () => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+const createSiteSortingTemplate = (sortType) => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
   <div class="trip-sort__item  trip-sort__item--day">
-    <input id="sort-day" data-sort-type="${SORT_TYPE.DATE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
+    <input id="sort-day" data-sort-type="${SORT_TYPE.DATE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" ${sortType === SORT_TYPE.DATE ? 'checked' : ''}>
     <label class="trip-sort__btn" for="sort-day">Day</label>
   </div>
 
@@ -13,12 +13,12 @@ const createSiteSortingTemplate = () => `<form class="trip-events__trip-sort  tr
   </div>
 
   <div class="trip-sort__item  trip-sort__item--time">
-    <input id="sort-time" data-sort-type="${SORT_TYPE.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
+    <input id="sort-time" data-sort-type="${SORT_TYPE.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" ${sortType === SORT_TYPE.TIME ? 'checked' : ''}>
     <label class="trip-sort__btn" for="sort-time">Time</label>
   </div>
 
   <div class="trip-sort__item  trip-sort__item--price">
-    <input id="sort-price" data-sort-type="${SORT_TYPE.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
+    <input id="sort-price" data-sort-type="${SORT_TYPE.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" ${sortType === SORT_TYPE.PRICE ? 'checked' : ''}>
     <label class="trip-sort__btn" for="sort-price">Price</label>
   </div>
 
@@ -29,14 +29,16 @@ const createSiteSortingTemplate = () => `<form class="trip-events__trip-sort  tr
 </form>`;
 
 export default class SiteSorting extends AbstractElement{
-  constructor() {
+  constructor(sortType) {
     super();
+    this._sortType = sortType;
     this._callback = {};
     this._sortClickHandler = this._sortClickHandler.bind(this);
   }
 
+
   getTemplate() {
-    return createSiteSortingTemplate();
+    return createSiteSortingTemplate(this._sortType);
   }
 
   setSortClick(cb) {

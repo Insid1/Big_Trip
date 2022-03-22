@@ -25,13 +25,4 @@ const getRandomValueFromArr = (arr) => arr[getRandomInt(0, arr.length -1)];
 const getTrueOrFalse = () => Boolean(getRandomInt(0, 1));
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-  return [...items.slice(0, index), update, ...items.slice(index + 1)];
-};
-
-export {getRandomInt, getRandomFloat, getRandomValueFromArr, getTrueOrFalse, capitalize, updateItem };
+export {getRandomInt, getRandomFloat, getRandomValueFromArr, getTrueOrFalse, capitalize };

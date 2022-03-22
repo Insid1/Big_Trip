@@ -3,7 +3,7 @@ import { pointsData } from './mock/point-data.js';
 import SiteMenuView from './view/menu.js';
 import SiteFilterView from './view/filter.js';
 import TripPresenter from './presenter/trip.js';
-import TripPointsModel from './view/model/trip-points.js';
+import TripPointsModel from './model/trip-points.js';
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
