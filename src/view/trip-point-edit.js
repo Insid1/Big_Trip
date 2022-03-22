@@ -323,6 +323,7 @@ export default class EditPoint extends Smart {
     this.setSubmitHandler(this._callback.submit);
     this._setInnerHandlers();
     this._setDatePickerFromTime();
+    this._setDatePickerToTime();
   }
 
 }
