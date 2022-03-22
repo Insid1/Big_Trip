@@ -14,8 +14,10 @@ import { SORT_TYPE } from '../const.js';
 import { sortByDate, sortByPrice, sortByTime } from '../util/point.js';
 
 export default class Trip {
-  constructor(tripContainer) {
+  constructor(tripContainer, pointsModel) {
     this._tripContainer = tripContainer;
+    this._pointsModel = pointsModel;
+
     this._tripListComponent = new PointContainerView();
     this._sortingComponent = new SiteSortingView();
     this._noPointsComponent = new NoPointView();
@@ -122,5 +124,9 @@ export default class Trip {
     Object.values(this._pointPresenter).forEach((value) => {
       value.resetView();
     });
+  }
+
+  _getPoints() {
+    return this._pointsModel.getPoints();
   }
 }

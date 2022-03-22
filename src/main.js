@@ -3,6 +3,7 @@ import { pointsData } from './mock/point-data.js';
 import SiteMenuView from './view/menu.js';
 import SiteFilterView from './view/filter.js';
 import TripPresenter from './presenter/trip.js';
+import TripPointsModel from './view/model/trip-points.js';
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
@@ -18,6 +19,9 @@ render(menuHeaderElement, new SiteMenuView(), RenderPosition.END);
 const filterHeaderElement = tripMainHeaderElement.querySelector('.trip-controls__filters');
 render(filterHeaderElement, new SiteFilterView(pointsData), RenderPosition.END);
 
-const tripPresenter = new TripPresenter(tripEventsElement);
+const tripPointsModel = new TripPointsModel();
+tripPointsModel.setPoints(pointsData);
+
+const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel);
 tripPresenter.init(pointsData);
 
