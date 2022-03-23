@@ -1,26 +1,25 @@
-import {render, RenderPosition } from './util/render.js';
 import { pointsData } from './mock/point-data.js';
-import SiteMenuView from './view/menu.js';
-import SiteFilterView from './view/filter.js';
 import TripPresenter from './presenter/trip.js';
 import TripPointsModel from './model/trip-points.js';
+import InfoHeaderPresenter from './presenter/info-header.js';
+
+const tripPointsModel = new TripPointsModel();
+tripPointsModel.setPoints(pointsData);
+
+const siteHeaderElement = document.querySelector('.page-header');
+const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
+// в мейн запихиваем:
+// 1. трип инфо в котором общий прайс и точка от и до
+// 2. три контролс в котором таблица статистики и фильтры
+
+//HEADER
+const infoHeaderPresenter = new InfoHeaderPresenter(tripMainHeaderElement, pointsData);
+infoHeaderPresenter.init();
+
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
-const siteHeaderElement = document.querySelector('.page-header');
-const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
-
-//HEADER
-// trip info is not here yet
-const menuHeaderElement = tripMainHeaderElement.querySelector('.trip-controls__navigation');
-render(menuHeaderElement, new SiteMenuView(), RenderPosition.END);
-// adds filter to header menu
-const filterHeaderElement = tripMainHeaderElement.querySelector('.trip-controls__filters');
-render(filterHeaderElement, new SiteFilterView(pointsData), RenderPosition.END);
-
-const tripPointsModel = new TripPointsModel();
-tripPointsModel.setPoints(pointsData);
 
 const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel);
 tripPresenter.init(pointsData);

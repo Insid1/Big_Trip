@@ -1,32 +1,16 @@
 import AbstractElement from './abstract-element';
 
-const createSiteTripInfo = (data) => {
-  if (data.length === 0) {return;}
-  const createRoute = () => {
-    const routeFrom = data[0].city;
-    const routeTo = data[data.length-1].city;
-    const generateMidRoutePoint = () => {
-      if (data.length === 2) {
-        return '';
-      } else if (data.length === 3) {
-        return `${data[1].city} &mdash;`;
-      } else {
-        return '... &mdash;';
-      }
-    };
-    return `${routeFrom} &mdash; ${generateMidRoutePoint()} ${routeTo}`;
+const createSiteTripInfo = () => `<section class="trip-main__trip-info  trip-info">
+  <div class="trip-info__main">
+    <h1 class="trip-info__title">Amsterdam — Chamonix — Geneva</h1>
 
-  };
-  const fromDate = data[0].date.format('MMM DD');
-  const toDate = data[data.length-1].date.format('MMM DD');
-  return `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">${createRoute()}</h1>
-  
-      <p class="trip-info__dates">${fromDate}&nbsp;&mdash;&nbsp;${toDate}</p>
-    </div>
-  </section>`;
-};
+    <p class="trip-info__dates">Mar 18&nbsp;—&nbsp;20</p>
+  </div>
+
+  <p class="trip-info__cost">
+    Total: €&nbsp;<span class="trip-info__cost-value">1230</span>
+  </p>
+</section>`;
 
 export default class TripInfo extends AbstractElement {
   constructor(data) {

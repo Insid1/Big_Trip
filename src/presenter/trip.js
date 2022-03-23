@@ -1,13 +1,7 @@
 import {render, RenderPosition } from '../util/render.js';
-// import SiteMenuView from './view/menu.js';
-// import SiteFilterView from './view/filter.js';
 import SiteSortingView from '../view/sorting.js';
-// import TotalPrice from './view/price.js';
 import PointContainerView  from '../view/point-container';
-// import PointView from '../view/trip-point.js';
-// import EditPointView from '../view/form-edit.js';
 import PointPresenter from './point.js';
-// import TripInfoView from './view/trip-info.js';
 import NoPointView from '../view/no-point.js';
 import { SORT_TYPE, UserAction, UpdateType } from '../const.js';
 import { sortByDate, sortByPrice, sortByTime } from '../util/point.js';
