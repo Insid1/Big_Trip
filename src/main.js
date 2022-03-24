@@ -2,6 +2,7 @@ import { pointsData } from './mock/point-data.js';
 import TripPresenter from './presenter/trip.js';
 import TripPointsModel from './model/trip-points.js';
 import InfoHeaderPresenter from './presenter/info-header.js';
+import './mock/filteredData.js';
 
 const tripPointsModel = new TripPointsModel();
 tripPointsModel.setPoints(pointsData);

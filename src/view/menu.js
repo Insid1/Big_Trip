@@ -1,6 +1,8 @@
 import AbstractElement from './abstract-element';
 
-const createMenu = () => `<div class="trip-main__trip-controls  trip-controls">
+const createMenu = (filteredData) => {
+  const one = 1;
+  return `<div class="trip-main__trip-controls  trip-controls">
   <div class="trip-controls__navigation">
     <h2 class="visually-hidden">Switch trip view</h2>
     <nav class="trip-controls__trip-tabs  trip-tabs">
@@ -31,6 +33,7 @@ const createMenu = () => `<div class="trip-main__trip-controls  trip-controls">
     </form>
   </div>
 </div>`;
+};
 
 export default class MenuHeader extends AbstractElement {
   getTemplate() {
