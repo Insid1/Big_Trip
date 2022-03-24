@@ -1,4 +1,4 @@
-import {render, RenderPosition } from '../util/render.js';
+import {remove, render, RenderPosition } from '../util/render.js';
 import SiteSortingView from '../view/trip-sorting.js';
 import PointContainerView  from '../view/trip-point-container';
 import PointPresenter from './point.js';
@@ -51,16 +51,13 @@ export default class Trip {
     return this._pointsModel.getPoints();
   }
 
-  _clearPointList() {
+  _clearTrip() {
+    remove(this._sortingComponent);
+    remove(this._tripListComponent);
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.destroy());
     this._pointPresenter = {};
-  }
-
-  _clearTrip() {
-    // Добавить удаление всех элементов Trip включая сортировку
-    // и сбросить текущий показатель сортировки
   }
 
   _handleSortClick(sortType) {
@@ -69,8 +66,8 @@ export default class Trip {
       return;
     }
     this._currentSortType = sortType;
-    this._clearPointList();
-    this._renderPoints();
+    this._clearTrip();
+    this._renderTrip();
   }
 
   _handleViewAction(actionType, updateType, update) {
@@ -94,7 +91,8 @@ export default class Trip {
         this._pointPresenter[update.id].init(update);
         break;
       case UpdateType.MINOR:
-        this._clearPointList();
+        this._clearTrip();
+        this._currentSortType = SORT_TYPE.DATE;
         this._renderTrip();
         break;
       case UpdateType.MAJOR:

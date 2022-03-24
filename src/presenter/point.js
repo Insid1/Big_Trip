@@ -21,6 +21,7 @@ export default class Point {
 
     this._handlePointClick = this._handlePointClick.bind(this);
     this._handlePointFavoriteClick = this._handlePointFavoriteClick.bind(this);
+    this._handleEditDelClick = this._handleEditDelClick.bind(this);
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleEditSubmit = this._handleEditSubmit.bind(this);
     this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
@@ -38,6 +39,7 @@ export default class Point {
     this._pointComponent.setClickFavoriteHandler(this._handlePointFavoriteClick);
     this._pointEditComponent.setClickHandler(this._handleEditClick);
     this._pointEditComponent.setSubmitHandler(this._handleEditSubmit);
+    this._pointEditComponent.setClickDelHandler(this._handleEditDelClick);
 
     if (prevPointComponent === null && prevPointEditComponent === null) {
       render(this._pointListContainer, this._pointComponent);
@@ -116,5 +118,9 @@ export default class Point {
       evt.preventDefault();
       this._replaceEditToPoint();
     }
+  }
+
+  _handleEditDelClick() {
+    this._changeData(UserAction.DELETE_POINT, UpdateType.MINOR, this.pointData);
   }
 }

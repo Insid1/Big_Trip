@@ -54,8 +54,5 @@ export default class SiteSorting extends AbstractElement{
     this._callback.sortClick(evt.target.dataset.sortType);
   }
 
-  _removeSortClick() {
-    this.getElement().removeEventListener('click', this._sortClickHandler);
-  }
 
 }

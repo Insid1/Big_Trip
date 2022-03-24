@@ -170,6 +170,7 @@ export default class EditPoint extends Smart {
 
     this._clickPointerHandler = this._clickPointerHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
+    this._clickDelHandler = this._clickDelHandler.bind(this);
     this._clickEventsHandler = this._clickEventsHandler.bind(this);
     this._changeCityHandler = this._changeCityHandler.bind(this);
     this._clickPointerHandler = this._clickPointerHandler.bind(this);
@@ -220,6 +221,15 @@ export default class EditPoint extends Smart {
     }, true);
   }
 
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit(EditPoint.pasrseStateToData(this._pointState));
+  }
+
+  _clickDelHandler() {
+    this._callback.clickDel();
+  }
+
   _setDatePickerFromTime() {
     if (this._datePickerFromTime) {
       this._datePickerFromTime.destroy();
@@ -254,10 +264,6 @@ export default class EditPoint extends Smart {
     });
   }
 
-  _submitHandler(evt) {
-    evt.preventDefault();
-    this._callback.submit(EditPoint.pasrseStateToData(this._pointState));
-  }
 
   _setInnerHandlers() {
     const currElement = this.getElement();
@@ -269,6 +275,11 @@ export default class EditPoint extends Smart {
     currElement
       .querySelector('#event-destination-1')
       .addEventListener('change', this._changeCityHandler);
+  }
+
+  setClickDelHandler(cb) {
+    this._callback.clickDel = cb;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._clickDelHandler);
   }
 
   setClickHandler(cb) {
