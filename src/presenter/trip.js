@@ -1,8 +1,8 @@
 import {render, RenderPosition } from '../util/render.js';
-import SiteSortingView from '../view/sorting.js';
-import PointContainerView  from '../view/point-container';
+import SiteSortingView from '../view/trip-sorting.js';
+import PointContainerView  from '../view/trip-point-container';
 import PointPresenter from './point.js';
-import NoPointView from '../view/no-point.js';
+import NoPointView from '../view/trip-no-point.js';
 import { SORT_TYPE, UserAction, UpdateType } from '../const.js';
 import { sortByDate, sortByPrice, sortByTime } from '../util/point.js';
 
