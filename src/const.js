@@ -71,4 +71,10 @@ const UpdateType = {
   MAJOR: 'MAJOR', // to rerender all elements on page
 };
 
-export {EVENTS, CITIES, PRICE_RANGE, TEXT, DATE_RANGE, DURATION_RANGE, SORT_TYPE, UpdateType, UserAction};
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
+
+export {EVENTS, CITIES, PRICE_RANGE, TEXT, DATE_RANGE, DURATION_RANGE, SORT_TYPE, UpdateType, UserAction, FilterType};
