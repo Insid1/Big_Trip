@@ -2,24 +2,24 @@ import { pointsData } from './mock/point-data.js';
 import TripPresenter from './presenter/trip.js';
 import TripPointsModel from './model/trip-points.js';
 import InfoHeaderPresenter from './presenter/info-header.js';
-import TripFilters from './model/filters.js';
+import TripFilterModel from './model/filter.js';
 
 const tripPointsModel = new TripPointsModel();
 tripPointsModel.setPoints(pointsData);
-const filteredPointsModel = new TripFilters(tripPointsModel);
+const filterModel = new TripFilterModel();
 
 const siteHeaderElement = document.querySelector('.page-header');
 const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
 
-//HEADER
-const infoHeaderPresenter = new InfoHeaderPresenter(tripMainHeaderElement, pointsData);
-infoHeaderPresenter.init();
-
-
-//MAIN
 const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
 
-const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filteredPointsModel);
+const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel);
+const infoHeaderPresenter = new InfoHeaderPresenter(tripMainHeaderElement, tripPointsModel, filterModel, tripPresenter);
+
+
+//HEADER
+infoHeaderPresenter.init();
+//MAIN
 tripPresenter.init();
 

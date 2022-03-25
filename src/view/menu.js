@@ -1,8 +1,15 @@
 import AbstractElement from './abstract-element';
 
-const createMenu = (filteredData) => {
-  const one = 1;
-  return `<div class="trip-main__trip-controls  trip-controls">
+const createFilter = (filter) => `<div class="trip-filters__filter">
+    <input id="filter-${filter.type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.type}" ${filter.isActive ? 'checked' : ''}>
+    <label class="trip-filters__filter-label" for="filter-${filter.type}">${filter.type} (${filter.amount})</label>
+  </div>`;
+const createFilters = (filters) => filters.reduce((acc, filter) => {
+  acc += createFilter(filter);
+  return acc;
+}, '');
+
+const createMenu = (filters) => `<div class="trip-main__trip-controls  trip-controls">
   <div class="trip-controls__navigation">
     <h2 class="visually-hidden">Switch trip view</h2>
     <nav class="trip-controls__trip-tabs  trip-tabs">
@@ -14,29 +21,36 @@ const createMenu = (filteredData) => {
   <div class="trip-controls__filters">
     <h2 class="visually-hidden">Filter events</h2>
     <form class="trip-filters" action="#" method="get">
-      <div class="trip-filters__filter">
-        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked="">
-        <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-        <label class="trip-filters__filter-label" for="filter-future">Future</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-        <label class="trip-filters__filter-label" for="filter-past">Past</label>
-      </div>
-
-      <button class="visually-hidden" type="submit">Accept filter</button>
+      ${createFilters(filters)}
     </form>
   </div>
 </div>`;
-};
 
 export default class MenuHeader extends AbstractElement {
+  constructor(filters) {
+    super();
+    this._callback = {};
+    this._filters = filters;
+
+    this._handleFilterClick = this._handleFilterClick.bind(this);
+  }
+
   getTemplate() {
-    return createMenu();
+    return createMenu(this._filters);
+  }
+
+  setClickFilters(cb) {
+    this._callback.filterClick = cb;
+    this
+      .getElement()
+      .querySelector('.trip-filters')
+      .addEventListener('click', this._handleFilterClick);
+  }
+
+  _handleFilterClick(evt) {
+    if (evt.target.tagName !== 'INPUT'){
+      return;
+    }
+    this._callback.filterClick(evt.target.value);
   }
 }
