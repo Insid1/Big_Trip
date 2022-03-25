@@ -9,7 +9,7 @@ export default class TripFilters extends Observer {
 
   setFilter(updateType, filterName) {
     this._activeFilter = filterName;
-    this._notify(updateType, filterName);
+    this.notify(updateType, filterName);
   }
 
   getFilter() {

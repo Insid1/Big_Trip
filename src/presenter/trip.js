@@ -26,6 +26,7 @@ export default class Trip {
     this._currentSortType = SORT_TYPE.DATE;
 
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {

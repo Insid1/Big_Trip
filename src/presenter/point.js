@@ -109,7 +109,7 @@ export default class Point {
     this._replaceEditToPoint();
     this._changeData(
       UserAction.UPDATE_POINT,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       newData);
   }
 
