@@ -19,6 +19,7 @@ export default class InfoHeader {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterClick = this._handleFilterClick.bind(this);
+
     this._filterModel.addObserver(this._handleModelEvent);
     this._pointsModel.addObserver(this._handleModelEvent);
 
@@ -32,7 +33,6 @@ export default class InfoHeader {
     this._menu.setClickFilters(this._handleFilterClick);
 
     this._renderHeader();
-
   }
 
   getFilters() {
@@ -64,7 +64,6 @@ export default class InfoHeader {
         this._pointsModel.addPoint(updateType, update);
         break;
       case UserAction.UPDATE_POINT:
-        // console.log(this._pointPresenter);
         this._pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
@@ -79,14 +78,15 @@ export default class InfoHeader {
   _handleModelEvent(updateType) {
     switch (updateType) {
       case UpdateType.PATCH:
+        // not implemented. Has nothing to do with filters. But with menu ?
         break;
       case UpdateType.MINOR:
+        // not implemented. Has nothing to do with filters. But with menu ?
+        break;
+      case UpdateType.MAJOR:
         this._clearHeader();
         this.init();
         this._renderHeader();
-        break;
-      case UpdateType.MAJOR:
-        this._clearTrip(); // not implemented
         break;
     }
   }

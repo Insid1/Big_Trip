@@ -109,7 +109,7 @@ export default class Point {
     this._replaceEditToPoint();
     this._changeData(
       UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       newData);
   }
 
@@ -121,6 +121,6 @@ export default class Point {
   }
 
   _handleEditDelClick() {
-    this._changeData(UserAction.DELETE_POINT, UpdateType.MINOR, this.pointData);
+    this._changeData(UserAction.DELETE_POINT, UpdateType.MAJOR, this.pointData);
   }
 }

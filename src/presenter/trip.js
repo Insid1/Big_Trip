@@ -14,7 +14,7 @@ export default class Trip {
     this._filterModel = filterModel;
 
     this._tripListComponent = new PointContainerView();
-    this._noPointsComponent = new NoPointView();
+    this._noPointsComponent = null;
     this._sortingComponent = null;
     this._pointPresenter = {};
 
@@ -56,6 +56,13 @@ export default class Trip {
   }
 
   _clearTrip() {
+
+    if (this._noPointsComponent !== null) {
+      remove(this._noPointsComponent);
+      this._noPointsComponent = null;
+      return;
+    }
+
     remove(this._sortingComponent);
     remove(this._tripListComponent);
     Object
@@ -100,7 +107,9 @@ export default class Trip {
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
-        this._clearTrip(); // not implemented
+        this._clearTrip();
+        this._currentSortType = SORT_TYPE.DATE;
+        this._renderTrip();
         break;
     }
   }
@@ -139,6 +148,7 @@ export default class Trip {
   }
 
   _renderNoPoints() {
+    this._noPointsComponent = new NoPointView();
     render(this._tripContainer, this._noPointsComponent);
   }
 
