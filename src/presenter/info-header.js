@@ -4,6 +4,7 @@ import NewEventButton from '../view/new-event-btn';
 import { render, remove, RenderPosition } from '../util/render';
 import { FilterType, UserAction, UpdateType } from '../const';
 import {filter} from '../util/filter.js';
+import {sortByDate} from '../util/point.js';
 
 
 export default class InfoHeader {
@@ -26,7 +27,7 @@ export default class InfoHeader {
   }
 
   init() {
-    this._tripInfo = new TripInfo(this._pointsModel.getPoints());
+    this._tripInfo = new TripInfo(this._pointsModel.getPoints().slice().sort(sortByDate));
     this._menu = new MenuHeader(this.getFilters());
     this._newEventButton = new NewEventButton();
 
