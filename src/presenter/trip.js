@@ -1,10 +1,12 @@
-import {remove, render, RenderPosition } from '../util/render.js';
 import SiteSortingView from '../view/trip-sorting.js';
 import PointContainerView  from '../view/trip-point-container';
-import PointPresenter from './point.js';
 import NoPointView from '../view/trip-no-point.js';
+import PointPresenter from './point.js';
+import NewPointPresenter from './new-point';
+import {remove, render, RenderPosition } from '../util/render.js';
 import { SORT_TYPE, UserAction, UpdateType } from '../const.js';
 import { sortByDate, sortByPrice, sortByTime } from '../util/point.js';
+import { templatePoint } from '../util/blank-point.js';
 import { filter } from '../util/filter.js';
 
 export default class Trip {
@@ -23,7 +25,10 @@ export default class Trip {
 
     this._handleChangeMode = this._handleChangeMode.bind(this);
     this._handleSortClick = this._handleSortClick.bind(this);
+    this._handleNewEventButtonClick = this._handleNewEventButtonClick.bind(this);
     this._currentSortType = SORT_TYPE.DATE;
+
+    this._newPointComponent = new NewPointPresenter(this._tripListComponent, this._handleViewAction);
 
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -115,9 +120,16 @@ export default class Trip {
   }
 
   _handleChangeMode() {
+    this._newPointComponent.destroy();
+
     Object.values(this._pointPresenter).forEach((value) => {
       value.resetView();
     });
+  }
+
+  _handleNewEventButtonClick() {
+    this._handleChangeMode();
+    this._newPointComponent.init(templatePoint);
   }
 
   _renderSorting() {

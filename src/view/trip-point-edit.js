@@ -264,7 +264,6 @@ export default class EditPoint extends Smart {
     });
   }
 
-
   _setInnerHandlers() {
     const currElement = this.getElement();
     // assign handler for event clicks

@@ -17,9 +17,12 @@ const tripEventsElement = siteMainElement.querySelector('.trip-events');
 const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel);
 const infoHeaderPresenter = new InfoHeaderPresenter(tripMainHeaderElement, tripPointsModel, filterModel, tripPresenter);
 
-
 //HEADER
 infoHeaderPresenter.init();
 //MAIN
 tripPresenter.init();
+
+const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-btn');
+newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
+
 

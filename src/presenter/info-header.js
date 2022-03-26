@@ -1,6 +1,5 @@
 import TripInfo from '../view/trip-info';
 import MenuHeader from '../view/menu';
-import NewEventButton from '../view/new-event-btn';
 import { render, remove, RenderPosition } from '../util/render';
 import { FilterType, UserAction, UpdateType } from '../const';
 import {filter} from '../util/filter.js';
@@ -15,7 +14,6 @@ export default class InfoHeader {
 
     this._tripInfo = null;
     this._menu = null;
-    this._newEventButton = null;
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -29,7 +27,6 @@ export default class InfoHeader {
   init() {
     this._tripInfo = new TripInfo(this._pointsModel.getPoints().slice().sort(sortByDate));
     this._menu = new MenuHeader(this.getFilters());
-    this._newEventButton = new NewEventButton();
 
     this._menu.setClickFilters(this._handleFilterClick);
 
@@ -98,7 +95,6 @@ export default class InfoHeader {
 
   _renderHeader() {
 
-    render(this._container, this._newEventButton, RenderPosition.START);
     render(this._container, this._menu, RenderPosition.START);
     render(this._container, this._tripInfo, RenderPosition.START);
   }
@@ -106,6 +102,5 @@ export default class InfoHeader {
   _clearHeader() {
     remove(this._tripInfo);
     remove(this._menu);
-    remove(this._newEventButton);
   }
 }
