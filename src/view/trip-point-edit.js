@@ -1,7 +1,6 @@
 import { EVENTS, CITIES } from '../const.js';
 import { offersForEvent ,photosForCities, descriptionsForCities } from '../mock/point-data.js';
-// import { pointsData } from '../mock/point-data.js';
-// import { pointsData } from '../mock/point-data.js';
+// import { createValidationForCitis } from '../util/point.js';
 import { capitalize} from '../util/common';
 import Smart from './smart.js';
 import flatpickr from 'flatpickr';
@@ -55,7 +54,7 @@ const addPointEditHeader = (event, city, fromTime, toTime, price) => `<header cl
     <label class="event__label  event__type-output" for="event-destination-1">
       ${event}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1" required>
     <datalist id="destination-list-1">
       ${addListOfCities(CITIES)}
     </datalist>
@@ -74,7 +73,7 @@ const addPointEditHeader = (event, city, fromTime, toTime, price) => `<header cl
       <span class="visually-hidden">Price</span>
       &euro;
     </label>
-    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+    <input class="event__input  event__input--price" id="event-price-1" type="number" required min="0" name="event-price" value="${price}">
   </div>
 
   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -181,6 +180,7 @@ export default class EditPoint extends Smart {
     this._setInnerHandlers();
     this._setDatePickerFromTime();
     this._setDatePickerToTime();
+
   }
 
   _clickEventsHandler(evt) {
@@ -197,11 +197,31 @@ export default class EditPoint extends Smart {
 
   _changeCityHandler(evt) {
     const newCity = evt.target.value;
-    this.updateData({
-      city: newCity,
-      description: descriptionsForCities[newCity],
-      photos: photosForCities[newCity],
-    });
+    if (CITIES.includes(newCity)) {
+      evt.preventDefault();
+      evt.target.setCustomValidity('');
+      this.updateData({
+        city: newCity,
+        description: descriptionsForCities[newCity],
+        photos: photosForCities[newCity],
+      });
+    } else {
+      evt.target.setCustomValidity('Enter city from List');
+    }
+    evt.target.reportValidity();
+  }
+
+  _changePriceHandler(evt) {
+    if (evt.target.value < 1) {
+      evt.target.setCustomValidity('Enter a number bigger than one');
+    } else {
+      evt.target.setCustomValidity('');
+      evt.preventDefault();
+      this.updateData({
+        price: evt.target.value,
+      }, true);
+    }
+    evt.target.reportValidity();
   }
 
   _clickPointerHandler(evt) {
@@ -274,6 +294,10 @@ export default class EditPoint extends Smart {
     currElement
       .querySelector('#event-destination-1')
       .addEventListener('change', this._changeCityHandler);
+    // assign handler for price input
+    currElement
+      .querySelector('.event__input--price')
+      .addEventListener('change', this._changePriceHandler);
   }
 
   setClickDelHandler(cb) {
