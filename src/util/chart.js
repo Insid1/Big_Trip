@@ -2,11 +2,24 @@ import { Chart, LinearScale, CategoryScale, BarController, BarElement, Title} fr
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels, LinearScale, BarController, BarElement, CategoryScale, Title);
 Chart.defaults.font.family = 'Montserrat';
-
+import { duration } from 'dayjs';
+import { ChartType } from '../const';
+import { formatDuration } from '../util/point';
 const BAR_HEIGHT = 55;
 
-export const createChart = (containerElement, labels, data) => {
+export const createChart = (containerElement, labels, data, chartType) => {
   containerElement.height = BAR_HEIGHT * 5;
+
+  const formatLabel = () => {
+    switch (chartType) {
+      case ChartType.AMOUNT:
+        return (val) => `${val}x`;
+      case ChartType.PRICE:
+        return (val) => `€ ${val}`;
+      case ChartType.PERIOD:
+        return (val) => formatDuration(duration(val));
+    }
+  };
 
   return new Chart(containerElement, {
     plugins: [ChartDataLabels],
@@ -31,11 +44,11 @@ export const createChart = (containerElement, labels, data) => {
           color: '#000000',
           anchor: 'end',
           align: 'start',
-          formatter: (val) => `€ ${val}`,
+          formatter: formatLabel(),
         },
         title: {
           display: true,
-          text: 'MONEY',
+          text: chartType,
           color: '#000000',
           fullSize: true,
           position: 'left',

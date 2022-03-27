@@ -1,5 +1,5 @@
 import AbstractElement from './abstract-element.js';
-import { getDuration } from '../util/point.js';
+import { getDuration, formatDuration } from '../util/point.js';
 
 const createTripPoint = (pointData) => {
   const createIconLink = () => `img/icons/${pointData.event.toLowerCase()}.png`;
@@ -30,16 +30,7 @@ const createTripPoint = (pointData) => {
   };
   const generateDuration = () => {
     const period =  getDuration(pointData.fromTime, pointData.toTime);
-    const durDay = period.get('days');
-    const durHour = period.get('hours');
-    const durMin = period.get('minutes');
-    if (durDay) {
-      return `${durDay} D ${durHour} H ${durMin} M`;
-    } else if (durHour) {
-      return `${durHour} H ${durMin} M`;
-    } else {
-      return `${durMin} M`;
-    }
+    return formatDuration(period);
   };
 
   return `<li class="trip-events__item">
