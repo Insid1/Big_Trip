@@ -9,6 +9,8 @@
     "start": "webpack serve"
   },
   "devDependencies": {
+    "chart.js": "^3.7.1",
+    "chartjs-plugin-datalabels": "^2.0.0",
     "css-loader": "^6.7.1",
     "dayjs": "^1.10.8",
     "eslint": "^8.10.0",

@@ -174,4 +174,14 @@ export default class Trip {
     this._renderPoints();
   }
 
+  hideTrip() {
+    this._sortingComponent.hide();
+    this._tripListComponent.hide();
+  }
+
+  showTrip() {
+    this._sortingComponent.show();
+    this._tripListComponent.show();
+  }
+
 }

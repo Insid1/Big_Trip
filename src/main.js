@@ -3,6 +3,9 @@ import TripPresenter from './presenter/trip.js';
 import TripPointsModel from './model/trip-points.js';
 import InfoHeaderPresenter from './presenter/info-header.js';
 import TripFilterModel from './model/filter.js';
+import StatisticView from './view/statistic.js';
+import { render, RenderPosition } from './util/render.js';
+const statisticElement = new StatisticView(pointsData);
 
 const tripPointsModel = new TripPointsModel();
 tripPointsModel.setPoints(pointsData);
@@ -25,4 +28,25 @@ tripPresenter.init();
 const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-btn');
 newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
 
+
+const menuTable = infoHeaderPresenter._menu.getElement().querySelector('.trip-controls__trip-tabs').children[0];
+const menuStats = infoHeaderPresenter._menu.getElement().querySelector('.trip-controls__trip-tabs').children[1];
+
+menuTable.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  menuTable.classList.add('trip-tabs__btn--active');
+  menuStats.classList.remove('trip-tabs__btn--active');
+  tripPresenter.showTrip();
+  statisticElement.hide();
+
+});
+menuStats.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  menuTable.classList.remove('trip-tabs__btn--active');
+  menuStats.classList.add('trip-tabs__btn--active');
+  tripPresenter.hideTrip();
+  statisticElement.show();
+});
+
+render(tripEventsElement, statisticElement, RenderPosition.END);
 
