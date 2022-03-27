@@ -172,6 +172,7 @@ export default class EditPoint extends Smart {
     this._clickDelHandler = this._clickDelHandler.bind(this);
     this._clickEventsHandler = this._clickEventsHandler.bind(this);
     this._changeCityHandler = this._changeCityHandler.bind(this);
+    this._changePriceHandler = this._changePriceHandler.bind(this);
     this._clickPointerHandler = this._clickPointerHandler.bind(this);
     this._changeFromTimeHandler = this._changeFromTimeHandler.bind(this);
     this._changeToTimeHandler = this._changeToTimeHandler.bind(this);
