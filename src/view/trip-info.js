@@ -2,19 +2,21 @@ import AbstractElement from './abstract-element';
 
 const createTripInfo = (poinsData) => {
   const createRoute = () => {
-    if (poinsData.length === 0) {return '<h1 class="trip-info__title">Enter The Point</h1>';}
-    const routeFrom = poinsData[0].city;
-    const routeTo = poinsData[poinsData.length-1].city;
-    const generateMidRoutePoint = () => {
-      if (poinsData.length === 2) {
-        return '';
-      } else if (poinsData.length === 3) {
-        return `${poinsData[1].city} &mdash;`;
-      } else {
-        return '... &mdash;';
+    const generateRoute = () => {
+      switch (poinsData.length) {
+        case 0:
+          return '';
+        case 1:
+          return `${poinsData[0].city}`;
+        case 2:
+          return `${poinsData[0].city} — ${poinsData[poinsData.length - 1].city}`;
+        case 3:
+          return `${poinsData[0].city} —  ${poinsData[1].city} —  ${poinsData[2].city}`;
+        default:
+          return `${poinsData[0].city} — ... — ${poinsData[poinsData.length - 1].city}`;
       }
     };
-    return `<h1 class="trip-info__title">${routeFrom} &mdash; ${generateMidRoutePoint()} ${routeTo}</h1>`;
+    return `<h1 class="trip-info__title">${generateRoute()}</h1>`;
   };
   const createDates = () => {
     if (poinsData.length === 0) {return '';}
