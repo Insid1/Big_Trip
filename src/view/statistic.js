@@ -23,6 +23,7 @@ export default class Statistic extends AbstractElement {
   constructor(pointsData) {
     super();
     this._pointsData = pointsData;
+    this.hide();
     this.createCharts();
   }
 

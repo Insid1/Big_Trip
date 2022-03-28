@@ -1,3 +1,4 @@
+import TripStatisticPresenter from './statistic';
 import TripInfo from '../view/trip-info';
 import MenuHeader from '../view/menu';
 import { render, remove, RenderPosition } from '../util/render';
@@ -27,6 +28,8 @@ export default class InfoHeader {
   init() {
     this._tripInfo = new TripInfo(this._pointsModel.getPoints().slice().sort(sortByDate));
     this._menu = new MenuHeader(this.getFilters());
+
+    this._tripStatisticPresenter = new TripStatisticPresenter(this._pointsModel);
 
     this._menu.setClickFilters(this._handleFilterClick);
 
@@ -87,6 +90,10 @@ export default class InfoHeader {
         this._renderHeader();
         break;
     }
+  }
+
+  _handleTableClick() {
+    this._tripStatisticPresenter.hide();
   }
 
   _handleFilterClick(filterName) {

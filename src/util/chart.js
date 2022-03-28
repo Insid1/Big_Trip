@@ -29,8 +29,8 @@ export const createChart = (containerElement, labels, data, chartType) => {
       datasets: [{
         data: data,
         backgroundColor: '#97d4ff',
-        barThickness: 43,
-        minBarLength: 70,
+        barThickness: 30,
+        minBarLength: 100,
         borderRadius: 7,
       }],
     },
