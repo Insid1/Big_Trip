@@ -1,11 +1,12 @@
 import { pointsData } from './mock/point-data.js';
-import TripPresenter from './presenter/trip.js';
 import TripPointsModel from './model/trip-points.js';
-import InfoHeaderPresenter from './presenter/info-header.js';
 import TripFilterModel from './model/filter.js';
-import StatisticView from './view/statistic.js';
-import { render, RenderPosition } from './util/render.js';
-const statisticElement = new StatisticView(pointsData);
+import TripPresenter from './presenter/trip.js';
+import TripFilterPresenter from './presenter/filter.js';
+import TripInfoPresenter from './presenter/trip-info.js';
+// import StatisticView from './view/statistic.js';
+// import { render, RenderPosition } from './util/render.js';
+// const statisticElement = new StatisticView(pointsData);
 
 const tripPointsModel = new TripPointsModel();
 tripPointsModel.setPoints(pointsData);
@@ -16,12 +17,15 @@ const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
 
 const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
+const tripControlsElement = tripMainHeaderElement.querySelector('.trip-main__trip-controls');
 
 const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel);
-const infoHeaderPresenter = new InfoHeaderPresenter(tripMainHeaderElement, tripPointsModel, filterModel, tripPresenter);
+const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
+const tripFilterPresenter = new TripFilterPresenter(tripControlsElement, tripPointsModel, filterModel);
 
 //HEADER
-infoHeaderPresenter.init();
+tripInfoPresenter.init();
+tripFilterPresenter.init();
 //MAIN
 tripPresenter.init();
 
@@ -29,24 +33,24 @@ const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-b
 newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
 
 
-const menuTable = infoHeaderPresenter._menu.getElement().querySelector('.trip-controls__trip-tabs').children[0];
-const menuStats = infoHeaderPresenter._menu.getElement().querySelector('.trip-controls__trip-tabs').children[1];
+// const menuTable = infoHeaderPresenter._filters.getElement().querySelector('.trip-controls__trip-tabs').children[0];
+// const menuStats = infoHeaderPresenter._filters.getElement().querySelector('.trip-controls__trip-tabs').children[1];
 
-menuTable.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  menuTable.classList.add('trip-tabs__btn--active');
-  menuStats.classList.remove('trip-tabs__btn--active');
-  tripPresenter.showTrip();
-  statisticElement.hide();
+// menuTable.addEventListener('click', (evt) => {
+//   evt.preventDefault();
+//   menuTable.classList.add('trip-tabs__btn--active');
+//   menuStats.classList.remove('trip-tabs__btn--active');
+//   tripPresenter.showTrip();
+//   statisticElement.hide();
 
-});
-menuStats.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  menuTable.classList.remove('trip-tabs__btn--active');
-  menuStats.classList.add('trip-tabs__btn--active');
-  tripPresenter.hideTrip();
-  statisticElement.show();
-});
+// });
+// menuStats.addEventListener('click', (evt) => {
+//   evt.preventDefault();
+//   menuTable.classList.remove('trip-tabs__btn--active');
+//   menuStats.classList.add('trip-tabs__btn--active');
+//   tripPresenter.hideTrip();
+//   statisticElement.show();
+// });
 
-render(tripEventsElement, statisticElement, RenderPosition.END);
+// render(tripEventsElement, statisticElement, RenderPosition.END);
 

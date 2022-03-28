@@ -44,7 +44,7 @@ const createTripInfo = (poinsData) => {
 };
 
 
-export default class TripInfo extends AbstractElement {
+export default class Info extends AbstractElement {
   constructor(data) {
     super();
     this._data = data;

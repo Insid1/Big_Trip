@@ -1,20 +1,17 @@
 import TripStatisticPresenter from './statistic';
-import TripInfo from '../view/trip-info';
-import MenuHeader from '../view/menu';
+import Filters from '../view/filter';
 import { render, remove, RenderPosition } from '../util/render';
 import { FilterType, UserAction, UpdateType } from '../const';
 import {filter} from '../util/filter.js';
-import {sortByDate} from '../util/point.js';
 
 
-export default class InfoHeader {
+export default class TripFilter {
   constructor(container, pointsModel, filterModel) {
     this._container = container;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
-    this._tripInfo = null;
-    this._menu = null;
+    this._filters = null;
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -26,14 +23,13 @@ export default class InfoHeader {
   }
 
   init() {
-    this._tripInfo = new TripInfo(this._pointsModel.getPoints().slice().sort(sortByDate));
-    this._menu = new MenuHeader(this.getFilters());
+    this._filters = new Filters(this.getFilters());
 
     this._tripStatisticPresenter = new TripStatisticPresenter(this._pointsModel);
 
-    this._menu.setClickFilters(this._handleFilterClick);
+    this._filters.setClickFilters(this._handleFilterClick);
 
-    this._renderHeader();
+    this._renderFilters();
   }
 
   getFilters() {
@@ -78,36 +74,23 @@ export default class InfoHeader {
 
   _handleModelEvent(updateType) {
     switch (updateType) {
-      case UpdateType.PATCH:
-        // not implemented. Has nothing to do with filters. But with menu ?
-        break;
-      case UpdateType.MINOR:
-        // not implemented. Has nothing to do with filters. But with menu ?
-        break;
       case UpdateType.MAJOR:
-        this._clearHeader();
+        this._clearFilters();
         this.init();
-        this._renderHeader();
+        this._renderFilters();
         break;
     }
-  }
-
-  _handleTableClick() {
-    this._tripStatisticPresenter.hide();
   }
 
   _handleFilterClick(filterName) {
     this._handleViewAction(UserAction.SELECT_FILTER, UpdateType.MINOR, filterName);
   }
 
-  _renderHeader() {
-
-    render(this._container, this._menu, RenderPosition.START);
-    render(this._container, this._tripInfo, RenderPosition.START);
+  _renderFilters() {
+    render(this._container, this._filters, RenderPosition.END);
   }
 
-  _clearHeader() {
-    remove(this._tripInfo);
-    remove(this._menu);
+  _clearFilters() {
+    remove(this._filters);
   }
 }
