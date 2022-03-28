@@ -30,6 +30,18 @@ export default class Filters extends AbstractElement {
     this._handleFilterClick = this._handleFilterClick.bind(this);
   }
 
+  disable() {
+    this.getElement().querySelectorAll('input').forEach((input) => {
+      input.disabled = true;
+    });
+  }
+
+  enable() {
+    this.getElement().querySelectorAll('input').forEach((input) => {
+      input.disabled = false;
+    });
+  }
+
   getTemplate() {
     return addFilters(this._filters);
   }

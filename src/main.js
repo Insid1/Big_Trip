@@ -32,7 +32,7 @@ tripPresenter.init();
 const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-btn');
 newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
 
-const makeStatisticWork = () => {
+const addStatistic = () => {
   const tableBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[0];
   const statsBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[1];
 
@@ -42,7 +42,8 @@ const makeStatisticWork = () => {
     statsBtn.classList.remove('trip-tabs__btn--active');
     tripPresenter.showTrip();
     tripStatisticPresenter.hide();
-
+    tripFilterPresenter.enableFilters();
+    newEventBtn.disabled = false;
   });
   statsBtn.addEventListener('click', (evt) => {
     evt.preventDefault();
@@ -50,8 +51,11 @@ const makeStatisticWork = () => {
     statsBtn.classList.add('trip-tabs__btn--active');
     tripPresenter.hideTrip();
     tripStatisticPresenter.show();
+    tripFilterPresenter.disableFilters();
+    newEventBtn.disabled = true;
+
   });
 };
-makeStatisticWork();
+addStatistic();
 
 

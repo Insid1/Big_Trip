@@ -90,4 +90,12 @@ export default class TripFilter {
   _clearFilters() {
     remove(this._filters);
   }
+
+  disableFilters() {
+    this._filters.disable();
+  }
+
+  enableFilters() {
+    this._filters.enable();
+  }
 }
