@@ -8,7 +8,7 @@ import { formatDuration } from '../util/point';
 const BAR_HEIGHT = 55;
 
 export const createChart = (containerElement, labels, data, chartType) => {
-  containerElement.height = BAR_HEIGHT * 5;
+  containerElement.height = BAR_HEIGHT * labels.length;
 
   const formatLabel = () => {
     switch (chartType) {
@@ -29,8 +29,8 @@ export const createChart = (containerElement, labels, data, chartType) => {
       datasets: [{
         data: data,
         backgroundColor: '#97d4ff',
-        barThickness: 30,
-        minBarLength: 100,
+        barThickness: 45,
+        minBarLength: 120,
         borderRadius: 7,
       }],
     },

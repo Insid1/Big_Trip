@@ -18,9 +18,7 @@ export default class TripInfo {
 
   init() {
     this._tripInfo = new Info(this._pointsModel.getPoints().slice().sort(sortByDate));
-    this._renderHeader();
-
-    // this._tripStatisticPresenter = new TripStatisticPresenter(this._pointsModel);
+    this._renderInfo();
 
   }
 
@@ -33,22 +31,18 @@ export default class TripInfo {
         // not implemented. Has nothing to do with filters. But with menu ?
         break;
       case UpdateType.MAJOR:
-        this._clearHeader();
+        this._clearInfo();
         this.init();
-        this._renderHeader();
+        this._renderInfo();
         break;
     }
   }
 
-  // _handleTableClick() {
-  //   this._tripStatisticPresenter.hide();
-  // }
-
-  _renderHeader() {
+  _renderInfo() {
     render(this._container, this._tripInfo, RenderPosition.START);
   }
 
-  _clearHeader() {
+  _clearInfo() {
     remove(this._tripInfo);
   }
 }

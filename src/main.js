@@ -4,9 +4,8 @@ import TripFilterModel from './model/filter.js';
 import TripPresenter from './presenter/trip.js';
 import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
-// import StatisticView from './view/statistic.js';
+import TripStatisticPresenter from './presenter/statistic.js';
 // import { render, RenderPosition } from './util/render.js';
-// const statisticElement = new StatisticView(pointsData);
 
 const tripPointsModel = new TripPointsModel();
 tripPointsModel.setPoints(pointsData);
@@ -22,6 +21,7 @@ const tripControlsElement = tripMainHeaderElement.querySelector('.trip-main__tri
 const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel);
 const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
 const tripFilterPresenter = new TripFilterPresenter(tripControlsElement, tripPointsModel, filterModel);
+const tripStatisticPresenter = new TripStatisticPresenter(siteMainElement, tripPointsModel);
 
 //HEADER
 tripInfoPresenter.init();
@@ -32,25 +32,26 @@ tripPresenter.init();
 const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-btn');
 newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
 
+const makeStatisticWork = () => {
+  const tableBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[0];
+  const statsBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[1];
 
-// const menuTable = infoHeaderPresenter._filters.getElement().querySelector('.trip-controls__trip-tabs').children[0];
-// const menuStats = infoHeaderPresenter._filters.getElement().querySelector('.trip-controls__trip-tabs').children[1];
+  tableBtn.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    tableBtn.classList.add('trip-tabs__btn--active');
+    statsBtn.classList.remove('trip-tabs__btn--active');
+    tripPresenter.showTrip();
+    tripStatisticPresenter.hide();
 
-// menuTable.addEventListener('click', (evt) => {
-//   evt.preventDefault();
-//   menuTable.classList.add('trip-tabs__btn--active');
-//   menuStats.classList.remove('trip-tabs__btn--active');
-//   tripPresenter.showTrip();
-//   statisticElement.hide();
+  });
+  statsBtn.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    tableBtn.classList.remove('trip-tabs__btn--active');
+    statsBtn.classList.add('trip-tabs__btn--active');
+    tripPresenter.hideTrip();
+    tripStatisticPresenter.show();
+  });
+};
+makeStatisticWork();
 
-// });
-// menuStats.addEventListener('click', (evt) => {
-//   evt.preventDefault();
-//   menuTable.classList.remove('trip-tabs__btn--active');
-//   menuStats.classList.add('trip-tabs__btn--active');
-//   tripPresenter.hideTrip();
-//   statisticElement.show();
-// });
-
-// render(tripEventsElement, statisticElement, RenderPosition.END);
 

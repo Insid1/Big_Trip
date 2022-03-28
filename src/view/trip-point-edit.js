@@ -213,13 +213,14 @@ export default class EditPoint extends Smart {
   }
 
   _changePriceHandler(evt) {
-    if (evt.target.value < 1) {
+    const price = +evt.target.value;
+    if (price < 1) {
       evt.target.setCustomValidity('Enter a number bigger than one');
     } else {
       evt.target.setCustomValidity('');
       evt.preventDefault();
       this.updateData({
-        price: evt.target.value,
+        price: price,
       }, true);
     }
     evt.target.reportValidity();

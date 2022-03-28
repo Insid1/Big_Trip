@@ -1,15 +1,15 @@
-import StatisticView from '../view/statistic';
+import StatisticView from '../view/statistic.js';
 import { UpdateType } from '../const';
+import { render, RenderPosition } from '../util/render.js';
 
 export default class TripStatistic {
-  constructor(pointsModel) {
+  constructor(statisticContainer, pointsModel) {
     this._pointsModel = pointsModel;
-
-    this._statisticView = null;
+    this._statisticContainer = statisticContainer;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
-
     this._pointsModel.addObserver(this._handleModelEvent);
+    this.createStatistic();
   }
 
   _handleModelEvent(updateType) {
@@ -21,6 +21,8 @@ export default class TripStatistic {
 
   createStatistic() {
     this._statisticView = new StatisticView(this._pointsModel.getPoints());
+    render(this._statisticContainer, this._statisticView, RenderPosition.END);
+    this._statisticView.hide();
   }
 
   hide() {

@@ -1,4 +1,3 @@
-import TripStatisticPresenter from './statistic';
 import Filters from '../view/filter';
 import { render, remove, RenderPosition } from '../util/render';
 import { FilterType, UserAction, UpdateType } from '../const';
@@ -24,8 +23,6 @@ export default class TripFilter {
 
   init() {
     this._filters = new Filters(this.getFilters());
-
-    this._tripStatisticPresenter = new TripStatisticPresenter(this._pointsModel);
 
     this._filters.setClickFilters(this._handleFilterClick);
 
