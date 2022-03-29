@@ -32,7 +32,10 @@ const createPhotosForCities = () => {
     const numOfPhotos = getRandomInt(1, 8);
     const photos = new Array(numOfPhotos)
       .fill()
-      .map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
+      .map((value, index) => ({
+        src:`http://picsum.photos/248/152?r=${Math.random()}`,
+        alt: index,
+      }));
     return photos ;
   };
 

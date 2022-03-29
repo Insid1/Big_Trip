@@ -85,7 +85,7 @@ const addPointEditHeader = (event, city, fromTime, toTime, price) => `<header cl
 
 const addPhotos = (photos) => {
   if (!photos) {return '';}
-  const createPhoto = (photoLink) => `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
+  const createPhoto = (photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.alt}">`;
 
   const photoElements = photos
     .reduce((acc, photo) => {

@@ -1,8 +1,8 @@
-import {nanoid} from 'nanoid';
+// import {nanoid} from 'nanoid';
 import dayjs from 'dayjs';
 import { getRandomValueFromArr} from '../util/common';
 import { EVENTS, CITIES } from '../const.js';
-import { offersForEvent ,photosForCities, descriptionsForCities } from '../mock/point-data.js';
+import { photosForCities, descriptionsForCities } from '../mock/point-data.js';
 
 
 export const createPointTemplate = () => {
@@ -10,13 +10,13 @@ export const createPointTemplate = () => {
   const city = getRandomValueFromArr(CITIES);
 
   return {
-    id: nanoid(),
+    // id: nanoid(),
     event,
     city,
     fromTime: dayjs(),
     toTime: dayjs(),
     price: 0,
-    offers: offersForEvent[event],
+    offers: [],
     favorite: false,
     description: descriptionsForCities[city],
     photos: photosForCities[city],
