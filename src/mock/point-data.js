@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { getRandomInt, getTrueOrFalse, getRandomValueFromArr } from '../util/common.js';
 
-const AMOUNT_OF_POINTS = 5;
+const AMOUNT_OF_POINTS = 0;
 const AMOUNT_OF_OFFERS = 6;
 
 

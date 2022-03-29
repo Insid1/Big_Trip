@@ -55,4 +55,8 @@ export default class TripPoints extends Observer {
     this.notify(updateType, update);
 
   }
+
+  refreshPoints(updateType) {
+    this.notify(updateType);
+  }
 }

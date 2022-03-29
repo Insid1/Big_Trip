@@ -1,6 +1,6 @@
 import StatisticView from '../view/statistic.js';
 import { UpdateType } from '../const';
-import { render, RenderPosition } from '../util/render.js';
+import { render, RenderPosition, remove } from '../util/render.js';
 
 export default class TripStatistic {
   constructor(statisticContainer, pointsModel) {
@@ -20,6 +20,9 @@ export default class TripStatistic {
   }
 
   createStatistic() {
+    if (this._statisticView) {
+      remove(this._statisticView);
+    }
     this._statisticView = new StatisticView(this._pointsModel.getPoints());
     render(this._statisticContainer, this._statisticView, RenderPosition.END);
     this._statisticView.hide();

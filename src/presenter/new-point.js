@@ -16,8 +16,11 @@ export default class NewPoint {
     this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
   }
 
-  init(pointData) {
+  init(pointData, isNoPoints, renderTrip) {
     this.pointData = pointData;
+    this._isNoPoints = isNoPoints;
+    this._renderTrip = renderTrip;
+
     if (this._addPointComponent !== null) {
       this.destroy();
       this._addPointComponent = null;
@@ -44,6 +47,9 @@ export default class NewPoint {
 
   _handleAddPointClick() {
     this.destroy();
+    if (this._isNoPoints) {
+      this._renderTrip();
+    }
   }
 
   _handleAddPointSubmit(newData) {
@@ -57,10 +63,16 @@ export default class NewPoint {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
+      if (this._isNoPoints) {
+        this._renderTrip();
+      }
     }
   }
 
   _handleAddPointDelClick() {
     this.destroy();
+    if (this._isNoPoints) {
+      this._renderTrip();
+    }
   }
 }

@@ -5,7 +5,7 @@ import { EVENTS, CITIES } from '../const.js';
 import { offersForEvent ,photosForCities, descriptionsForCities } from '../mock/point-data.js';
 
 
-const createPointTemplate = () => {
+export const createPointTemplate = () => {
   const event = getRandomValueFromArr(EVENTS);
   const city = getRandomValueFromArr(CITIES);
 
@@ -24,4 +24,3 @@ const createPointTemplate = () => {
 
 };
 
-export const templatePoint = createPointTemplate();

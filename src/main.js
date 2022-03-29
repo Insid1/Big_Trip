@@ -5,31 +5,28 @@ import TripPresenter from './presenter/trip.js';
 import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
 import TripStatisticPresenter from './presenter/statistic.js';
-// import { render, RenderPosition } from './util/render.js';
 
+const filterModel = new TripFilterModel();
 const tripPointsModel = new TripPointsModel();
 tripPointsModel.setPoints(pointsData);
-const filterModel = new TripFilterModel();
 
 const siteHeaderElement = document.querySelector('.page-header');
 const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
-
 const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
 const tripControlsElement = tripMainHeaderElement.querySelector('.trip-main__trip-controls');
+const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-btn');
+
 
 const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel);
+tripPresenter.init();
 const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
+tripInfoPresenter.init();
 const tripFilterPresenter = new TripFilterPresenter(tripControlsElement, tripPointsModel, filterModel);
+tripFilterPresenter.init();
 const tripStatisticPresenter = new TripStatisticPresenter(siteMainElement, tripPointsModel);
 
-//HEADER
-tripInfoPresenter.init();
-tripFilterPresenter.init();
-//MAIN
-tripPresenter.init();
 
-const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-btn');
 newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
 
 const addStatistic = () => {
@@ -57,5 +54,3 @@ const addStatistic = () => {
   });
 };
 addStatistic();
-
-

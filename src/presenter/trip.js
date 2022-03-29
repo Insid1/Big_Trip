@@ -6,7 +6,7 @@ import NewPointPresenter from './new-point';
 import {remove, render, RenderPosition } from '../util/render.js';
 import { SORT_TYPE, UserAction, UpdateType } from '../const.js';
 import { sortByDate, sortByPrice, sortByTime } from '../util/point.js';
-import { templatePoint } from '../util/blank-point.js';
+import { createPointTemplate } from '../util/blank-point.js';
 import { filter } from '../util/filter.js';
 
 export default class Trip {
@@ -26,6 +26,7 @@ export default class Trip {
     this._handleChangeMode = this._handleChangeMode.bind(this);
     this._handleSortClick = this._handleSortClick.bind(this);
     this._handleNewEventButtonClick = this._handleNewEventButtonClick.bind(this);
+    this._renderTrip = this._renderTrip.bind(this);
     this._currentSortType = SORT_TYPE.DATE;
 
     this._newPointComponent = new NewPointPresenter(this._tripListComponent, this._handleViewAction);
@@ -107,11 +108,14 @@ export default class Trip {
         this._pointPresenter[update.id].init(update);
         break;
       case UpdateType.MINOR:
+        this._newPointComponent.destroy();
         this._clearTrip();
         this._currentSortType = SORT_TYPE.DATE;
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
+        this._newPointComponent.destroy();
+
         this._clearTrip();
         this._currentSortType = SORT_TYPE.DATE;
         this._renderTrip();
@@ -120,7 +124,7 @@ export default class Trip {
   }
 
   _handleChangeMode() {
-    this._newPointComponent.destroy();
+    // this._newPointComponent.destroy();
 
     Object.values(this._pointPresenter).forEach((value) => {
       value.resetView();
@@ -128,8 +132,12 @@ export default class Trip {
   }
 
   _handleNewEventButtonClick() {
+    if (this.isNoPoints()) {
+      this._renderPointList();
+      remove(this._noPointsComponent);
+    }
     this._handleChangeMode();
-    this._newPointComponent.init(templatePoint);
+    this._newPointComponent.init(createPointTemplate(), this.isNoPoints(), this._renderTrip);
   }
 
   _renderSorting() {
@@ -165,7 +173,7 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._getPoints().length === 0) {
+    if (this.isNoPoints()) {
       this._renderNoPoints();
       return;
     }
@@ -182,6 +190,10 @@ export default class Trip {
   showTrip() {
     this._sortingComponent.show();
     this._tripListComponent.show();
+  }
+
+  isNoPoints() {
+    return this._getPoints().length === 0;
   }
 
 }
