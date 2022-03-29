@@ -57,10 +57,6 @@ export default class TripPoints extends Observer {
 
   }
 
-  refreshPoints(updateType) {
-    this.notify(updateType);
-  }
-
   static adaptPointToClient(serverPoint) {
     const adaptOffers = (offers) => {
       offers.map((offer) => ({
@@ -84,7 +80,17 @@ export default class TripPoints extends Observer {
   }
 
   static adaptPointToServer(clientPoint) {
-    const one = 1;
+    const adaptPhotos = () => {
+      clientPoint.photos.map(({src, alt}) => ({
+        'src': src,
+        'description': alt,
+      })
+      );
+    };
+    const adaptOffers = () => clientPoint.map(({name, price}) => ({
+      'title': name,
+      'price': price,
+    }));
     return {
       'id': clientPoint.id,
       'type': clientPoint.event,
@@ -93,29 +99,11 @@ export default class TripPoints extends Observer {
       'destination': {
         'name': clientPoint.city,
         'description': clientPoint.description,
-        'pictures': [ // make function for pictures
-          {
-            'src': 'http://picsum.photos/300/200?r=0.17074295443576526',
-            'description': 'not yet'
-          },
-          {
-            'src': 'http://picsum.photos/300/200?r=0.12509370998832603',
-            'description': 'not yet'
-          },
-        ]
+        'pictures': adaptPhotos(),
       },
       'base_price': clientPoint.price,
       'is_favorite': clientPoint.favorite,
-      'offers': [ // make function for offers
-        {
-          'title': 'Choose comfort class',
-          'price': 110
-        },
-        {
-          'title': 'Choose business class',
-          'price': 180
-        }
-      ]
+      'offers': adaptOffers(),
     };
   }
 }

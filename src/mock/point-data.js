@@ -106,7 +106,6 @@ const createPoints = () => {
   const data = new Array(AMOUNT_OF_POINTS)
     .fill()
     .map(createPointTemplate);
-  console.log(data);
   return AMOUNT_OF_POINTS ? data : []; // if no data return empty list
 };
 

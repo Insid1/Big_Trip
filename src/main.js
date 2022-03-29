@@ -9,14 +9,16 @@ import Api from './api.js';
 const AUTHORIZATION = 'Basic random_string';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
-// const api = new Api(END_POINT, AUTHORIZATION);
-// api.getPoints().then((points) => {
-//   console.log(points);
-// });
+console.log(pointsData);
+
+const api = new Api(END_POINT, AUTHORIZATION);
+api.getPoints().then((points) => {
+  // console.log(points);
+});
 
 const filterModel = new TripFilterModel();
 const tripPointsModel = new TripPointsModel();
-tripPointsModel.setPoints(pointsData);
+// tripPointsModel.setPoints(pointsData);
 
 const siteHeaderElement = document.querySelector('.page-header');
 const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
