@@ -20,7 +20,14 @@ const getRandomFloat = (min, max, numOfdecimalPlace) => {
   return +randomNumber.toFixed(numOfdecimalPlace);
 };
 
-const getRandomValueFromArr = (arr) => arr[getRandomInt(0, arr.length -1)];
+const getRandomValueFromArr = (arr) => {
+  // сделать проверку на обьект
+  const randomValue = arr[getRandomInt(0, arr.length -1)];
+  if (typeof randomValue === 'object') {
+    return Object.assign({}, randomValue);
+  }
+  return randomValue;
+};
 
 const getTrueOrFalse = () => Boolean(getRandomInt(0, 1));
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;

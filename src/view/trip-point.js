@@ -18,13 +18,11 @@ const createTripPoint = (pointData) => {
   const addSelectedOffers = () => {
     const offers = pointData.offers;
     return offers.reduce((acc, offer) => {
-      acc += offer.checked ?
-        `<li class="event__offer">
+      acc += `<li class="event__offer">
   <span class="event__offer-title">${offer.name}</span>
   &plus;&euro;&nbsp;
   <span class="event__offer-price">${offer.price}</span>
-</li>`:
-        '';
+</li>`;
       return acc;
     }, '');
   };

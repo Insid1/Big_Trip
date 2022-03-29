@@ -1,3 +1,5 @@
+import TripPointsModel from './model/trip-points';
+
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -14,19 +16,23 @@ export default class Api {
     this._authorization = authorization;
   }
 
-  getTasks() {
-    return this._load({url: 'tasks'})
-      .then(Api.toJSON);
+  getPoints() {
+    return this._load({url: 'points'})
+      .then(Api.toJSON)
+      .then((points) => {console.log(points);
+        return points;})
+      .then((points) => points.map(TripPointsModel.adaptPointToClient));
   }
 
-  updateTask(point) {
+  updatePoints(point) {
     return this._load({
       url: `tasks/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(point),
+      body: JSON.stringify(TripPointsModel.adaptPointToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then(TripPointsModel.adaptPointToClient); // почему ту клаент?
   }
 
   _load({

@@ -3,22 +3,24 @@ import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { getRandomInt, getTrueOrFalse, getRandomValueFromArr } from '../util/common.js';
 
-const AMOUNT_OF_POINTS = 0;
+const AMOUNT_OF_POINTS = 10;
 const AMOUNT_OF_OFFERS = 6;
 
-
+// переработать функцию по созданию оферов для поинта
+//  она должна добавлять только активные оферы в зависимости от ивента
+// следовательно в обьекте поинта будут лежать только активные оферы
+// а при отрисовки вьюхи она должна брать общий набор оферов и сравнивать
+// есть ли такой офер там и если есть, то делать его checked
 const createOffersForEvent = () => {
   const result = {};
   const createOffer = (eventName) => ({
-    id: getRandomInt(1, 10000),
     name: eventName,
     price: getRandomInt(PRICE_RANGE.MIN, PRICE_RANGE.MAX),
-    checked: false,
   });
   EVENTS.forEach((value) => {
     const arrOfOffers = new Array(AMOUNT_OF_OFFERS)
       .fill()
-      .map(() => (createOffer(value)));
+      .map((element, index) => (createOffer(value + index)));
     result[value] = arrOfOffers;
   });
   return result;
@@ -74,12 +76,7 @@ const offersForEvent = createOffersForEvent();
 const photosForCities = createPhotosForCities();
 const descriptionsForCities = createDescriptionForCities();
 
-const generateOffer = (event) => {
-  const specificOffer = offersForEvent[event]
-    .slice()
-    .map((value) => Object.assign({}, value, {checked: getTrueOrFalse()}));
-  return specificOffer;
-};
+const generateOffer = (event) => [getRandomValueFromArr(offersForEvent[event])];
 
 const createPoints = () => {
   const createPointTemplate = () => {
@@ -106,6 +103,7 @@ const createPoints = () => {
   const data = new Array(AMOUNT_OF_POINTS)
     .fill()
     .map(createPointTemplate);
+  console.log(data);
   return AMOUNT_OF_POINTS ? data : []; // if no data return empty list
 };
 

@@ -106,21 +106,20 @@ const addDescription = (description) => {
   return `<p class="event__destination-description">${description}</p>`;
 };
 
-const addPointEditDetailsOffers = (offers) => {
+const addOffers = (totalOffers, pointOffers) => {
 
   const addOffer = (offer) => {
-    const isChecked = () => (offer.checked) ? 'checked': '';
+    const isChecked = () => pointOffers.some((pointOffer) => pointOffer.name === offer.name) ? 'checked' : '';
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name.toLowerCase()}-${offer.id}" type="checkbox" name="event-offer-${offer.name.toLowerCase()}" ${isChecked()}>
-        <label class="event__offer-label" for="event-offer-${offer.name.toLowerCase()}-${offer.id}">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name.toLowerCase()}" type="checkbox" name="event-offer-${offer.name.toLowerCase()}" ${isChecked()}>
+        <label class="event__offer-label" for="event-offer-${offer.name.toLowerCase()}">
         <span class="event__offer-title">${offer.name}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
         </label>
         </div>`;
   };
-
-  const offersElement = offers.map((element) => addOffer(element));
+  const offersElement = totalOffers.map(addOffer);
 
   return `<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -142,8 +141,8 @@ const createPointEditDetailsDestination = (photos, description) => {
 </section>`;
 };
 
-const addPointEditDetails = (offers, photos, description) => `<section class="event__details">
-  ${offers !== null ? addPointEditDetailsOffers(offers) : ''}
+const addPointEditDetails = (offers, photos, description, event) => `<section class="event__details">
+  ${offers !== null ? addOffers(offersForEvent[event], offers) : ''}
   ${createPointEditDetailsDestination(photos, description)}
 </section>`;
 
@@ -154,7 +153,7 @@ const addPointEdit = (pointData) => {
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       ${addPointEditHeader(event, city,fromTime, toTime, price)}
-      ${addPointEditDetails(offers, photos, description)}
+      ${addPointEditDetails(offers, photos, description, event)}
     </form>
   </li>`;
 };

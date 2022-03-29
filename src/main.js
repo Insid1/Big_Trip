@@ -5,6 +5,14 @@ import TripPresenter from './presenter/trip.js';
 import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
 import TripStatisticPresenter from './presenter/statistic.js';
+import Api from './api.js';
+const AUTHORIZATION = 'Basic random_string';
+const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+
+// const api = new Api(END_POINT, AUTHORIZATION);
+// api.getPoints().then((points) => {
+//   console.log(points);
+// });
 
 const filterModel = new TripFilterModel();
 const tripPointsModel = new TripPointsModel();
