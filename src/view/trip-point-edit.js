@@ -1,5 +1,3 @@
-import { EVENTS, CITIES } from '../const.js';
-import { destination } from '../mock/point-data.js';
 import { capitalize} from '../util/common';
 import Smart from './smart.js';
 import flatpickr from 'flatpickr';
@@ -33,7 +31,7 @@ const addListOfCities = (cities) => {
   return listOfCities.join('');
 };
 
-const addPointEditHeader = (event, city, fromTime, toTime, price) => `<header class="event__header">
+const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsData, offersData) => `<header class="event__header">
   <div class="event__type-wrapper">
     <label class="event__type  event__type-btn" for="event-type-toggle-1">
       <span class="visually-hidden">Choose event type</span>
@@ -44,7 +42,7 @@ const addPointEditHeader = (event, city, fromTime, toTime, price) => `<header cl
     <div class="event__type-list">
       <fieldset class="event__type-group"> 
         <legend class="visually-hidden">Event type</legend>
-        ${addListOfEvents(event, EVENTS)}
+        ${addListOfEvents(event, Object.keys(offersData))}
       </fieldset>
     </div>
   </div>
@@ -55,7 +53,7 @@ const addPointEditHeader = (event, city, fromTime, toTime, price) => `<header cl
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1" required>
     <datalist id="destination-list-1">
-      ${addListOfCities(CITIES)}
+      ${addListOfCities(Object.keys(destinationsData))}
     </datalist>
   </div>
   
@@ -145,13 +143,13 @@ const addPointEditDetails = (offers, photos, description, event, offersData) => 
   ${createPointEditDetailsDestination(photos, description)}
 </section>`;};
 
-const addPointEdit = (pointData, offersData) => {
+const addPointEdit = (pointData, offersData, destinationsData) => {
   const {event, city, fromTime, toTime,
     price, offers, description, photos} = pointData;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
-      ${addPointEditHeader(event, city,fromTime, toTime, price)}
+      ${addPointEditHeader(event, city,fromTime, toTime, price, destinationsData, offersData)}
       ${addPointEditDetails(offers, photos, description, event, offersData)}
     </form>
   </li>`;
@@ -164,7 +162,7 @@ export default class EditPoint extends Smart {
     this._pointState = EditPoint.parseDataToState(pointData);
     this._offersData = offersData;
     this._destinationsData = destinationsData;
-    console.log(destinationsData);
+
     this._datePickerFromTime = null;
     this._datePickerToTime = null;
 
@@ -199,13 +197,13 @@ export default class EditPoint extends Smart {
 
   _changeCityHandler(evt) {
     const newCity = evt.target.value;
-    if (CITIES.includes(newCity)) {
+    if (Object.keys(this._destinationsData).includes(newCity)) {
       evt.preventDefault();
       evt.target.setCustomValidity('');
       this.updateData({
         city: newCity,
-        description: destination[newCity].description,
-        photos: destination[newCity].photos,
+        description: this._destinationsData[newCity].description,
+        photos: this._destinationsData[newCity].photos,
       });
     } else {
       evt.target.setCustomValidity('Enter city from List');
@@ -337,7 +335,7 @@ export default class EditPoint extends Smart {
   }
 
   getTemplate() {
-    return addPointEdit(this._pointState, this._offersData);
+    return addPointEdit(this._pointState, this._offersData, this._destinationsData);
   }
 
   static parseDataToState(state) {

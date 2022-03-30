@@ -11,6 +11,7 @@ export default class TripFilter {
     this._filterModel = filterModel;
 
     this._filters = null;
+    this._isLoading = true;
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -75,7 +76,7 @@ export default class TripFilter {
         this._renderFilters();
         break;
       case UpdateType.INIT:
-        this._clearFilters();
+        this._isLoading = false;
         this.init();
         this._renderFilters();
     }
@@ -86,6 +87,9 @@ export default class TripFilter {
   }
 
   _renderFilters() {
+    if (this._isLoading) {
+      return;
+    }
     render(this._container, this._filters, RenderPosition.END);
   }
 

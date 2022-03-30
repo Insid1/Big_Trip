@@ -6,6 +6,7 @@ export default class TripStatistic {
   constructor(statisticContainer, pointsModel) {
     this._pointsModel = pointsModel;
     this._statisticContainer = statisticContainer;
+    this._isLoading = true;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._pointsModel.addObserver(this._handleModelEvent);
@@ -18,12 +19,17 @@ export default class TripStatistic {
         this.createStatistic();
         break;
       case UpdateType.INIT:
+        this._isLoading = false;
         this.createStatistic();
         break;
     }
   }
 
   createStatistic() {
+    if (this._isLoading) {
+      return;
+    }
+
     if (this._statisticView) {
       remove(this._statisticView);
     }

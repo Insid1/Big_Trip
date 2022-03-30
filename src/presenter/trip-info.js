@@ -11,6 +11,8 @@ export default class TripInfo {
 
     this._tripInfo = null;
 
+    this._isLoading = true;
+
     this._handleModelEvent = this._handleModelEvent.bind(this);
   }
 
@@ -35,7 +37,7 @@ export default class TripInfo {
         this._renderInfo();
         break;
       case UpdateType.INIT:
-        this._clearInfo();
+        this._isLoading = false;
         this.init();
         this._renderInfo();
         break;
@@ -43,6 +45,9 @@ export default class TripInfo {
   }
 
   _renderInfo() {
+    if (this._isLoading) {
+      return;
+    }
     render(this._container, this._tripInfo, RenderPosition.START);
   }
 
