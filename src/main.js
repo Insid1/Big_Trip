@@ -1,4 +1,4 @@
-import { pointsData } from './mock/point-data.js';
+// import { pointsData } from './mock/point-data.js';
 import TripPointsModel from './model/trip-points.js';
 import TripFilterModel from './model/filter.js';
 import TripPresenter from './presenter/trip.js';

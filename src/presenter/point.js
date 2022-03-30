@@ -102,7 +102,6 @@ export default class Point {
 
   _handleEditClick() {
     this._changeMode();
-    this._replaceEditToPoint();
 
   }
 

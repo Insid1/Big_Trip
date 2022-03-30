@@ -26,17 +26,16 @@ export default class Trip {
     this._handleChangeMode = this._handleChangeMode.bind(this);
     this._handleSortClick = this._handleSortClick.bind(this);
     this._handleNewEventButtonClick = this._handleNewEventButtonClick.bind(this);
-    this._renderTrip = this._renderTrip.bind(this);
+    this._renderTrip = this._renderTrip.bind(this); // to send it to newPointPresenter
     this._currentSortType = SORT_TYPE.DATE;
 
     this._newPointComponent = new NewPointPresenter(this._tripListComponent, this._handleViewAction);
-
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     this._renderTrip();
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   _getPoints() {
@@ -121,7 +120,6 @@ export default class Trip {
         this._renderTrip();
         break;
       case UpdateType.INIT:
-        console.log(this._getPoints());
         this._clearTrip();
         this._renderTrip();
     }
