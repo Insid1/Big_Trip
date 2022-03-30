@@ -1,6 +1,5 @@
 import { EVENTS, CITIES } from '../const.js';
-import { photosForCities, descriptionsForCities } from '../mock/point-data.js';
-// import { createValidationForCitis } from '../util/point.js';
+import { destination } from '../mock/point-data.js';
 import { capitalize} from '../util/common';
 import Smart from './smart.js';
 import flatpickr from 'flatpickr';
@@ -203,8 +202,8 @@ export default class EditPoint extends Smart {
       evt.target.setCustomValidity('');
       this.updateData({
         city: newCity,
-        description: descriptionsForCities[newCity],
-        photos: photosForCities[newCity],
+        description: destination[newCity].description,
+        photos: destination[newCity].photos,
       });
     } else {
       evt.target.setCustomValidity('Enter city from List');

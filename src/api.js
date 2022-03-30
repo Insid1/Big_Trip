@@ -26,17 +26,15 @@ export default class Api {
       .then((offers) => TripOffersModel.adaptOfferToClient(offers));
   }
 
-  getEvents() {
-
+  getDestinations() {
+    return this._load({url: 'destinations'})
+      .then(Api.toJSON)
+      .then((destinations) => destinations);
   }
 
   getPoints() {
     return this._load({url: 'points'})
       .then(Api.toJSON)
-      .then((points) =>
-        // console.log(points);
-        points
-      )
       .then((points) => points.map(TripPointsModel.adaptPointToClient));
   }
 

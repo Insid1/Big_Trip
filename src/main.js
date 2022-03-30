@@ -1,6 +1,7 @@
 import TripPointsModel from './model/trip-points.js';
 import TripFilterModel from './model/filter.js';
 import TripOffersModel from './model/offers.js';
+import TripDestinationsModel from './model/destinations.js';
 import TripPresenter from './presenter/trip.js';
 import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
@@ -22,14 +23,21 @@ const api = new Api(END_POINT, AUTHORIZATION);
 const filterModel = new TripFilterModel();
 const tripOffersModel = new TripOffersModel();
 const tripPointsModel = new TripPointsModel();
+const tripDestinationsModel = new TripDestinationsModel();
 
+api.getDestinations()
+  .then(TripDestinationsModel.adaptDestinationToClient)
+  .then((destinations) => {
+    tripDestinationsModel.setDestinations(destinations);
+  });
 
 api.getOffers()
   .then((offers) => {
     tripOffersModel.setOffers(offers);
   })
   .then(() => {
-    const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel);
+    const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel, tripDestinationsModel);
+    console.log(tripDestinationsModel);
     tripPresenter.init();
     const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
     tripInfoPresenter.init();

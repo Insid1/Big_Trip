@@ -64,7 +64,7 @@ export default class TripPoints extends Observer {
       name: offer.title,
       price: offer.price,
     }));
-    const addPhotos = (photos) => photos.map(({title, src}) => ({
+    const adaptPhotos = (photos) => photos.map(({title, src}) => ({
       src: src,
       alt: title,
     }));
@@ -77,7 +77,7 @@ export default class TripPoints extends Observer {
       price: serverPoint.base_price,
       favorite: serverPoint['is_favorite'],
       description: serverPoint.destination.description,
-      photos: addPhotos(serverPoint.destination.pictures),
+      photos: adaptPhotos(serverPoint.destination.pictures),
       offers: adaptOffers(serverPoint.offers),
     };
   }
