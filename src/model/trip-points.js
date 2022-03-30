@@ -8,7 +8,7 @@ export default class TripPoints extends Observer {
     this._points = [];
   }
 
-  setPoints(updateType, points) {
+  setPoints(points, updateType) {
     this._points = points.slice();
 
     this.notify(updateType);

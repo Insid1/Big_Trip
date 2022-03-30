@@ -25,53 +25,52 @@ const tripOffersModel = new TripOffersModel();
 const tripPointsModel = new TripPointsModel();
 const tripDestinationsModel = new TripDestinationsModel();
 
+const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel, tripDestinationsModel);
+tripPresenter.init();
+const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
+tripInfoPresenter.init();
+const tripFilterPresenter = new TripFilterPresenter(tripControlsElement, tripPointsModel, filterModel);
+tripFilterPresenter.init();
+const tripStatisticPresenter = new TripStatisticPresenter(siteMainElement, tripPointsModel);
+
+newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
+
+const addStatistic = () => {
+  const tableBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[0];
+  const statsBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[1];
+
+  tableBtn.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    tableBtn.classList.add('trip-tabs__btn--active');
+    statsBtn.classList.remove('trip-tabs__btn--active');
+    tripPresenter.showTrip();
+    tripStatisticPresenter.hide();
+    tripFilterPresenter.enableFilters();
+    newEventBtn.disabled = false;
+  });
+  statsBtn.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    tableBtn.classList.remove('trip-tabs__btn--active');
+    statsBtn.classList.add('trip-tabs__btn--active');
+    tripPresenter.hideTrip();
+    tripStatisticPresenter.show();
+    tripFilterPresenter.disableFilters();
+    newEventBtn.disabled = true;
+
+  });
+};
+addStatistic();
+
+
 api.getDestinations()
   .then(TripDestinationsModel.adaptDestinationToClient)
   .then((destinations) => {
-    tripDestinationsModel.setDestinations(destinations);
+    tripDestinationsModel.setDestinations(destinations, UpdateType.INIT_DESTINATIONS);
   });
 
 api.getOffers()
   .then((offers) => {
-    tripOffersModel.setOffers(offers);
-  })
-  .then(() => {
-    const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel, tripDestinationsModel);
-    console.log(tripDestinationsModel);
-    tripPresenter.init();
-    const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
-    tripInfoPresenter.init();
-    const tripFilterPresenter = new TripFilterPresenter(tripControlsElement, tripPointsModel, filterModel);
-    tripFilterPresenter.init();
-    const tripStatisticPresenter = new TripStatisticPresenter(siteMainElement, tripPointsModel);
-
-    newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
-
-    const addStatistic = () => {
-      const tableBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[0];
-      const statsBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[1];
-
-      tableBtn.addEventListener('click', (evt) => {
-        evt.preventDefault();
-        tableBtn.classList.add('trip-tabs__btn--active');
-        statsBtn.classList.remove('trip-tabs__btn--active');
-        tripPresenter.showTrip();
-        tripStatisticPresenter.hide();
-        tripFilterPresenter.enableFilters();
-        newEventBtn.disabled = false;
-      });
-      statsBtn.addEventListener('click', (evt) => {
-        evt.preventDefault();
-        tableBtn.classList.remove('trip-tabs__btn--active');
-        statsBtn.classList.add('trip-tabs__btn--active');
-        tripPresenter.hideTrip();
-        tripStatisticPresenter.show();
-        tripFilterPresenter.disableFilters();
-        newEventBtn.disabled = true;
-
-      });
-    };
-    addStatistic();
+    tripOffersModel.setOffers(offers, UpdateType.INIT_OFFERS);
   })
   .catch((err) => {
     throw Error(err);
@@ -80,9 +79,9 @@ api.getOffers()
 
 api.getPoints()
   .then((points) => {
-    tripPointsModel.setPoints(UpdateType.INIT, points);
+    tripPointsModel.setPoints(points, UpdateType.INIT);
   })
   .catch((err) => {
-    tripPointsModel.setPoints(UpdateType.INIT, []);
+    tripPointsModel.setPoints([], UpdateType.INIT);
     throw Error(err);
   });

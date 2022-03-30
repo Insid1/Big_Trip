@@ -6,9 +6,9 @@ export default class TripOffers extends Observer {
     this._offers = [];
   }
 
-  setOffers(points) {
+  setOffers(points, updateType) {
     this._offers = Object.assign({}, points);
-
+    this.notify(updateType);
   }
 
   getOffers() {

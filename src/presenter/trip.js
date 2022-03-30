@@ -10,16 +10,25 @@ import { createPointTemplate } from '../util/blank-point.js';
 import { filter } from '../util/filter.js';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel, offersModel) {
+  constructor(tripContainer, pointsModel, filterModel, offersModel, destinationsModel) {
     this._tripContainer = tripContainer;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
 
     this._tripListComponent = new PointContainerView();
+    this._newPointComponent = new NewPointPresenter(this._tripListComponent, this._handleViewAction);
     this._noPointsComponent = null;
     this._sortingComponent = null;
+
     this._pointPresenter = {};
+    this._isLoading = true;
+    this._isLoadingOffers = true;
+    this._isLoadingDestinations = true;
+
+    this._offers = null;
+    this._destinations = null;
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -30,14 +39,17 @@ export default class Trip {
     this._renderTrip = this._renderTrip.bind(this); // to send it to newPointPresenter
     this._currentSortType = SORT_TYPE.DATE;
 
-    this._newPointComponent = new NewPointPresenter(this._tripListComponent, this._handleViewAction);
   }
 
   init() {
     this._renderTrip();
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+    this._offersModel.addObserver(this._handleModelEvent);
+    this._destinationsModel.addObserver(this._handleModelEvent);
   }
+
+  // shall add destroy
 
   _getPoints() {
 
@@ -121,8 +133,19 @@ export default class Trip {
         this._renderTrip();
         break;
       case UpdateType.INIT:
-        this._clearTrip();
+        this._isLoading = false;
         this._renderTrip();
+        break;
+      case UpdateType.INIT_OFFERS:
+        this._isLoadingOffers = false;
+        this._offers = this._offersModel.getOffers();
+        this._renderTrip();
+        break;
+      case UpdateType.INIT_DESTINATIONS:
+        this._isLoadingDestinations = false;
+        this._destinations = this._destinationsModel.getDestinations();
+        this._renderTrip();
+        break;
     }
   }
 
@@ -158,7 +181,7 @@ export default class Trip {
   }
 
   _renderPoint(pointData) {
-    const pointPresenter = new PointPresenter(this._tripListComponent, this._handleViewAction, this._handleChangeMode, this._offersModel);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._handleViewAction, this._handleChangeMode, this._offers, this._destinations);
     pointPresenter.init(pointData);
     this._pointPresenter[pointData.id] = pointPresenter;
   }
@@ -176,6 +199,11 @@ export default class Trip {
   }
 
   _renderTrip() {
+    if (this._isLoading || this._isLoadingOffers || this._isLoadingDestinations) {
+      //render заглушку в виде загрузки
+      return;
+    }
+    // удалить заглушку в виде загрузки
     if (this.isNoPoints()) {
       this._renderNoPoints();
       return;

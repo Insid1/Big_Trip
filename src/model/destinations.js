@@ -3,15 +3,15 @@ import Observer from '../util/observer';
 export default class TripDestinations extends Observer {
   constructor() {
     super();
-    this._destinations = [];
+    this._destinations = {};
   }
 
-  setDestinations(destinations) {
+  setDestinations(destinations, updateType) {
     this._destinations = Object.assign({}, destinations);
-
+    this.notify(updateType);
   }
 
-  getEvents() {
+  getDestinations() {
     return this._destinations;
   }
 

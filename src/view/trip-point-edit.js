@@ -159,10 +159,12 @@ const addPointEdit = (pointData, offersData) => {
 
 
 export default class EditPoint extends Smart {
-  constructor(pointData, offersData) {
+  constructor(pointData, offersData, destinationsData) {
     super();
     this._pointState = EditPoint.parseDataToState(pointData);
     this._offersData = offersData;
+    this._destinationsData = destinationsData;
+    console.log(destinationsData);
     this._datePickerFromTime = null;
     this._datePickerToTime = null;
 

@@ -71,6 +71,8 @@ const UpdateType = {
   MINOR: 'MINOR', // to rerender all points
   MAJOR: 'MAJOR', // to rerender all elements on page
   INIT: 'INIT',
+  INIT_OFFERS: 'INIT_OFFERS',
+  INIT_DESTINATIONS: 'INIT_DESTINATIONS',
 };
 
 const FilterType = {
