@@ -8,8 +8,10 @@ export default class TripPoints extends Observer {
     this._points = [];
   }
 
-  setPoints(points) {
+  setPoints(updateType, points) {
     this._points = points.slice();
+
+    this.notify(updateType);
   }
 
   getPoints() {
@@ -58,13 +60,14 @@ export default class TripPoints extends Observer {
   }
 
   static adaptPointToClient(serverPoint) {
-    const adaptOffers = (offers) => {
-      offers.map((offer) => ({
-        name: offer.title,
-        price: offer.price,
-        checked: false, // must rework view function false is temporary
-      }));
-    };
+    const adaptOffers = (offers) => offers.map((offer) => ({
+      name: offer.title,
+      price: offer.price,
+    }));
+    const addPhotos = (photos) => photos.map(({title, src}) => ({
+      src: src,
+      alt: title,
+    }));
     return {
       id: serverPoint.id,
       event: serverPoint.type,
@@ -74,7 +77,7 @@ export default class TripPoints extends Observer {
       price: serverPoint.base_price,
       favorite: serverPoint['is_favorite'],
       description: serverPoint.destination.description,
-      photos: serverPoint.destination.pictures.map(({src}) => src), // server data aslo consist alt value  img tag must refactor View component to support it
+      photos: addPhotos(serverPoint.destination.pictures),
       offers: adaptOffers(serverPoint.offers),
     };
   }

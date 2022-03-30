@@ -1,4 +1,4 @@
-import Filters from '../view/filter';
+import FiltersView from '../view/filter';
 import { render, remove, RenderPosition } from '../util/render';
 import { FilterType, UserAction, UpdateType } from '../const';
 import {filter} from '../util/filter.js';
@@ -15,18 +15,16 @@ export default class TripFilter {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterClick = this._handleFilterClick.bind(this);
-
-    this._filterModel.addObserver(this._handleModelEvent);
-    this._pointsModel.addObserver(this._handleModelEvent);
-
   }
 
   init() {
-    this._filters = new Filters(this.getFilters());
+    this._filters = new FiltersView(this.getFilters());
 
     this._filters.setClickFilters(this._handleFilterClick);
-
     this._renderFilters();
+
+    this._filterModel.addObserver(this._handleModelEvent);
+    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
   getFilters() {
@@ -76,6 +74,10 @@ export default class TripFilter {
         this.init();
         this._renderFilters();
         break;
+      case UpdateType.INIT:
+        this._clearFilters();
+        this.init();
+        this._renderFilters();
     }
   }
 
@@ -89,6 +91,8 @@ export default class TripFilter {
 
   _clearFilters() {
     remove(this._filters);
+    this._filterModel.removeObservers(this._handleModelEvent);
+    this._pointsModel.removeObservers(this._handleModelEvent);
   }
 
   disableFilters() {

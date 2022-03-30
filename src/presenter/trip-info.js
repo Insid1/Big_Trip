@@ -12,14 +12,13 @@ export default class TripInfo {
     this._tripInfo = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
-
-    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     this._tripInfo = new Info(this._pointsModel.getPoints().slice().sort(sortByDate));
     this._renderInfo();
 
+    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
   _handleModelEvent(updateType) {
@@ -35,6 +34,11 @@ export default class TripInfo {
         this.init();
         this._renderInfo();
         break;
+      case UpdateType.INIT:
+        this._clearInfo();
+        this.init();
+        this._renderInfo();
+        break;
     }
   }
 
@@ -44,5 +48,6 @@ export default class TripInfo {
 
   _clearInfo() {
     remove(this._tripInfo);
+    this._pointsModel.removeObservers(this._handleModelEvent);
   }
 }

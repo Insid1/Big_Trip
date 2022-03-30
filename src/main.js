@@ -6,19 +6,10 @@ import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
 import TripStatisticPresenter from './presenter/statistic.js';
 import Api from './api.js';
+import { UpdateType } from './const.js';
+
 const AUTHORIZATION = 'Basic random_string';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
-
-console.log(pointsData);
-
-const api = new Api(END_POINT, AUTHORIZATION);
-api.getPoints().then((points) => {
-  // console.log(points);
-});
-
-const filterModel = new TripFilterModel();
-const tripPointsModel = new TripPointsModel();
-// tripPointsModel.setPoints(pointsData);
 
 const siteHeaderElement = document.querySelector('.page-header');
 const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
@@ -27,6 +18,9 @@ const tripEventsElement = siteMainElement.querySelector('.trip-events');
 const tripControlsElement = tripMainHeaderElement.querySelector('.trip-main__trip-controls');
 const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-btn');
 
+const api = new Api(END_POINT, AUTHORIZATION);
+const filterModel = new TripFilterModel();
+const tripPointsModel = new TripPointsModel();
 
 const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel);
 tripPresenter.init();
@@ -35,7 +29,6 @@ tripInfoPresenter.init();
 const tripFilterPresenter = new TripFilterPresenter(tripControlsElement, tripPointsModel, filterModel);
 tripFilterPresenter.init();
 const tripStatisticPresenter = new TripStatisticPresenter(siteMainElement, tripPointsModel);
-
 
 newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
 
@@ -64,3 +57,12 @@ const addStatistic = () => {
   });
 };
 addStatistic();
+
+api.getPoints()
+  .then((points) => {
+    tripPointsModel.setPoints(UpdateType.INIT, points);
+  })
+  .catch((err) => {
+    console.log(err);
+    tripPointsModel.setPoints(UpdateType.INIT, []);
+  });

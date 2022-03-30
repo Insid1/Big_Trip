@@ -120,6 +120,10 @@ export default class Trip {
         this._currentSortType = SORT_TYPE.DATE;
         this._renderTrip();
         break;
+      case UpdateType.INIT:
+        console.log(this._getPoints());
+        this._clearTrip();
+        this._renderTrip();
     }
   }
 

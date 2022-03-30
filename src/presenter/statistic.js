@@ -16,6 +16,10 @@ export default class TripStatistic {
     switch (updateType) {
       case UpdateType.MAJOR:
         this.createStatistic();
+        break;
+      case UpdateType.INIT:
+        this.createStatistic();
+        break;
     }
   }
 

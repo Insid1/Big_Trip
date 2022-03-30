@@ -70,6 +70,7 @@ const UpdateType = {
   PATCH: 'PATCH', // to rerender onlty one point
   MINOR: 'MINOR', // to rerender all points
   MAJOR: 'MAJOR', // to rerender all elements on page
+  INIT: 'INIT',
 };
 
 const FilterType = {
