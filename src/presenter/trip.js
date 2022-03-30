@@ -10,10 +10,11 @@ import { createPointTemplate } from '../util/blank-point.js';
 import { filter } from '../util/filter.js';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel) {
+  constructor(tripContainer, pointsModel, filterModel, offersModel) {
     this._tripContainer = tripContainer;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+    this._offersModel = offersModel;
 
     this._tripListComponent = new PointContainerView();
     this._noPointsComponent = null;
@@ -157,7 +158,7 @@ export default class Trip {
   }
 
   _renderPoint(pointData) {
-    const pointPresenter = new PointPresenter(this._tripListComponent, this._handleViewAction, this._handleChangeMode);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._handleViewAction, this._handleChangeMode, this._offersModel);
     pointPresenter.init(pointData);
     this._pointPresenter[pointData.id] = pointPresenter;
   }

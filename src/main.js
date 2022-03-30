@@ -1,6 +1,6 @@
-// import { pointsData } from './mock/point-data.js';
 import TripPointsModel from './model/trip-points.js';
 import TripFilterModel from './model/filter.js';
+import TripOffersModel from './model/offers.js';
 import TripPresenter from './presenter/trip.js';
 import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
@@ -20,49 +20,61 @@ const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-b
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const filterModel = new TripFilterModel();
+const tripOffersModel = new TripOffersModel();
 const tripPointsModel = new TripPointsModel();
 
-const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel);
-tripPresenter.init();
-const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
-tripInfoPresenter.init();
-const tripFilterPresenter = new TripFilterPresenter(tripControlsElement, tripPointsModel, filterModel);
-tripFilterPresenter.init();
-const tripStatisticPresenter = new TripStatisticPresenter(siteMainElement, tripPointsModel);
 
-newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
+api.getOffers()
+  .then((offers) => {
+    tripOffersModel.setOffers(offers);
+  })
+  .then(() => {
+    const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel);
+    tripPresenter.init();
+    const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
+    tripInfoPresenter.init();
+    const tripFilterPresenter = new TripFilterPresenter(tripControlsElement, tripPointsModel, filterModel);
+    tripFilterPresenter.init();
+    const tripStatisticPresenter = new TripStatisticPresenter(siteMainElement, tripPointsModel);
 
-const addStatistic = () => {
-  const tableBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[0];
-  const statsBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[1];
+    newEventBtn.addEventListener('click', tripPresenter._handleNewEventButtonClick);
 
-  tableBtn.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    tableBtn.classList.add('trip-tabs__btn--active');
-    statsBtn.classList.remove('trip-tabs__btn--active');
-    tripPresenter.showTrip();
-    tripStatisticPresenter.hide();
-    tripFilterPresenter.enableFilters();
-    newEventBtn.disabled = false;
+    const addStatistic = () => {
+      const tableBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[0];
+      const statsBtn = tripControlsElement.querySelector('.trip-controls__trip-tabs').children[1];
+
+      tableBtn.addEventListener('click', (evt) => {
+        evt.preventDefault();
+        tableBtn.classList.add('trip-tabs__btn--active');
+        statsBtn.classList.remove('trip-tabs__btn--active');
+        tripPresenter.showTrip();
+        tripStatisticPresenter.hide();
+        tripFilterPresenter.enableFilters();
+        newEventBtn.disabled = false;
+      });
+      statsBtn.addEventListener('click', (evt) => {
+        evt.preventDefault();
+        tableBtn.classList.remove('trip-tabs__btn--active');
+        statsBtn.classList.add('trip-tabs__btn--active');
+        tripPresenter.hideTrip();
+        tripStatisticPresenter.show();
+        tripFilterPresenter.disableFilters();
+        newEventBtn.disabled = true;
+
+      });
+    };
+    addStatistic();
+  })
+  .catch((err) => {
+    throw Error(err);
   });
-  statsBtn.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    tableBtn.classList.remove('trip-tabs__btn--active');
-    statsBtn.classList.add('trip-tabs__btn--active');
-    tripPresenter.hideTrip();
-    tripStatisticPresenter.show();
-    tripFilterPresenter.disableFilters();
-    newEventBtn.disabled = true;
 
-  });
-};
-addStatistic();
 
 api.getPoints()
   .then((points) => {
     tripPointsModel.setPoints(UpdateType.INIT, points);
   })
   .catch((err) => {
-    console.log(err);
     tripPointsModel.setPoints(UpdateType.INIT, []);
+    throw Error(err);
   });

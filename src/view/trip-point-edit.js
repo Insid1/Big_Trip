@@ -1,5 +1,5 @@
 import { EVENTS, CITIES } from '../const.js';
-import { offersForEvent ,photosForCities, descriptionsForCities } from '../mock/point-data.js';
+import { photosForCities, descriptionsForCities } from '../mock/point-data.js';
 // import { createValidationForCitis } from '../util/point.js';
 import { capitalize} from '../util/common';
 import Smart from './smart.js';
@@ -107,12 +107,11 @@ const addDescription = (description) => {
 };
 
 const addOffers = (totalOffers, pointOffers) => {
-
   const addOffer = (offer) => {
     const isChecked = () => pointOffers.some((pointOffer) => pointOffer.name === offer.name) ? 'checked' : '';
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name.toLowerCase()}" type="checkbox" name="event-offer-${offer.name.toLowerCase()}" ${isChecked()}>
-        <label class="event__offer-label" for="event-offer-${offer.name.toLowerCase()}">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name}" type="checkbox" name="event-offer-${offer.name}" ${isChecked()}>
+        <label class="event__offer-label" for="event-offer-${offer.name}">
         <span class="event__offer-title">${offer.name}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
@@ -120,7 +119,6 @@ const addOffers = (totalOffers, pointOffers) => {
         </div>`;
   };
   const offersElement = totalOffers.map(addOffer);
-
   return `<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">
@@ -141,28 +139,31 @@ const createPointEditDetailsDestination = (photos, description) => {
 </section>`;
 };
 
-const addPointEditDetails = (offers, photos, description, event) => `<section class="event__details">
-  ${offers !== null ? addOffers(offersForEvent[event], offers) : ''}
+const addPointEditDetails = (offers, photos, description, event, offersData) => {
+  const exactOffers = offersData[event];
+  return `<section class="event__details">
+  ${offers !== null ? addOffers(exactOffers, offers) : ''}
   ${createPointEditDetailsDestination(photos, description)}
-</section>`;
+</section>`;};
 
-const addPointEdit = (pointData) => {
+const addPointEdit = (pointData, offersData) => {
   const {event, city, fromTime, toTime,
     price, offers, description, photos} = pointData;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       ${addPointEditHeader(event, city,fromTime, toTime, price)}
-      ${addPointEditDetails(offers, photos, description, event)}
+      ${addPointEditDetails(offers, photos, description, event, offersData)}
     </form>
   </li>`;
 };
 
 
 export default class EditPoint extends Smart {
-  constructor(pointData) {
+  constructor(pointData, offersData) {
     super();
     this._pointState = EditPoint.parseDataToState(pointData);
+    this._offersData = offersData;
     this._datePickerFromTime = null;
     this._datePickerToTime = null;
 
@@ -191,7 +192,7 @@ export default class EditPoint extends Smart {
     const newEvent = evt.target.value;
     this.updateData({
       event: newEvent,
-      offers: offersForEvent[newEvent]
+      offers: this._offersData[newEvent]
     });
   }
 
@@ -335,7 +336,7 @@ export default class EditPoint extends Smart {
   }
 
   getTemplate() {
-    return addPointEdit(this._pointState);
+    return addPointEdit(this._pointState, this._offersData);
   }
 
   static parseDataToState(state) {

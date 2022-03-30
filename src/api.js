@@ -1,4 +1,5 @@
 import TripPointsModel from './model/trip-points';
+import TripOffersModel from './model/offers';
 
 const Method = {
   GET: 'GET',
@@ -16,21 +17,38 @@ export default class Api {
     this._authorization = authorization;
   }
 
+  getOffers() {
+    return this._load({url: 'offers'})
+      .then(Api.toJSON)
+      .then((offers) =>
+        // console.log(offers);
+        offers)
+      .then((offers) => TripOffersModel.adaptOfferToClient(offers));
+  }
+
+  getEvents() {
+
+  }
+
   getPoints() {
     return this._load({url: 'points'})
       .then(Api.toJSON)
+      .then((points) =>
+        // console.log(points);
+        points
+      )
       .then((points) => points.map(TripPointsModel.adaptPointToClient));
   }
 
   updatePoints(point) {
     return this._load({
-      url: `tasks/${point.id}`,
+      url: `points/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(TripPointsModel.adaptPointToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
       .then(Api.toJSON)
-      .then(TripPointsModel.adaptPointToClient); // почему ту клаент?
+      .then(TripPointsModel.adaptPointToClient);
   }
 
   _load({

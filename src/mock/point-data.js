@@ -6,11 +6,6 @@ import { getRandomInt, getTrueOrFalse, getRandomValueFromArr } from '../util/com
 const AMOUNT_OF_POINTS = 10;
 const AMOUNT_OF_OFFERS = 6;
 
-// переработать функцию по созданию оферов для поинта
-//  она должна добавлять только активные оферы в зависимости от ивента
-// следовательно в обьекте поинта будут лежать только активные оферы
-// а при отрисовки вьюхи она должна брать общий набор оферов и сравнивать
-// есть ли такой офер там и если есть, то делать его checked
 const createOffersForEvent = () => {
   const result = {};
   const createOffer = (eventName) => ({
