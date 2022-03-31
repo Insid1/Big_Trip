@@ -77,6 +77,7 @@ export default class NewPoint {
   }
 
   _handleAddPointSubmit(newData) {
+    this.destroy();
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MAJOR,

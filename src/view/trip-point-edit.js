@@ -107,7 +107,7 @@ const addOffers = (totalOffers, pointOffers) => {
   const addOffer = (offer) => {
     const isChecked = () => pointOffers.some((pointOffer) => pointOffer.name === offer.name) ? 'checked' : '';
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name}" type="checkbox" name="event-offer-${offer.name}" ${isChecked()}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name}" data-price="${offer.price}" value="${offer.name}" type="checkbox" name="event-offer-${offer.name}" ${isChecked()}>
         <label class="event__offer-label" for="event-offer-${offer.name}">
         <span class="event__offer-title">${offer.name}</span>
         &plus;&euro;&nbsp;
@@ -175,6 +175,7 @@ export default class EditPoint extends Smart {
     this._clickPointerHandler = this._clickPointerHandler.bind(this);
     this._changeFromTimeHandler = this._changeFromTimeHandler.bind(this);
     this._changeToTimeHandler = this._changeToTimeHandler.bind(this);
+    this._changeOffersHandler = this._changeOffersHandler.bind(this);
 
     this._callback.clickEvents = this._clickEventsHandler;
     this._setInnerHandlers();
@@ -191,7 +192,7 @@ export default class EditPoint extends Smart {
     const newEvent = evt.target.value;
     this.updateData({
       event: newEvent,
-      offers: this._offersData[newEvent]
+      offers: [],
     });
   }
 
@@ -223,6 +224,26 @@ export default class EditPoint extends Smart {
       }, true);
     }
     evt.target.reportValidity();
+  }
+
+  _changeOffersHandler(evt) {
+    evt.preventDefault();
+
+    const currentOffersCopy = JSON.parse(JSON.stringify(this._pointState.offers)); // deep copy
+    const index = currentOffersCopy.findIndex((offer) => offer.name === evt.target.value);
+
+    if (index === -1) {
+      currentOffersCopy.push({
+        name: evt.target.value,
+        price: +evt.target.dataset.price,
+      });
+    } else {
+      currentOffersCopy.splice(index, 1);
+    }
+    this.updateData({
+      offers: currentOffersCopy
+    }, true);
+
   }
 
   _clickPointerHandler(evt) {
@@ -263,8 +284,7 @@ export default class EditPoint extends Smart {
       enableTime: true,
       defaultDate: this._pointState.date,
       onChange: this._changeFromTimeHandler,
-      // eslint-disable-next-line camelcase
-      time_24hr: true,
+      'time_24hr': true,
     });
   }
 
@@ -299,6 +319,9 @@ export default class EditPoint extends Smart {
     currElement
       .querySelector('.event__input--price')
       .addEventListener('change', this._changePriceHandler);
+    currElement
+      .querySelector('.event__available-offers')
+      .addEventListener('change', this._changeOffersHandler);
   }
 
   setClickDelHandler(cb) {

@@ -198,7 +198,6 @@ export default class Trip {
   }
 
   _renderTrip() {
-    console.log(this._isLoading,this._isLoadingOffers, this._isLoadingDestinations);
     if (this._isLoading || this._isLoadingOffers || this._isLoadingDestinations) {
       render(this._tripContainer, this._loadingComponent);
       return;
