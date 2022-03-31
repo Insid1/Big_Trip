@@ -1,6 +1,7 @@
 import SiteSortingView from '../view/trip-sorting.js';
 import PointContainerView  from '../view/trip-point-container';
 import NoPointView from '../view/trip-no-point.js';
+import LoadingView from '../view/loading.js';
 import PointPresenter from './point.js';
 import NewPointPresenter from './new-point';
 import {remove, render, RenderPosition } from '../util/render.js';
@@ -22,6 +23,7 @@ export default class Trip {
 
     this._tripListComponent = new PointContainerView();
     this._newPointComponent = new NewPointPresenter(this._tripListComponent, this._handleViewAction);
+    this._loadingComponent = new LoadingView();
     this._noPointsComponent = null;
     this._sortingComponent = null;
 
@@ -196,11 +198,12 @@ export default class Trip {
   }
 
   _renderTrip() {
+    console.log(this._isLoading,this._isLoadingOffers, this._isLoadingDestinations);
     if (this._isLoading || this._isLoadingOffers || this._isLoadingDestinations) {
-      //render заглушку в виде загрузки
+      render(this._tripContainer, this._loadingComponent);
       return;
     }
-    // удалить заглушку в виде загрузки
+    remove(this._loadingComponent);
     if (this.isNoPoints()) {
       this._renderNoPoints();
       return;

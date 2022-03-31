@@ -6,8 +6,15 @@ import TripPresenter from './presenter/trip.js';
 import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
 import TripStatisticPresenter from './presenter/statistic.js';
+import ErrorMessageView from './view/error-message.js';
 import Api from './api.js';
 import { UpdateType } from './const.js';
+import { render } from './util/render.js';
+
+const createErrorMessage = (err) => {
+  const errMsg = new ErrorMessageView(err);
+  render(document.body, errMsg);
+};
 
 const AUTHORIZATION = 'Basic random_string';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
@@ -66,6 +73,9 @@ api.getDestinations()
   .then(TripDestinationsModel.adaptDestinationToClient)
   .then((destinations) => {
     tripDestinationsModel.setDestinations(destinations, UpdateType.INIT_DESTINATIONS);
+  }).catch((err) => {
+    createErrorMessage(err);
+    throw Error(err);
   });
 
 api.getOffers()
@@ -73,6 +83,7 @@ api.getOffers()
     tripOffersModel.setOffers(offers, UpdateType.INIT_OFFERS);
   })
   .catch((err) => {
+    createErrorMessage(err);
     throw Error(err);
   });
 
