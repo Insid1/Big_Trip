@@ -6,16 +6,19 @@ import NewPointPresenter from './new-point';
 import {remove, render, RenderPosition } from '../util/render.js';
 import { SORT_TYPE, UserAction, UpdateType } from '../const.js';
 import { sortByDate, sortByPrice, sortByTime } from '../util/point.js';
-import { createPointTemplate } from '../util/blank-point.js';
 import { filter } from '../util/filter.js';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel, offersModel, destinationsModel) {
+  constructor(tripContainer, pointsModel, filterModel, offersModel, destinationsModel, api) {
     this._tripContainer = tripContainer;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
+    this._api = api;
+
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
 
     this._tripListComponent = new PointContainerView();
     this._newPointComponent = new NewPointPresenter(this._tripListComponent, this._handleViewAction);
@@ -30,8 +33,6 @@ export default class Trip {
     this._offers = null;
     this._destinations = null;
 
-    this._handleViewAction = this._handleViewAction.bind(this);
-    this._handleModelEvent = this._handleModelEvent.bind(this);
 
     this._handleChangeMode = this._handleChangeMode.bind(this);
     this._handleSortClick = this._handleSortClick.bind(this);
@@ -48,8 +49,6 @@ export default class Trip {
     this._offersModel.addObserver(this._handleModelEvent);
     this._destinationsModel.addObserver(this._handleModelEvent);
   }
-
-  // shall add destroy
 
   _getPoints() {
 
@@ -105,8 +104,9 @@ export default class Trip {
         this._pointsModel.addPoint(updateType, update);
         break;
       case UserAction.UPDATE_POINT:
-        // console.log(this._pointPresenter);
-        this._pointsModel.updatePoint(updateType, update);
+        this._api.updatePoint(update).then(() => {
+          this._pointsModel.updatePoint(updateType, update);
+        });
         break;
       case UserAction.DELETE_POINT:
         this._pointsModel.deletePoint(updateType, update);
@@ -120,14 +120,11 @@ export default class Trip {
         this._pointPresenter[update.id].init(update);
         break;
       case UpdateType.MINOR:
-        this._newPointComponent.destroy();
         this._clearTrip();
         this._currentSortType = SORT_TYPE.DATE;
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
-        this._newPointComponent.destroy();
-
         this._clearTrip();
         this._currentSortType = SORT_TYPE.DATE;
         this._renderTrip();
@@ -163,7 +160,7 @@ export default class Trip {
       remove(this._noPointsComponent);
     }
     this._handleChangeMode();
-    this._newPointComponent.init(createPointTemplate(), this.isNoPoints(), this._renderTrip);
+    this._newPointComponent.init(this.isNoPoints(), this._renderTrip, this._offers, this._destinations);
   }
 
   _renderSorting() {

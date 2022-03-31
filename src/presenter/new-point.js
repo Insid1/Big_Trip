@@ -1,12 +1,34 @@
 import EditPointView from '../view/trip-point-edit.js';
+import dayjs from 'dayjs';
+import { getRandomValueFromArr } from '../util/common.js';
 import { render, remove, RenderPosition } from '../util/render';
 import { UserAction, UpdateType } from '../const.js';
+
+export const createPointTemplate = (offers, destinations) => {
+  const event = getRandomValueFromArr(Object.keys(offers));
+  const city = getRandomValueFromArr(Object.keys(destinations));
+  return {
+    event,
+    city,
+    fromTime: dayjs(),
+    toTime: dayjs(),
+    price: 0,
+    offers: [],
+    favorite: false,
+    description: destinations[city].description,
+    photos: destinations[city].photos,
+  };
+
+};
 
 export default class NewPoint {
   constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
 
     this._changeData = changeData; // function that updates point in TripPresenter and inits it
+
+    this._offers = null;
+    this._destinations = null;
 
     this._addPointComponent = null;
 
@@ -16,16 +38,18 @@ export default class NewPoint {
     this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
   }
 
-  init(pointData, isNoPoints, renderTrip) {
-    this.pointData = pointData;
+  init(isNoPoints, renderTrip, offers, destinations) {
+    this.pointData = createPointTemplate(offers, destinations);
     this._isNoPoints = isNoPoints;
     this._renderTrip = renderTrip;
+    this._offers = offers;
+    this._destinations = destinations;
 
     if (this._addPointComponent !== null) {
       this.destroy();
       this._addPointComponent = null;
     }
-    this._addPointComponent = new EditPointView(pointData);
+    this._addPointComponent = new EditPointView(this.pointData, this._offers, this._destinations);
 
     document.addEventListener('keydown', this._handleEscKeyDown);
     this._addPointComponent.setClickHandler(this._handleAddPointClick);

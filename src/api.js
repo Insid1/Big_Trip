@@ -38,7 +38,7 @@ export default class Api {
       .then((points) => points.map(TripPointsModel.adaptPointToClient));
   }
 
-  updatePoints(point) {
+  updatePoint(point) {
     return this._load({
       url: `points/${point.id}`,
       method: Method.PUT,

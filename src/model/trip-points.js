@@ -64,9 +64,9 @@ export default class TripPoints extends Observer {
       name: offer.title,
       price: offer.price,
     }));
-    const adaptPhotos = (photos) => photos.map(({title, src}) => ({
+    const adaptPhotos = (photos) => photos.map(({description, src}) => ({
       src: src,
-      alt: title,
+      alt: description,
     }));
     return {
       id: serverPoint.id,
@@ -83,30 +83,28 @@ export default class TripPoints extends Observer {
   }
 
   static adaptPointToServer(clientPoint) {
-    const adaptPhotos = () => {
-      clientPoint.photos.map(({src, alt}) => ({
-        'src': src,
-        'description': alt,
-      })
-      );
-    };
-    const adaptOffers = () => clientPoint.map(({name, price}) => ({
+    const adaptPhotos = (photos) => photos.map(({src, alt}) => ({
+      'src': src,
+      'description': alt,
+    }));
+
+    const adaptOffers = (offers) => offers.map(({name, price}) => ({
       'title': name,
       'price': price,
     }));
     return {
       'id': clientPoint.id,
       'type': clientPoint.event,
-      'date_from': clientPoint.fromTime, // shall convert back from dayjs
+      'date_from': clientPoint.fromTime,
       'date_to': clientPoint.toTime,
       'destination': {
         'name': clientPoint.city,
         'description': clientPoint.description,
-        'pictures': adaptPhotos(),
+        'pictures': adaptPhotos(clientPoint.photos),
       },
       'base_price': clientPoint.price,
       'is_favorite': clientPoint.favorite,
-      'offers': adaptOffers(),
+      'offers': adaptOffers(clientPoint.offers),
     };
   }
 }

@@ -25,7 +25,7 @@ const tripOffersModel = new TripOffersModel();
 const tripPointsModel = new TripPointsModel();
 const tripDestinationsModel = new TripDestinationsModel();
 
-const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel, tripDestinationsModel);
+const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel, tripDestinationsModel, api);
 tripPresenter.init();
 const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
 tripInfoPresenter.init();
