@@ -148,7 +148,7 @@ const createPointEditDetailsDestination = (photos, description) => {
 const addPointEditDetails = (offers, photos, description, event, offersData, isDisabled) => {
   const exactOffers = offersData[event];
   return `<section class="event__details">
-  ${offers !== null ? addOffers(exactOffers, offers, isDisabled) : ''}
+  ${exactOffers.length !== 0 ? addOffers(exactOffers, offers, isDisabled) : ''}
   ${createPointEditDetailsDestination(photos, description)}
 </section>`;};
 
@@ -381,10 +381,11 @@ export default class EditPoint extends Smart {
       .querySelector('.event__input--price')
       .addEventListener('change', this._changePriceHandler);
 
-    currElement
-      .querySelector('.event__available-offers')
-      .addEventListener('change', this._changeOffersHandler);
-
+    if (currElement.querySelector('.event__available-offers')) {
+      currElement
+        .querySelector('.event__available-offers')
+        .addEventListener('change', this._changeOffersHandler);
+    }
   }
 
   static parseDataToState(state) {
