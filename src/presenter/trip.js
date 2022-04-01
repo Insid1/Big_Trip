@@ -90,6 +90,7 @@ export default class Trip {
   _clearTrip() {
 
     if (this._noPointsComponent !== null) {
+      remove(this._tripListComponent);
       remove(this._noPointsComponent);
       this._noPointsComponent = null;
       return;

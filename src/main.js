@@ -11,7 +11,7 @@ import Api from './api.js';
 import { UpdateType } from './const.js';
 import { render } from './util/render.js';
 
-const AUTHORIZATION = 'Basic dkjfn34tbhjdfhjgb345';
+const AUTHORIZATION = 'Basic dkjfn34tbhjdfhjgb3452';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
 const siteHeaderElement = document.querySelector('.page-header');

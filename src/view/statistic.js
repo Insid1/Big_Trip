@@ -60,7 +60,6 @@ export default class Statistic extends AbstractComponent {
     const prices = Object.values(chartData).map(({totalPrice}) => totalPrice);
     const periods = Object.values(chartData).map(({period}) => period);
     const amounts = Object.values(chartData).map(({amount}) => amount);
-
     createChart(moneyCtx, labels, prices, ChartType.PRICE);
     createChart(timeCtx, labels, periods, ChartType.PERIOD);
     createChart(typeCtx, labels, amounts, ChartType.AMOUNT);
