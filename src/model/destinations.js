@@ -15,7 +15,6 @@ export default class TripDestinations extends Observer {
     return this._destinations;
   }
 
-  // shall rework
   static adaptDestinationToClient(serverDestination) {
     const result = {};
     const adaptPhotos = (photos) => photos.map(({description, src}) => ({

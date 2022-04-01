@@ -69,12 +69,12 @@ export default class Point extends AbstractElement{
     this._clickFavoriteHandler = this._clickFavoriteHandler.bind(this);
   }
 
-  _clickHandler(evt) { // save callback for handler
+  _clickHandler(evt) {
     evt.preventDefault();
     this._callback.click();
   }
 
-  _clickFavoriteHandler(evt) { // save callback for handler
+  _clickFavoriteHandler(evt) {
     evt.preventDefault();
     this._callback.clickFavorite();
   }

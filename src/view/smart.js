@@ -9,18 +9,13 @@ export default class Smart extends AbstractElement {
   updateElement() {
     const oldElement = this.getElement();
     const parentElement = oldElement.parentElement;
-    // Удаляет старый дом элемент компонента
     this.removeElement();
-    // Создает новый элемент дом компонента
     const newElement = this.getElement();
-    // заменит старый элемент новым
     parentElement.replaceChild(newElement, oldElement);
-    // восстановит обработчики событий
     this.restoreHandlers();
   }
 
   updateData(update, isSmallUpdate) {
-    // Обновляет данные и если нужно обновляет элемент
     if (!update) {
       return;
     }

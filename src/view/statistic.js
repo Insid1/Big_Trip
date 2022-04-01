@@ -23,7 +23,6 @@ export default class Statistic extends AbstractElement {
   constructor(pointsData) {
     super();
     this._pointsData = pointsData;
-    // this.hide();
     this.createCharts();
   }
 
@@ -40,7 +39,6 @@ export default class Statistic extends AbstractElement {
     const createChartData = () => {
       const data = {};
       this._pointsData.slice().forEach((value) => {
-        // runs through object and if such event exist adds its values to such key otherwise creates key and assigns value
         const currEvent = value.event.toUpperCase();
         if (data[currEvent]) {
           data[currEvent].totalPrice += value.price;

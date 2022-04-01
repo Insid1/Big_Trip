@@ -11,11 +11,6 @@ import Api from './api.js';
 import { UpdateType } from './const.js';
 import { render } from './util/render.js';
 
-const createErrorMessage = (err) => {
-  const errMsg = new ErrorMessageView(err);
-  render(document.body, errMsg);
-};
-
 const AUTHORIZATION = 'Basic random_string';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
@@ -67,7 +62,10 @@ const addStatistic = () => {
   });
 };
 addStatistic();
-
+const createErrorMessage = (err) => {
+  const errMsg = new ErrorMessageView(err);
+  render(document.body, errMsg);
+};
 
 api.getDestinations()
   .then(TripDestinationsModel.adaptDestinationToClient)

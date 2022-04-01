@@ -398,7 +398,6 @@ export default class EditPoint extends Smart {
   }
 
   restoreHandlers() {
-    // Восстанавливает обработчики событий на элементах после перересовки
     this.setClickHandler(this._callback.clickPointer);
     this.setSubmitHandler(this._callback.submit);
     this.setClickDelHandler(this._callback.clickDel);

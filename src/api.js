@@ -23,7 +23,6 @@ export default class Api {
     return this._load({url: 'offers'})
       .then(Api.toJSON)
       .then((offers) =>
-        // console.log(offers);
         offers)
       .then((offers) => TripOffersModel.adaptOfferToClient(offers));
   }

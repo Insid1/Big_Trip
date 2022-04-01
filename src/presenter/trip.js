@@ -5,7 +5,7 @@ import LoadingView from '../view/loading.js';
 import PointPresenter, {State as PointPresenterViewState} from './point.js';
 import NewPointPresenter from './new-point';
 import {remove, render, RenderPosition } from '../util/render.js';
-import { SORT_TYPE, UserAction, UpdateType } from '../const.js';
+import { SortType, UserAction, UpdateType } from '../const.js';
 import { sortByDate, sortByPrice, sortByTime } from '../util/point.js';
 import { filter } from '../util/filter.js';
 
@@ -39,7 +39,7 @@ export default class Trip {
     this._handleSortClick = this._handleSortClick.bind(this);
     this._handleNewEventButtonClick = this._handleNewEventButtonClick.bind(this);
     this._renderTrip = this._renderTrip.bind(this); // to send it to newPointPresenter
-    this._currentSortType = SORT_TYPE.DATE;
+    this._currentSortType = SortType.DATE;
 
   }
 
@@ -57,15 +57,15 @@ export default class Trip {
     this._filteredPoints = filter[this._currentFilter](this._pointsModel.getPoints());
 
     switch (this._currentSortType) {
-      case SORT_TYPE.DATE:
+      case SortType.DATE:
         return this._filteredPoints
           .slice()
           .sort(sortByDate);
-      case SORT_TYPE.PRICE:
+      case SortType.PRICE:
         return this._filteredPoints
           .slice()
           .sort(sortByPrice);
-      case SORT_TYPE.TIME:
+      case SortType.TIME:
         return this._filteredPoints
           .slice()
           .sort(sortByTime);
@@ -122,7 +122,6 @@ export default class Trip {
           });
         break;
       case UserAction.DELETE_POINT:
-        // debugger;
         this._pointPresenter[update.id].setViewState(PointPresenterViewState.DELETING);
         this._api.removePoint(update)
           .then(() => {
@@ -142,12 +141,12 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         this._clearTrip();
-        this._currentSortType = SORT_TYPE.DATE;
+        this._currentSortType = SortType.DATE;
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
         this._clearTrip();
-        this._currentSortType = SORT_TYPE.DATE;
+        this._currentSortType = SortType.DATE;
         this._renderTrip();
         break;
       case UpdateType.INIT:

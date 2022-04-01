@@ -25,12 +25,6 @@ export default class TripInfo {
 
   _handleModelEvent(updateType) {
     switch (updateType) {
-      case UpdateType.PATCH:
-        // not implemented. Has nothing to do with filters. But with menu ?
-        break;
-      case UpdateType.MINOR:
-        // not implemented. Has nothing to do with filters. But with menu ?
-        break;
       case UpdateType.MAJOR:
         this._clearInfo();
         this.init();

@@ -2,12 +2,10 @@ const getRandomInt = (min, max) => {
   if (min > max) {
     [min, max] = [max, min];
   }
-  // to round number up to the next largest integer
   min = Math.ceil(min);
-  // to round number to less then or equal number
-  max = ~~max;
+  max = Math.trunc(max);
   const randomFloat = Math.random();
-  const randomNumber = ~~(randomFloat * (max - min + 1)) + min;
+  const randomNumber = Math.trunc(randomFloat * (max - min + 1)) + min;
   return randomNumber;
 };
 
@@ -21,7 +19,6 @@ const getRandomFloat = (min, max, numOfdecimalPlace) => {
 };
 
 const getRandomValueFromArr = (arr) => {
-  // сделать проверку на обьект
   const randomValue = arr[getRandomInt(0, arr.length -1)];
   if (typeof randomValue === 'object') {
     return Object.assign({}, randomValue);
