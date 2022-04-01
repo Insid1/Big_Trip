@@ -48,7 +48,7 @@ export default class Api {
       headers: new Headers({'Content-Type': 'application/json'}),
     })
       .then(Api.toJSON)
-      .then(point);
+      .then(TripPointsModel.adaptPointToClient);
   }
 
   addPoint(point) {
@@ -66,8 +66,6 @@ export default class Api {
     return this._load({
       url: `points/${point.id}`,
       method: Method.DELETE,
-      body: JSON.stringify(TripPointsModel.adaptPointToServer(point)),
-      headers: new Headers({'Content-Type': 'application/json'}),
     });
   }
 
