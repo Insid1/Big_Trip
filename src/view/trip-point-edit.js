@@ -30,14 +30,22 @@ const addListOfCities = (cities) => {
   const listOfCities = cities.map((cityName) => createCity(cityName));
   return listOfCities.join('');
 };
-
-const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsData, offersData) => `<header class="event__header">
+const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsData, offersData, isDisabled, isSaving, isDeleting) => {
+  const isSavingOrDeleting = () => {
+    if (isSaving) {
+      return 'Saving...';
+    } else if (isDeleting){
+      return 'Deleting...';
+    }
+    return 'Save';
+  };
+  return `<header class="event__header">
   <div class="event__type-wrapper">
     <label class="event__type  event__type-btn" for="event-type-toggle-1">
       <span class="visually-hidden">Choose event type</span>
       ${addIcon(event)}
     </label>
-    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled': ''}>
 
     <div class="event__type-list">
       <fieldset class="event__type-group"> 
@@ -51,7 +59,7 @@ const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsDa
     <label class="event__label  event__type-output" for="event-destination-1">
       ${event}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1" required>
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1" required ${isDisabled ? 'disabled': ''}>
     <datalist id="destination-list-1">
       ${addListOfCities(Object.keys(destinationsData))}
     </datalist>
@@ -59,10 +67,10 @@ const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsDa
   
   <div class="event__field-group  event__field-group--time">
     <label class="visually-hidden" for="event-start-time-1">From</label>
-    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${fromTime.format('DD/MM/YY HH:mm')}">
+    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${fromTime.format('DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled': ''}>
     &mdash;
     <label class="visually-hidden" for="event-end-time-1">To</label>
-    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toTime.format('DD/MM/YY HH:mm')}">
+    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toTime.format('DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled': ''}>
   </div>
   
   <div class="event__field-group  event__field-group--price">
@@ -70,15 +78,16 @@ const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsDa
       <span class="visually-hidden">Price</span>
       &euro;
     </label>
-    <input class="event__input  event__input--price" id="event-price-1" type="number" required min="0" name="event-price" value="${price}">
+    <input class="event__input  event__input--price" id="event-price-1" type="number" required min="0" name="event-price" value="${price}" ${isDisabled ? 'disabled': ''}>
   </div>
 
-  <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-  <button class="event__reset-btn" type="reset">Delete</button>
-  <button class="event__rollup-btn" type="button">
+  <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled': ''}>${isSavingOrDeleting()}</button>
+  <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled': ''}>Delete</button>
+  <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled': ''}>
     <span class="visually-hidden">Open event</span>
   </button>
 </header>`;
+};
 
 const addPhotos = (photos) => {
   if (!photos) {return '';}
@@ -103,11 +112,11 @@ const addDescription = (description) => {
   return `<p class="event__destination-description">${description}</p>`;
 };
 
-const addOffers = (totalOffers, pointOffers) => {
+const addOffers = (totalOffers, pointOffers, isDisabled) => {
   const addOffer = (offer) => {
     const isChecked = () => pointOffers.some((pointOffer) => pointOffer.name === offer.name) ? 'checked' : '';
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name}" data-price="${offer.price}" value="${offer.name}" type="checkbox" name="event-offer-${offer.name}" ${isChecked()}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.name}" data-price="${offer.price}" value="${offer.name}" type="checkbox" name="event-offer-${offer.name}" ${isChecked()} ${isDisabled ? 'disabled': ''}>
         <label class="event__offer-label" for="event-offer-${offer.name}">
         <span class="event__offer-title">${offer.name}</span>
         &plus;&euro;&nbsp;
@@ -136,21 +145,25 @@ const createPointEditDetailsDestination = (photos, description) => {
 </section>`;
 };
 
-const addPointEditDetails = (offers, photos, description, event, offersData) => {
+const addPointEditDetails = (offers, photos, description, event, offersData, isDisabled) => {
   const exactOffers = offersData[event];
   return `<section class="event__details">
-  ${offers !== null ? addOffers(exactOffers, offers) : ''}
+  ${offers !== null ? addOffers(exactOffers, offers, isDisabled) : ''}
   ${createPointEditDetailsDestination(photos, description)}
 </section>`;};
 
 const addPointEdit = (pointData, offersData, destinationsData) => {
-  const {event, city, fromTime, toTime,
-    price, offers, description, photos} = pointData;
+  const {event, city,
+    fromTime, toTime,
+    price, offers,
+    description, photos,
+    isDisabled, isSaving,
+    isDeleting} = pointData;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
-      ${addPointEditHeader(event, city,fromTime, toTime, price, destinationsData, offersData)}
-      ${addPointEditDetails(offers, photos, description, event, offersData)}
+      ${addPointEditHeader(event, city,fromTime, toTime, price, destinationsData, offersData, isDisabled, isSaving, isDeleting)}
+      ${addPointEditDetails(offers, photos, description, event, offersData, isDisabled)}
     </form>
   </li>`;
 };
@@ -362,11 +375,20 @@ export default class EditPoint extends Smart {
   }
 
   static parseDataToState(state) {
-    return Object.assign({},
-      state);
+    return Object.assign(
+      {},
+      state,
+      {
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
   }
 
   static pasrseStateToData(data) {
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
     return Object.assign({},
       data);
   }
@@ -379,6 +401,7 @@ export default class EditPoint extends Smart {
     // Восстанавливает обработчики событий на элементах после перересовки
     this.setClickHandler(this._callback.clickPointer);
     this.setSubmitHandler(this._callback.submit);
+    this.setClickDelHandler(this._callback.clickDel);
     this._setInnerHandlers();
     this._setDatePickerFromTime();
     this._setDatePickerToTime();

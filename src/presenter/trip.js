@@ -2,7 +2,7 @@ import SiteSortingView from '../view/trip-sorting.js';
 import PointContainerView  from '../view/trip-point-container';
 import NoPointView from '../view/trip-no-point.js';
 import LoadingView from '../view/loading.js';
-import PointPresenter from './point.js';
+import PointPresenter, {State as PointPresenterViewState} from './point.js';
 import NewPointPresenter from './new-point';
 import {remove, render, RenderPosition } from '../util/render.js';
 import { SORT_TYPE, UserAction, UpdateType } from '../const.js';
@@ -34,7 +34,6 @@ export default class Trip {
 
     this._offers = null;
     this._destinations = null;
-
 
     this._handleChangeMode = this._handleChangeMode.bind(this);
     this._handleSortClick = this._handleSortClick.bind(this);
@@ -103,21 +102,34 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.ADD_POINT:
+        this._newPointComponent.setSaving();
         this._api.addPoint(update)
           .then((response) => {
             this._pointsModel.addPoint(updateType, response);
+          })
+          .catch(() => {
+            this._newPointComponent.setAborting();
           });
         break;
       case UserAction.UPDATE_POINT:
+        this._pointPresenter[update.id].setViewState(PointPresenterViewState.SAVING);
         this._api.updatePoint(update)
           .then((response) => {
             this._pointsModel.updatePoint(updateType, response);
+          })
+          .catch(() => {
+            this._pointPresenter[update.id].setViewState(PointPresenterViewState.ABORTING);
           });
         break;
       case UserAction.DELETE_POINT:
+        // debugger;
+        this._pointPresenter[update.id].setViewState(PointPresenterViewState.DELETING);
         this._api.removePoint(update)
           .then(() => {
             this._pointsModel.deletePoint(updateType, update);
+          })
+          .catch(() => {
+            this._pointPresenter[update.id].setViewState(PointPresenterViewState.ABORTING);
           });
         break;
     }

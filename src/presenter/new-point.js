@@ -79,6 +79,13 @@ export default class NewPoint {
     }
   }
 
+  setSaving() {
+    this._addPointComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
   _handleAddPointSubmit(newData) {
     this._changeData(
       UserAction.ADD_POINT,
@@ -101,5 +108,17 @@ export default class NewPoint {
     if (this._isNoPoints) {
       this._renderTrip();
     }
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._addPointComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._addPointComponent.shake(resetFormState);
   }
 }

@@ -8,6 +8,12 @@ const Mode = {
   EDIT: 'edit',
 };
 
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
+
 export default class Point {
   constructor(pointListContainer, changeData, changeMode, offers, destinations) {
     this._pointListContainer = pointListContainer;
@@ -104,11 +110,9 @@ export default class Point {
 
   _handleEditClick() {
     this._changeMode();
-
   }
 
   _handleEditSubmit(newData) {
-    this._replaceEditToPoint();
     this._changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MAJOR,
@@ -118,11 +122,44 @@ export default class Point {
   _handleEscKeyDown(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this._replaceEditToPoint();
+      this._changeMode();
     }
   }
 
   _handleEditDelClick() {
-    this._changeData(UserAction.DELETE_POINT, UpdateType.MAJOR, this.pointData);
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MAJOR,
+      this.pointData);
+  }
+
+  setViewState(state) {
+
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isDeleting: false,
+        isSaving: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._pointEditComponent.shake(resetFormState);
+        this._pointComponent.shake(resetFormState);
+        break;
+    }
   }
 }
