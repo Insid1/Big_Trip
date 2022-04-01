@@ -11,7 +11,7 @@ import Api from './api.js';
 import { UpdateType } from './const.js';
 import { render } from './util/render.js';
 
-const AUTHORIZATION = 'Basic random_string';
+const AUTHORIZATION = 'Basic dkjfn34tbhjdfhjgb345';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
 const siteHeaderElement = document.querySelector('.page-header');
@@ -45,7 +45,7 @@ const addStatistic = () => {
     evt.preventDefault();
     tableBtn.classList.add('trip-tabs__btn--active');
     statsBtn.classList.remove('trip-tabs__btn--active');
-    tripPresenter.showTrip();
+    tripPresenter.show();
     tripStatisticPresenter.hide();
     tripFilterPresenter.enableFilters();
     newEventBtn.disabled = false;
@@ -54,7 +54,7 @@ const addStatistic = () => {
     evt.preventDefault();
     tableBtn.classList.remove('trip-tabs__btn--active');
     statsBtn.classList.add('trip-tabs__btn--active');
-    tripPresenter.hideTrip();
+    tripPresenter.hide();
     tripStatisticPresenter.show();
     tripFilterPresenter.disableFilters();
     newEventBtn.disabled = true;

@@ -18,9 +18,8 @@ const formatDuration = (value) => {
     return `${durDay} D ${durHour} H ${durMin} M`;
   } else if (durHour) {
     return `${durHour} H ${durMin} M`;
-  } else {
-    return `${durMin} M`;
   }
+  return `${durMin} M`;
 };
 
 const sortByDate = (a, b) => a.fromTime - b.fromTime;

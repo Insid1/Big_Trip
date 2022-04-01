@@ -51,6 +51,14 @@ export default class TripFilter {
     ];
   }
 
+  disableFilters() {
+    this._filters.disable();
+  }
+
+  enableFilters() {
+    this._filters.enable();
+  }
+
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.ADD_POINT:
@@ -97,13 +105,5 @@ export default class TripFilter {
     remove(this._filters);
     this._filterModel.removeObservers(this._handleModelEvent);
     this._pointsModel.removeObservers(this._handleModelEvent);
-  }
-
-  disableFilters() {
-    this._filters.disable();
-  }
-
-  enableFilters() {
-    this._filters.enable();
   }
 }

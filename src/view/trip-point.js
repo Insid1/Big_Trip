@@ -1,4 +1,4 @@
-import AbstractElement from './abstract-element.js';
+import AbstractComponent from './abstract-component';
 import { getDuration, formatDuration } from '../util/point.js';
 
 const createTripPoint = (pointData) => {
@@ -61,22 +61,12 @@ const createTripPoint = (pointData) => {
   </li>`;
 };
 
-export default class Point extends AbstractElement{
+export default class Point extends AbstractComponent{
   constructor(pointData) {
     super();
     this._pointData = pointData;
     this._clickHandler = this._clickHandler.bind(this);
     this._clickFavoriteHandler = this._clickFavoriteHandler.bind(this);
-  }
-
-  _clickHandler(evt) {
-    evt.preventDefault();
-    this._callback.click();
-  }
-
-  _clickFavoriteHandler(evt) {
-    evt.preventDefault();
-    this._callback.clickFavorite();
   }
 
   setClickHandler(cb) {
@@ -110,4 +100,13 @@ export default class Point extends AbstractElement{
     return createTripPoint(this._pointData);
   }
 
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  _clickFavoriteHandler(evt) {
+    evt.preventDefault();
+    this._callback.clickFavorite();
+  }
 }

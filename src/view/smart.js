@@ -1,6 +1,6 @@
-import AbstractElement from './abstract-element';
+import AbstractComponent from './abstract-component';
 
-export default class Smart extends AbstractElement {
+export default class Smart extends AbstractComponent {
 
   restoreHandlers() {
     throw Error('Abstract method not implemented : restoreHandlers');

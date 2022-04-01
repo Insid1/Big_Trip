@@ -1,8 +1,8 @@
-import AbstractElement from './abstract-element';
+import AbstractComponent from './abstract-component';
 
 const createTripList = () => '<ul class="trip-events__list"></ul>';
 
-export default class PointContainer extends AbstractElement {
+export default class PointContainer extends AbstractComponent {
 
   getTemplate() {
     return createTripList();

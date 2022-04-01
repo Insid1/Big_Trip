@@ -79,6 +79,36 @@ export default class Point {
     }
   }
 
+  setViewState(state) {
+
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isDeleting: false,
+        isSaving: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._pointEditComponent.shake(resetFormState);
+        this._pointComponent.shake(resetFormState);
+        break;
+    }
+  }
+
   _replacePointToEdit() {
     replace(this._pointEditComponent, this._pointComponent);
     document.addEventListener('keydown', this._handleEscKeyDown);
@@ -131,35 +161,5 @@ export default class Point {
       UserAction.DELETE_POINT,
       UpdateType.MAJOR,
       this.pointData);
-  }
-
-  setViewState(state) {
-
-    const resetFormState = () => {
-      this._pointEditComponent.updateData({
-        isDisabled: false,
-        isDeleting: false,
-        isSaving: false,
-      });
-    };
-
-    switch (state) {
-      case State.SAVING:
-        this._pointEditComponent.updateData({
-          isDisabled: true,
-          isSaving: true,
-        });
-        break;
-      case State.DELETING:
-        this._pointEditComponent.updateData({
-          isDisabled: true,
-          isDeleting: true,
-        });
-        break;
-      case State.ABORTING:
-        this._pointEditComponent.shake(resetFormState);
-        this._pointComponent.shake(resetFormState);
-        break;
-    }
   }
 }

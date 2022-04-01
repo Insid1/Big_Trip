@@ -1,4 +1,4 @@
-import SiteSortingView from '../view/trip-sorting.js';
+import SortingView from '../view/trip-sorting.js';
 import PointContainerView  from '../view/trip-point-container';
 import NoPointView from '../view/trip-no-point.js';
 import LoadingView from '../view/loading.js';
@@ -49,6 +49,20 @@ export default class Trip {
     this._filterModel.addObserver(this._handleModelEvent);
     this._offersModel.addObserver(this._handleModelEvent);
     this._destinationsModel.addObserver(this._handleModelEvent);
+  }
+
+  hide() {
+    this._sortingComponent.hide();
+    this._tripListComponent.hide();
+  }
+
+  show() {
+    this._sortingComponent.show();
+    this._tripListComponent.show();
+  }
+
+  isNoPoints() {
+    return this._getPoints().length === 0;
   }
 
   _getPoints() {
@@ -190,7 +204,7 @@ export default class Trip {
       this._sortingComponent = null;
     }
 
-    this._sortingComponent = new SiteSortingView(this._currentSortType);
+    this._sortingComponent = new SortingView(this._currentSortType);
     this._sortingComponent.setSortClick(this._handleSortClick);
     render(this._tripContainer, this._sortingComponent, RenderPosition.START);
   }
@@ -231,19 +245,4 @@ export default class Trip {
     this._renderPointList();
     this._renderPoints();
   }
-
-  hideTrip() {
-    this._sortingComponent.hide();
-    this._tripListComponent.hide();
-  }
-
-  showTrip() {
-    this._sortingComponent.show();
-    this._tripListComponent.show();
-  }
-
-  isNoPoints() {
-    return this._getPoints().length === 0;
-  }
-
 }

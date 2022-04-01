@@ -197,6 +197,56 @@ export default class EditPoint extends Smart {
 
   }
 
+  setClickDelHandler(cb) {
+    this._callback.clickDel = cb;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._clickDelHandler);
+  }
+
+  setClickHandler(cb) {
+    this._callback.clickPointer = cb;
+    this
+      .getElement()
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click' , this._clickPointerHandler);
+
+  }
+
+  setSubmitHandler(cb) {
+    this._callback.submit = cb;
+    this.getElement()
+      .addEventListener('submit', this._submitHandler);
+  }
+
+  removeClickHandler() {
+    this
+      .getElement()
+      .querySelector('.event__rollup-btn')
+      .removeEventListener('click', this._clickPointerHandler);
+  }
+
+  removeSubmitHandler() {
+    this
+      .getElement()
+      .removeEventListener('submit', this._submitHandler);
+  }
+
+  getTemplate() {
+    return addPointEdit(this._pointState, this._offersData, this._destinationsData);
+  }
+
+  reset(oldData) {
+    this.updateData(EditPoint.pasrseStateToData(oldData));
+  }
+
+  restoreHandlers() {
+    this.setClickHandler(this._callback.clickPointer);
+    this.setSubmitHandler(this._callback.submit);
+    this.setClickDelHandler(this._callback.clickDel);
+    this._setInnerHandlers();
+    this._setDatePickerFromTime();
+    this._setDatePickerToTime();
+  }
+
   _clickEventsHandler(evt) {
     if (evt.target.tagName !== 'INPUT') {
       return;
@@ -313,65 +363,28 @@ export default class EditPoint extends Smart {
       enableTime: true,
       defaultDate: this._pointState.date,
       onChange: this._changeToTimeHandler,
-      // eslint-disable-next-line camelcase
-      time_24hr: true,
+      'time_24hr': true,
     });
   }
 
   _setInnerHandlers() {
     const currElement = this.getElement();
-    // assign handler for event clicks
     currElement
       .querySelector('.event__type-group')
       .addEventListener('click', this._clickEventsHandler);
-    // assign handler for City input
+
     currElement
       .querySelector('#event-destination-1')
       .addEventListener('change', this._changeCityHandler);
-    // assign handler for price input
+
     currElement
       .querySelector('.event__input--price')
       .addEventListener('change', this._changePriceHandler);
+
     currElement
       .querySelector('.event__available-offers')
       .addEventListener('change', this._changeOffersHandler);
-  }
 
-  setClickDelHandler(cb) {
-    this._callback.clickDel = cb;
-    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._clickDelHandler);
-  }
-
-  setClickHandler(cb) {
-    this._callback.clickPointer = cb;
-    this
-      .getElement()
-      .querySelector('.event__rollup-btn')
-      .addEventListener('click' , this._clickPointerHandler);
-
-  }
-
-  setSubmitHandler(cb) {
-    this._callback.submit = cb;
-    this.getElement()
-      .addEventListener('submit', this._submitHandler);
-  }
-
-  removeClickHandler() {
-    this
-      .getElement()
-      .querySelector('.event__rollup-btn')
-      .removeEventListener('click', this._clickPointerHandler);
-  }
-
-  removeSubmitHandler() {
-    this
-      .getElement()
-      .removeEventListener('submit', this._submitHandler);
-  }
-
-  getTemplate() {
-    return addPointEdit(this._pointState, this._offersData, this._destinationsData);
   }
 
   static parseDataToState(state) {
@@ -392,18 +405,4 @@ export default class EditPoint extends Smart {
     return Object.assign({},
       data);
   }
-
-  reset(oldData) {
-    this.updateData(EditPoint.pasrseStateToData(oldData));
-  }
-
-  restoreHandlers() {
-    this.setClickHandler(this._callback.clickPointer);
-    this.setSubmitHandler(this._callback.submit);
-    this.setClickDelHandler(this._callback.clickDel);
-    this._setInnerHandlers();
-    this._setDatePickerFromTime();
-    this._setDatePickerToTime();
-  }
-
 }

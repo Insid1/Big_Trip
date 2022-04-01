@@ -13,18 +13,6 @@ export default class TripStatistic {
     this.createStatistic();
   }
 
-  _handleModelEvent(updateType) {
-    switch (updateType) {
-      case UpdateType.MAJOR:
-        this.createStatistic();
-        break;
-      case UpdateType.INIT:
-        this._isLoading = false;
-        this.createStatistic();
-        break;
-    }
-  }
-
   createStatistic() {
     if (this._isLoading) {
       return;
@@ -44,5 +32,17 @@ export default class TripStatistic {
 
   show() {
     this._statisticView.show();
+  }
+
+  _handleModelEvent(updateType) {
+    switch (updateType) {
+      case UpdateType.MAJOR:
+        this.createStatistic();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        this.createStatistic();
+        break;
+    }
   }
 }

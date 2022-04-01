@@ -14,7 +14,7 @@ module.exports = {
     port: 3030,
     open: {
       app: {
-        name: 'chrome',
+        name: 'firefox',
       },
     },
   },

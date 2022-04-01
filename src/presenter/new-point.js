@@ -72,18 +72,30 @@ export default class NewPoint {
     this._isRendered = false;
   }
 
-  _handleAddPointClick() {
-    this.destroy();
-    if (this._isNoPoints) {
-      this._renderTrip();
-    }
-  }
-
   setSaving() {
     this._addPointComponent.updateData({
       isDisabled: true,
       isSaving: true,
     });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._addPointComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._addPointComponent.shake(resetFormState);
+  }
+
+  _handleAddPointClick() {
+    this.destroy();
+    if (this._isNoPoints) {
+      this._renderTrip();
+    }
   }
 
   _handleAddPointSubmit(newData) {
@@ -108,17 +120,5 @@ export default class NewPoint {
     if (this._isNoPoints) {
       this._renderTrip();
     }
-  }
-
-  setAborting() {
-    const resetFormState = () => {
-      this._addPointComponent.updateData({
-        isDisabled: false,
-        isSaving: false,
-        isDeleting: false,
-      });
-    };
-
-    this._addPointComponent.shake(resetFormState);
   }
 }

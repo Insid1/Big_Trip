@@ -1,4 +1,4 @@
-import AbstractElement from './abstract-element';
+import AbstractComponent from './abstract-component';
 import { createChart } from '../util/chart';
 import { ChartType } from '../const';
 
@@ -19,7 +19,7 @@ const createStatistic = () => `<section class="statistics">
   </div>
 </section>`;
 
-export default class Statistic extends AbstractElement {
+export default class Statistic extends AbstractComponent {
   constructor(pointsData) {
     super();
     this._pointsData = pointsData;

@@ -1,8 +1,8 @@
-import AbstractElement from './abstract-element';
+import AbstractComponent from './abstract-component';
 
 const createErrorMessage = (err) => `<div class="error-message">Unable to load data. ${err}</div>`;
 
-export default class ErrorMessage extends AbstractElement {
+export default class ErrorMessage extends AbstractComponent {
   constructor(error) {
     super();
     this._error = error;

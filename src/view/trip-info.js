@@ -1,4 +1,4 @@
-import AbstractElement from './abstract-element';
+import AbstractComponent from './abstract-component';
 
 const createTripInfo = (poinsData) => {
   const createRoute = () => {
@@ -44,7 +44,7 @@ const createTripInfo = (poinsData) => {
 };
 
 
-export default class Info extends AbstractElement {
+export default class Info extends AbstractComponent {
   constructor(data) {
     super();
     this._data = data;

@@ -1,4 +1,4 @@
-import AbstractElement from './abstract-element';
+import AbstractComponent from './abstract-component';
 
 
 const addFilters = (filters) => {
@@ -21,7 +21,7 @@ const addFilters = (filters) => {
 };
 
 
-export default class Filters extends AbstractElement {
+export default class Filters extends AbstractComponent {
   constructor(filters) {
     super();
     this._callback = {};

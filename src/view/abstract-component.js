@@ -1,9 +1,9 @@
 import { createElement } from '../util/render';
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
-export default class AbstractElement {
+export default class AbstractComponent {
   constructor() {
-    if (new.target === AbstractElement) {
+    if (new.target === AbstractComponent) {
       throw Error('Can\'t instantiate Abstract, only concrete one.');
     }
     this._element = null;

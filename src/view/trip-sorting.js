@@ -1,4 +1,4 @@
-import AbstractElement from './abstract-element';
+import AbstractComponent from './abstract-component';
 import { SortType } from '../const';
 
 const createSiteSortingTemplate = (sortType) => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -28,14 +28,13 @@ const createSiteSortingTemplate = (sortType) => `<form class="trip-events__trip-
   </div>
 </form>`;
 
-export default class SiteSorting extends AbstractElement{
+export default class Sorting extends AbstractComponent{
   constructor(sortType) {
     super();
     this._sortType = sortType;
     this._callback = {};
     this._sortClickHandler = this._sortClickHandler.bind(this);
   }
-
 
   getTemplate() {
     return createSiteSortingTemplate(this._sortType);
@@ -53,6 +52,4 @@ export default class SiteSorting extends AbstractElement{
 
     this._callback.sortClick(evt.target.dataset.sortType);
   }
-
-
 }
