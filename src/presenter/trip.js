@@ -103,15 +103,22 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.ADD_POINT:
-        this._pointsModel.addPoint(updateType, update);
+        this._api.addPoint(update)
+          .then(() => {
+            this._pointsModel.addPoint(updateType, update);
+          });
         break;
       case UserAction.UPDATE_POINT:
-        this._api.updatePoint(update).then(() => {
-          this._pointsModel.updatePoint(updateType, update);
-        });
+        this._api.updatePoint(update)
+          .then(() => {
+            this._pointsModel.updatePoint(updateType, update);
+          });
         break;
       case UserAction.DELETE_POINT:
-        this._pointsModel.deletePoint(updateType, update);
+        this._api.removePoint(update)
+          .then(() => {
+            this._pointsModel.deletePoint(updateType, update);
+          });
         break;
     }
   }
@@ -149,7 +156,9 @@ export default class Trip {
   }
 
   _handleChangeMode() {
-    // this._newPointComponent.destroy();
+    if (this._newPointComponent._isRendered) {
+      this._newPointComponent.destroy();
+    }
 
     Object.values(this._pointPresenter).forEach((value) => {
       value.resetView();

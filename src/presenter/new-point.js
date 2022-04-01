@@ -30,6 +30,8 @@ export default class NewPoint {
     this._offers = null;
     this._destinations = null;
 
+    this._isRendered = false;
+
     this._addPointComponent = null;
 
     this._handleAddPointDelClick = this._handleAddPointDelClick.bind(this);
@@ -57,7 +59,7 @@ export default class NewPoint {
     this._addPointComponent.setClickDelHandler(this._handleAddPointDelClick);
 
     render(this._pointListContainer, this._addPointComponent, RenderPosition.START);
-
+    this._isRendered = true;
   }
 
   destroy() {
@@ -67,6 +69,7 @@ export default class NewPoint {
     document.removeEventListener('keydown', this._handleEscKeyDown);
     remove(this._addPointComponent);
     this._addPointComponent = null;
+    this._isRendered = false;
   }
 
   _handleAddPointClick() {
