@@ -5,7 +5,7 @@
   "description": "Проект «Big Trip» от HTML Academy",
   "scripts": {
     "lint": "eslint src/",
-    "build": "webpack --mode development",
+    "build": "webpack --mode development --watch",
     "prod": "webpack --mode production",
     "start": "webpack serve"
   },
