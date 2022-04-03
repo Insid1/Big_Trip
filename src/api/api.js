@@ -1,5 +1,5 @@
-import TripPointsModel from './model/trip-points';
-import TripOffersModel from './model/offers';
+import TripPointsModel from '../model/trip-points';
+import TripOffersModel from '../model/offers';
 
 const Method = {
   GET: 'GET',

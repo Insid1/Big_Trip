@@ -7,7 +7,7 @@ import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
 import TripStatisticPresenter from './presenter/statistic.js';
 import ErrorMessageView from './view/error-message.js';
-import Api from './api.js';
+import Api from './api/api.js';
 import { UpdateType } from './const.js';
 import { render } from './util/render.js';
 
