@@ -1,3 +1,5 @@
+import ErrorMessageView from '../view/error-message';
+import { render } from './render';
 const getRandomInt = (min, max) => {
   if (min > max) {
     [min, max] = [max, min];
@@ -7,6 +9,13 @@ const getRandomInt = (min, max) => {
   const randomFloat = Math.random();
   const randomNumber = Math.trunc(randomFloat * (max - min + 1)) + min;
   return randomNumber;
+};
+
+const isOnline = () => window.navigator.onLine;
+
+const createErrorMessage = (err) => {
+  const errMsg = new ErrorMessageView(err);
+  render(document.body, errMsg);
 };
 
 const getRandomFloat = (min, max, numOfdecimalPlace) => {
@@ -29,4 +38,4 @@ const getRandomValueFromArr = (arr) => {
 const getTrueOrFalse = () => Boolean(getRandomInt(0, 1));
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
-export {getRandomInt, getRandomFloat, getRandomValueFromArr, getTrueOrFalse, capitalize };
+export {getRandomInt, getRandomFloat, getRandomValueFromArr, getTrueOrFalse, capitalize, isOnline, createErrorMessage };

@@ -3,6 +3,9 @@ import dayjs from 'dayjs';
 import { getRandomValueFromArr } from '../util/common.js';
 import { render, remove, RenderPosition } from '../util/render';
 import { UserAction, UpdateType } from '../const.js';
+import { isOnline } from '../util/common.js';
+import { OfflineMessage } from '../const.js';
+import { toast } from '../util/toast.js';
 
 export const createPointTemplate = (offers, destinations) => {
   const event = getRandomValueFromArr(Object.keys(offers));
@@ -31,6 +34,7 @@ export default class NewPoint {
     this._destinations = null;
 
     this._isRendered = false;
+    this._isNewPoint = true;
 
     this._addPointComponent = null;
 
@@ -51,7 +55,7 @@ export default class NewPoint {
       this.destroy();
       this._addPointComponent = null;
     }
-    this._addPointComponent = new EditPointView(this.pointData, this._offers, this._destinations);
+    this._addPointComponent = new EditPointView(this.pointData, this._offers, this._destinations, this._isNewPoint);
 
     document.addEventListener('keydown', this._handleEscKeyDown);
     this._addPointComponent.setClickHandler(this._handleAddPointClick);
@@ -99,6 +103,11 @@ export default class NewPoint {
   }
 
   _handleAddPointSubmit(newData) {
+    if (!isOnline()) {
+      toast(OfflineMessage.ADD);
+      return;
+    }
+
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MAJOR,

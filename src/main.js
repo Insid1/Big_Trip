@@ -6,13 +6,18 @@ import TripPresenter from './presenter/trip.js';
 import TripFilterPresenter from './presenter/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
 import TripStatisticPresenter from './presenter/statistic.js';
-import ErrorMessageView from './view/error-message.js';
 import Api from './api/api.js';
+import Provider from './api/provider.js';
 import { UpdateType } from './const.js';
-import { render } from './util/render.js';
+import { createErrorMessage } from './util/common.js';
+import Store from './api/store.js';
 
 const AUTHORIZATION = 'Basic dkjfn34tbhjdfhjgb3452';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+const STORE_PREFIX = 'taskmanager-localstorage';
+const STORE_VER = 'v14';
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const STORE_NAME_STATIC = `${STORE_PREFIX}-STATIC-${STORE_VER}`;
 
 const siteHeaderElement = document.querySelector('.page-header');
 const tripMainHeaderElement = siteHeaderElement.querySelector('.trip-main');
@@ -22,12 +27,15 @@ const tripControlsElement = tripMainHeaderElement.querySelector('.trip-main__tri
 const newEventBtn = tripMainHeaderElement.querySelector('.trip-main__event-add-btn');
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const storeStatic = new Store(STORE_NAME_STATIC, window.localStorage);
+const apiWithProvider = new Provider(api, store, storeStatic);
 const filterModel = new TripFilterModel();
 const tripOffersModel = new TripOffersModel();
 const tripPointsModel = new TripPointsModel();
 const tripDestinationsModel = new TripDestinationsModel();
 
-const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel, tripDestinationsModel, api);
+const tripPresenter = new TripPresenter(tripEventsElement, tripPointsModel, filterModel, tripOffersModel, tripDestinationsModel, apiWithProvider);
 tripPresenter.init();
 const tripInfoPresenter = new TripInfoPresenter(tripMainHeaderElement, tripPointsModel);
 tripInfoPresenter.init();
@@ -62,12 +70,9 @@ const addStatistic = () => {
   });
 };
 addStatistic();
-const createErrorMessage = (err) => {
-  const errMsg = new ErrorMessageView(err);
-  render(document.body, errMsg);
-};
 
-api.getDestinations()
+
+apiWithProvider.getDestinations()
   .then(TripDestinationsModel.adaptDestinationToClient)
   .then((destinations) => {
     tripDestinationsModel.setDestinations(destinations, UpdateType.INIT_DESTINATIONS);
@@ -76,7 +81,7 @@ api.getDestinations()
     throw Error(err);
   });
 
-api.getOffers()
+apiWithProvider.getOffers()
   .then((offers) => {
     tripOffersModel.setOffers(offers, UpdateType.INIT_OFFERS);
   })
@@ -86,7 +91,7 @@ api.getOffers()
   });
 
 
-api.getPoints()
+apiWithProvider.getPoints()
   .then((points) => {
     tripPointsModel.setPoints(points, UpdateType.INIT);
   })
@@ -94,3 +99,15 @@ api.getPoints()
     tripPointsModel.setPoints([], UpdateType.INIT);
     throw Error(err);
   });
+
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
+
+window.addEventListener('online', () => {
+  document.title = document.title.replace(' [offline]', '');
+  apiWithProvider.sync();
+});
+window.addEventListener('offline', () => {
+  document.title += ' [offline]';
+});

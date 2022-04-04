@@ -32,4 +32,11 @@ const ChartType = {
   AMOUNT: 'AMOUNT',
 };
 
-export {SortType, UpdateType, UserAction, FilterType, ChartType};
+const OfflineMessage = {
+  DELETE: 'You can\'t delete task offline',
+  SAVE: 'You can\'t save task offline',
+  EDIT: 'You can\'t edit task offline',
+  ADD: 'You can\'t add task offline',
+};
+
+export {SortType, UpdateType, UserAction, FilterType, ChartType, OfflineMessage};

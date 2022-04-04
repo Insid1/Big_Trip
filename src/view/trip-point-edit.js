@@ -30,14 +30,27 @@ const addListOfCities = (cities) => {
   const listOfCities = cities.map((cityName) => createCity(cityName));
   return listOfCities.join('');
 };
-const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsData, offersData, isDisabled, isSaving, isDeleting) => {
-  const isSavingOrDeleting = () => {
+const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsData, offersData, isDisabled, isSaving, isDeleting, isNew) => {
+  const chooseSaveOrAdd = () => {
+    if (isSaving && isNew) {
+      return 'Adding...';
+    }
     if (isSaving) {
       return 'Saving...';
-    } else if (isDeleting){
-      return 'Deleting...';
+    }
+    if (isNew) {
+      return 'Add';
     }
     return 'Save';
+  };
+  const chooseDeleteOrCancel = () => {
+    if (isNew) {
+      return 'Cancel';
+    }
+    if (isDeleting) {
+      return 'Deleting';
+    }
+    return 'Delete';
   };
   return `<header class="event__header">
   <div class="event__type-wrapper">
@@ -81,8 +94,8 @@ const addPointEditHeader = (event, city, fromTime, toTime, price, destinationsDa
     <input class="event__input  event__input--price" id="event-price-1" type="number" required min="0" name="event-price" value="${price}" ${isDisabled ? 'disabled': ''}>
   </div>
 
-  <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled': ''}>${isSavingOrDeleting()}</button>
-  <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled': ''}>Delete</button>
+  <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled': ''}>${chooseSaveOrAdd()}</button>
+  <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled': ''}>${chooseDeleteOrCancel()}</button>
   <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled': ''}>
     <span class="visually-hidden">Open event</span>
   </button>
@@ -152,7 +165,7 @@ const addPointEditDetails = (offers, photos, description, event, offersData, isD
   ${createPointEditDetailsDestination(photos, description)}
 </section>`;};
 
-const addPointEdit = (pointData, offersData, destinationsData) => {
+const addPointEdit = (pointData, offersData, destinationsData, isNew) => {
   const {event, city,
     fromTime, toTime,
     price, offers,
@@ -162,7 +175,7 @@ const addPointEdit = (pointData, offersData, destinationsData) => {
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
-      ${addPointEditHeader(event, city,fromTime, toTime, price, destinationsData, offersData, isDisabled, isSaving, isDeleting)}
+      ${addPointEditHeader(event, city,fromTime, toTime, price, destinationsData, offersData, isDisabled, isSaving, isDeleting, isNew)}
       ${addPointEditDetails(offers, photos, description, event, offersData, isDisabled)}
     </form>
   </li>`;
@@ -170,7 +183,7 @@ const addPointEdit = (pointData, offersData, destinationsData) => {
 
 
 export default class EditPoint extends Smart {
-  constructor(pointData, offersData, destinationsData) {
+  constructor(pointData, offersData, destinationsData, isNewPoint) {
     super();
     this._pointState = EditPoint.parseDataToState(pointData);
     this._offersData = offersData;
@@ -178,6 +191,7 @@ export default class EditPoint extends Smart {
 
     this._datePickerFromTime = null;
     this._datePickerToTime = null;
+    this.isNewPoint = Boolean(isNewPoint);
 
     this._clickPointerHandler = this._clickPointerHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
@@ -231,7 +245,7 @@ export default class EditPoint extends Smart {
   }
 
   getTemplate() {
-    return addPointEdit(this._pointState, this._offersData, this._destinationsData);
+    return addPointEdit(this._pointState, this._offersData, this._destinationsData, this.isNewPoint);
   }
 
   reset(oldData) {

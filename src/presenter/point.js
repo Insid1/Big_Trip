@@ -2,6 +2,9 @@ import PointView from '../view/trip-point.js';
 import EditPointView from '../view/trip-point-edit.js';
 import { render, replace, remove } from '../util/render';
 import { UserAction, UpdateType } from '../const.js';
+import { isOnline } from '../util/common.js';
+import { toast } from '../util/toast.js';
+import { OfflineMessage } from '../const.js';
 
 const Mode = {
   DEFAULT: 'default',
@@ -143,6 +146,11 @@ export default class Point {
   }
 
   _handleEditSubmit(newData) {
+    if (!isOnline()) {
+      toast(OfflineMessage.SAVE);
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MAJOR,
@@ -157,6 +165,10 @@ export default class Point {
   }
 
   _handleEditDelClick() {
+    if (!isOnline()) {
+      toast(OfflineMessage.DELETE);
+      return;
+    }
     this._changeData(
       UserAction.DELETE_POINT,
       UpdateType.MAJOR,
