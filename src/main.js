@@ -12,7 +12,7 @@ import { UpdateType } from './const.js';
 import { createErrorMessage } from './util/common.js';
 import Store from './api/store.js';
 
-const AUTHORIZATION = 'Basic dkjfn34tbhjdfhjgb3452';
+const AUTHORIZATION = 'Basic dkjfn34tbhjdfhjgb34522';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 const STORE_PREFIX = 'taskmanager-localstorage';
 const STORE_VER = 'v14';
